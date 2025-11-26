@@ -1,5 +1,5 @@
-import { Link } from 'react-router-dom'
-import { config } from '../config'
+import Link from 'next/link'
+import { config } from '@/config'
 
 export default function Terms() {
 	return (
@@ -67,7 +67,7 @@ export default function Terms() {
 			<h2>7. Privacy</h2>
 			<p>
 				Your use of the App is also governed by our
-				<Link to="/privacy"> Privacy Policy</Link>, which explains how we handle your information (spoiler: we don't
+				<Link href="/privacy"> Privacy Policy</Link>, which explains how we handle your information (spoiler: we don't
 				collect any personal data).
 			</p>
 
@@ -124,3 +124,4 @@ export default function Terms() {
 		</div>
 	)
 }
+

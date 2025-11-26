@@ -1,4 +1,4 @@
-import { config } from '../config'
+import { config } from '@/config'
 
 export default function Privacy() {
 	return (
@@ -80,3 +80,4 @@ export default function Privacy() {
 		</div>
 	)
 }
+

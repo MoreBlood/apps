@@ -1,8 +1,11 @@
+'use client'
+
 import { useState } from 'react'
-import { Link, useLocation } from 'react-router-dom'
+import { usePathname } from 'next/navigation'
+import Link from 'next/link'
 
 export default function Navigation() {
-	const location = useLocation()
+	const pathname = usePathname()
 	const [isMenuOpen, setIsMenuOpen] = useState(false)
 
 	const toggleMenu = () => {
@@ -29,20 +32,21 @@ export default function Navigation() {
 				</span>
 			</button>
 			<nav className={`nav-menu ${isMenuOpen ? 'open' : ''}`}>
-				<Link to="/" className={`nav-link ${location.pathname === '/' ? 'active' : ''}`} onClick={closeMenu}>
+				<Link href="/" className={`nav-link ${pathname === '/' ? 'active' : ''}`} onClick={closeMenu}>
 					Home
 				</Link>
 				<Link
-					to="/privacy"
-					className={`nav-link ${location.pathname === '/privacy' ? 'active' : ''}`}
+					href="/privacy"
+					className={`nav-link ${pathname === '/privacy' ? 'active' : ''}`}
 					onClick={closeMenu}
 				>
 					Privacy Policy
 				</Link>
-				<Link to="/terms" className={`nav-link ${location.pathname === '/terms' ? 'active' : ''}`} onClick={closeMenu}>
+				<Link href="/terms" className={`nav-link ${pathname === '/terms' ? 'active' : ''}`} onClick={closeMenu}>
 					Terms of Service
 				</Link>
 			</nav>
 		</div>
 	)
 }
+

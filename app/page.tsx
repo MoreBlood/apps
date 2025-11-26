@@ -1,4 +1,4 @@
-import { config } from '../config'
+import { config } from '@/config'
 
 export default function Home() {
 	return (
@@ -33,3 +33,4 @@ export default function Home() {
 		</div>
 	)
 }
+
