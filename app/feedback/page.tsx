@@ -1,10 +1,9 @@
-const GOOGLE_FORMS_URL =
-	'https://docs.google.com/forms/d/e/1FAIpQLSfddrmPd8al4Gnbs8gezfCQ-zna6U1ZIE2tpBH1WWLHwxoxqg/viewform?embedded=true'
+import { config } from '@/config'
 
 export default function Feedback() {
 	return (
 		<iframe
-			src={GOOGLE_FORMS_URL}
+			src={config.feedbackFormUrl}
 			width="100%"
 			height="1600px"
 			frameBorder="0"
