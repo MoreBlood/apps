@@ -45,6 +45,13 @@ export default function Navigation() {
 				<Link href="/terms" className={`nav-link ${pathname === '/terms' ? 'active' : ''}`} onClick={closeMenu}>
 					Terms of Service
 				</Link>
+				<Link
+					href="/feedback"
+					className={`nav-link ${pathname === '/feedback' ? 'active' : ''}`}
+					onClick={closeMenu}
+				>
+					Feedback
+				</Link>
 			</nav>
 		</div>
 	)
