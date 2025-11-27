@@ -1,0 +1,16 @@
+@use 'mixins' as *;
+
+// Поддержка accessibility
+
+@include reduced-transparency {
+  .container {
+    box-shadow: var(--container-shadow-reduced);
+  }
+}
+
+@include reduced-motion {
+  * {
+    transition: none !important;
+    animation: none !important;
+  }
+}

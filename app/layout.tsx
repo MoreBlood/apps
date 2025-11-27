@@ -1,11 +1,14 @@
-import type { Metadata } from 'next'
+import type { Metadata, Viewport } from 'next'
 import Navigation from '@/components/Navigation'
-import '@/styles/index.css'
+import '@/styles/index.scss'
 
 export const metadata: Metadata = {
 	title: 'RAW Clinic',
 	description:
-		'RAW Clinic - Professional RAW photo editing for iOS. Edit RAW photos directly on your device with 100% local processing and no data collection.',
+		'RAW Clinic - Professional RAW photo editing for iOS. Edit RAW photos directly on your device with 100% local processing and no data collection.'
+}
+
+export const viewport: Viewport = {
 	colorScheme: 'light dark'
 }
 

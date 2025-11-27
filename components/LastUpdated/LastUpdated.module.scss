@@ -1,0 +1,9 @@
+.lastUpdated {
+  font-style: italic;
+  font-size: var(--font-size-xs);
+  color: var(--text-tertiary);
+  margin-bottom: var(--margin-last-updated-bottom);
+  padding-bottom: var(--padding-last-updated-bottom);
+  border-bottom: var(--border-width-thin) solid var(--border-color);
+}
+

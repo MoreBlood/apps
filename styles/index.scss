@@ -1,0 +1,12 @@
+// RAW Clinic - Главный файл стилей с поддержкой светлой/темной темы
+
+// Импорт модулей в правильном порядке
+@use 'functions';
+@use 'variables';
+@use 'mixins';
+@use 'reset';
+@use 'typography';
+@use 'layout';
+@use 'navigation';
+@use 'responsive';
+@use 'accessibility';

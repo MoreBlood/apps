@@ -1,12 +1,17 @@
 import Link from 'next/link'
+import AppName from '@/components/AppName'
+import Contact from '@/components/Contact'
+import Container from '@/components/Container'
+import Important from '@/components/Important'
+import LastUpdated from '@/components/LastUpdated'
 import { config } from '@/config'
 
 export default function Terms() {
 	return (
-		<div className="container">
+		<Container>
 			<h1>Terms of Service</h1>
-			<div className="app-name">{config.appName}</div>
-			<div className="last-updated">Last updated: {config.lastUpdated}</div>
+			<AppName>{config.appName}</AppName>
+			<LastUpdated>Last updated: {config.lastUpdated}</LastUpdated>
 
 			<h2>1. Acceptance of Terms</h2>
 			<p>
@@ -41,9 +46,9 @@ export default function Terms() {
 			</p>
 
 			<h2>5. Limitations of Liability</h2>
-			<div className="important">
+			<Important>
 				<strong>Important:</strong> {config.appName} is provided "as is" without warranties of any kind.
-			</div>
+			</Important>
 			<p>We are not liable for:</p>
 			<ul>
 				<li>Loss or corruption of photos or data</li>
@@ -113,14 +118,14 @@ export default function Terms() {
 				regarding use of the App.
 			</p>
 
-			<div className="contact">
+			<Contact>
 				<h2>Contact Us</h2>
 				<p>If you have any questions about these Terms of Service, please contact us at:</p>
 				<p>
 					<strong>Email: </strong>
 					<a href={`mailto:${config.contactEmail}`}>{config.contactEmail}</a>
 				</p>
-			</div>
-		</div>
+			</Contact>
+		</Container>
 	)
 }

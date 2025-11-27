@@ -1,0 +1,293 @@
+@use 'sass:map';
+@use 'functions' as *;
+@use 'mixins' as *;
+
+// RAW Clinic - Переменные с поддержкой светлой/темной темы
+
+// Базовые значения
+$base-font-size: 16px;
+$mobile-breakpoint: 600px;
+
+// Цвета светлой темы
+$colors-light: (
+  bg-primary: #f2f2f7,
+  bg-secondary: #ffffff,
+  bg-tertiary: #f8f9fa,
+  text-primary: #000000,
+  text-secondary: #1d1d1f,
+  text-tertiary: #8e8e93,
+  accent-blue: #0051d5,
+  accent-purple: #5856d6,
+  border-color: #e5e5ea,
+  shadow-color: rgba(0, 0, 0, 0.1),
+  warning-bg: #fff3cd,
+  warning-border: #ffc107,
+);
+
+// Цвета темной темы
+$colors-dark: (
+  bg-primary: #000000,
+  bg-secondary: #1c1c1e,
+  bg-tertiary: #2c2c2e,
+  text-primary: #ffffff,
+  text-secondary: #e5e5ea,
+  text-tertiary: #8e8e93,
+  accent-blue: #409cff,
+  accent-purple: #5e5ce6,
+  border-color: #38383a,
+  shadow-color: rgba(0, 0, 0, 0.4),
+  warning-bg: #3d3929,
+  warning-border: #ffc107,
+);
+
+// Spacing scale (кратно 4px)
+$spacing-scale: (
+  xs: spacing(1),
+  // 4px
+  sm: spacing(2),
+  // 8px
+  md: spacing(3),
+  // 12px
+  base: spacing(4),
+  // 16px
+  lg: spacing(5),
+  // 20px
+  xl: spacing(6),
+  // 24px
+  '2xl': spacing(8),
+  // 32px
+  '3xl': spacing(10),
+  // 40px
+  '4xl': spacing(12),
+  // 48px
+  '5xl': spacing(14),
+  // 56px
+  '6xl': spacing(16),
+  // 64px
+);
+
+// Размеры шрифтов (rem-based)
+$font-sizes: (
+  xs: rem(12px),
+  sm: rem(14px),
+  base: rem(16px),
+  md: rem(18px),
+  lg: rem(20px),
+  xl: rem(24px),
+  '2xl': rem(30px),
+  '3xl': rem(36px),
+  '4xl': rem(48px),
+);
+
+// Мобильные размеры шрифтов
+$font-sizes-mobile: (
+  sm: rem(16px),
+  md: rem(18px),
+  lg: rem(24px),
+  xl: rem(32px),
+);
+
+// Letter spacing
+$letter-spacing: (
+  tight: -0.025em,
+  normal: -0.015em,
+);
+
+// Border radius
+$border-radius: (
+  sm: 2px,
+  md: map.get($spacing-scale, sm),
+  lg: map.get($spacing-scale, md),
+  xl: map.get($spacing-scale, lg),
+  '2xl': map.get($spacing-scale, lg),
+  '3xl': map.get($spacing-scale, xl),
+);
+
+// Border widths
+$border-widths: (
+  thin: 1px,
+  medium: map.get($spacing-scale, xs),
+);
+
+// CSS переменные для светлой темы
+:root {
+  // Цвета
+  --bg-primary: #{map.get($colors-light, bg-primary)};
+  --bg-secondary: #{map.get($colors-light, bg-secondary)};
+  --bg-tertiary: #{map.get($colors-light, bg-tertiary)};
+  --text-primary: #{map.get($colors-light, text-primary)};
+  --text-secondary: #{map.get($colors-light, text-secondary)};
+  --text-tertiary: #{map.get($colors-light, text-tertiary)};
+  --accent-blue: #{map.get($colors-light, accent-blue)};
+  --accent-purple: #{map.get($colors-light, accent-purple)};
+  --border-color: #{map.get($colors-light, border-color)};
+  --shadow-color: #{map.get($colors-light, shadow-color)};
+  --warning-bg: #{map.get($colors-light, warning-bg)};
+  --warning-border: #{map.get($colors-light, warning-border)};
+
+  // Base font size
+  --font-base: #{$base-font-size};
+
+  // Spacing
+  --spacing-xs: #{map.get($spacing-scale, xs)};
+  --spacing-sm: #{map.get($spacing-scale, sm)};
+  --spacing-md: #{map.get($spacing-scale, md)};
+  --spacing-base: #{map.get($spacing-scale, base)};
+  --spacing-lg: #{map.get($spacing-scale, lg)};
+  --spacing-xl: #{map.get($spacing-scale, xl)};
+  --spacing-2xl: #{map.get($spacing-scale, '2xl')};
+  --spacing-3xl: #{map.get($spacing-scale, '3xl')};
+  --spacing-4xl: #{map.get($spacing-scale, '4xl')};
+  --spacing-5xl: #{map.get($spacing-scale, '5xl')};
+  --spacing-6xl: #{map.get($spacing-scale, '6xl')};
+
+  // Body & Container
+  --body-padding: #{map.get($spacing-scale, xl)};
+  --body-padding-mobile: #{map.get($spacing-scale, base)};
+  --container-max-width: 800px;
+  --container-padding: #{map.get($spacing-scale, '4xl')};
+  --container-padding-mobile: #{map.get($spacing-scale, xl)};
+  --container-border-radius: #{map.get($spacing-scale, xl)};
+  --container-border-radius-mobile: #{map.get($spacing-scale, lg)};
+  --container-shadow: #{shadow(
+      0,
+      map.get($spacing-scale, md),
+      map.get($spacing-scale, '4xl'),
+      0,
+      map.get($colors-light, shadow-color)
+    )};
+  --container-shadow-reduced: #{shadow(
+      0,
+      map.get($spacing-scale, xs),
+      map.get($spacing-scale, md),
+      0,
+      map.get($colors-light, shadow-color)
+    )};
+
+  // Typography - Font Sizes
+  --font-size-xs: #{map.get($font-sizes, xs)};
+  --font-size-sm: #{map.get($font-sizes, sm)};
+  --font-size-base: #{map.get($font-sizes, base)};
+  --font-size-md: #{map.get($font-sizes, md)};
+  --font-size-lg: #{map.get($font-sizes, lg)};
+  --font-size-xl: #{map.get($font-sizes, xl)};
+  --font-size-2xl: #{map.get($font-sizes, '2xl')};
+  --font-size-3xl: #{map.get($font-sizes, '3xl')};
+  --font-size-4xl: #{map.get($font-sizes, '4xl')};
+
+  // Typography - Mobile Font Sizes
+  --font-size-mobile-sm: #{map.get($font-sizes-mobile, sm)};
+  --font-size-mobile-md: #{map.get($font-sizes-mobile, md)};
+  --font-size-mobile-lg: #{map.get($font-sizes-mobile, lg)};
+  --font-size-mobile-xl: #{map.get($font-sizes-mobile, xl)};
+
+  // Typography - Letter Spacing
+  --letter-spacing-tight: #{map.get($letter-spacing, tight)};
+  --letter-spacing-normal: #{map.get($letter-spacing, normal)};
+
+  // Typography - Margins
+  --margin-h1-bottom: #{map.get($spacing-scale, md)};
+  --margin-app-name-bottom: #{map.get($spacing-scale, '3xl')};
+  --margin-last-updated-bottom: #{map.get($spacing-scale, '3xl')};
+  --margin-h2-top: #{map.get($spacing-scale, '4xl')};
+  --margin-h2-top-mobile: #{map.get($spacing-scale, '3xl')};
+  --margin-h2-bottom: #{map.get($spacing-scale, lg)};
+  --margin-h3-top: #{map.get($spacing-scale, '2xl')};
+  --margin-h3-bottom: #{map.get($spacing-scale, base)};
+  --margin-p-bottom: #{map.get($spacing-scale, lg)};
+  --margin-ul-bottom: #{map.get($spacing-scale, lg)};
+  --margin-li-bottom: #{map.get($spacing-scale, md)};
+  --margin-content-top: #{map.get($spacing-scale, xl)};
+  --margin-contact-top: #{map.get($spacing-scale, '4xl')};
+  --margin-important-y: #{map.get($spacing-scale, xl)};
+  --margin-subtitle-bottom: #{map.get($spacing-scale, '4xl')};
+  --margin-nav-bottom: #{map.get($spacing-scale, '4xl')};
+  --margin-menu-toggle-bottom: #{map.get($spacing-scale, xl)};
+
+  // Typography - Padding
+  --padding-last-updated-bottom: #{map.get($spacing-scale, xl)};
+  --padding-ul-left: #{map.get($spacing-scale, '3xl')};
+  --padding-contact: #{map.get($spacing-scale, '2xl')};
+  --padding-contact-mobile: #{map.get($spacing-scale, xl)};
+  --padding-important-x: #{map.get($spacing-scale, xl)};
+  --padding-important-y: #{map.get($spacing-scale, base)};
+  --padding-nav-bottom: #{map.get($spacing-scale, '3xl')};
+  --padding-nav-bottom-mobile: 0;
+
+  // Navigation
+  --nav-gap: #{map.get($spacing-scale, xl)};
+  --nav-gap-mobile: 0;
+  --nav-menu-gap: #{map.get($spacing-scale, xl)};
+  --nav-menu-gap-mobile: #{map.get($spacing-scale, base)};
+  --nav-link-padding-y: #{map.get($spacing-scale, base)};
+  --nav-link-padding-y-mobile: #{map.get($spacing-scale, base)};
+  --nav-link-padding-x: #{map.get($spacing-scale, '2xl')};
+  --nav-link-border-radius: #{map.get($spacing-scale, md)};
+  --nav-menu-padding: #{map.get($spacing-scale, xl)};
+  --nav-menu-border-radius: #{map.get($spacing-scale, md)};
+  --menu-toggle-padding: #{map.get($spacing-scale, sm)};
+  --menu-icon-width: #{map.get($spacing-scale, '2xl')};
+  --menu-icon-height: #{map.get($spacing-scale, base)};
+  --menu-icon-gap: #{map.get($spacing-scale, xs)};
+  --menu-icon-line-height: 2px;
+  --menu-icon-border-radius: 2px;
+
+  // Borders
+  --border-width-thin: #{map.get($border-widths, thin)};
+  --border-width-medium: #{map.get($border-widths, medium)};
+  --border-radius-sm: #{map.get($border-radius, sm)};
+  --border-radius-md: #{map.get($border-radius, md)};
+  --border-radius-lg: #{map.get($border-radius, lg)};
+  --border-radius-xl: #{map.get($border-radius, xl)};
+  --border-radius-2xl: #{map.get($border-radius, '2xl')};
+  --border-radius-3xl: #{map.get($border-radius, '3xl')};
+
+  // Shadows
+  --shadow-nav-link: #{shadow(
+      0,
+      map.get($spacing-scale, xs),
+      map.get($spacing-scale, base),
+      0,
+      map.get($colors-light, shadow-color)
+    )};
+  --shadow-nav-link-transform: translateY(-2px);
+}
+
+// Темная тема
+@include dark-theme {
+  :root {
+    --bg-primary: #{map.get($colors-dark, bg-primary)};
+    --bg-secondary: #{map.get($colors-dark, bg-secondary)};
+    --bg-tertiary: #{map.get($colors-dark, bg-tertiary)};
+    --text-primary: #{map.get($colors-dark, text-primary)};
+    --text-secondary: #{map.get($colors-dark, text-secondary)};
+    --text-tertiary: #{map.get($colors-dark, text-tertiary)};
+    --accent-blue: #{map.get($colors-dark, accent-blue)};
+    --accent-purple: #{map.get($colors-dark, accent-purple)};
+    --border-color: #{map.get($colors-dark, border-color)};
+    --shadow-color: #{map.get($colors-dark, shadow-color)};
+    --warning-bg: #{map.get($colors-dark, warning-bg)};
+    --warning-border: #{map.get($colors-dark, warning-border)};
+    --container-shadow: #{shadow(
+        0,
+        map.get($spacing-scale, md),
+        map.get($spacing-scale, '4xl'),
+        0,
+        map.get($colors-dark, shadow-color)
+      )};
+    --container-shadow-reduced: #{shadow(
+        0,
+        map.get($spacing-scale, xs),
+        map.get($spacing-scale, md),
+        0,
+        map.get($colors-dark, shadow-color)
+      )};
+    --shadow-nav-link: #{shadow(
+        0,
+        map.get($spacing-scale, xs),
+        map.get($spacing-scale, base),
+        0,
+        map.get($colors-dark, shadow-color)
+      )};
+  }
+}

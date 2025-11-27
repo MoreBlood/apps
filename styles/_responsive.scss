@@ -1,0 +1,28 @@
+@use 'mixins' as *;
+
+// Адаптивность для мобильных устройств (глобальные стили)
+
+@include mobile {
+  body {
+    padding: var(--body-padding-mobile);
+  }
+
+  h1 {
+    font-size: var(--font-size-mobile-xl);
+  }
+
+  h2 {
+    font-size: var(--font-size-mobile-lg);
+    margin-top: var(--margin-h2-top-mobile);
+  }
+
+  h3 {
+    font-size: var(--font-size-mobile-md);
+  }
+
+  p,
+  li {
+    font-size: var(--font-size-mobile-sm);
+  }
+}
+

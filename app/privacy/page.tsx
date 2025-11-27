@@ -1,11 +1,15 @@
+import AppName from '@/components/AppName'
+import Contact from '@/components/Contact'
+import Container from '@/components/Container'
+import LastUpdated from '@/components/LastUpdated'
 import { config } from '@/config'
 
 export default function Privacy() {
 	return (
-		<div className="container">
+		<Container>
 			<h1>Privacy Policy</h1>
-			<div className="app-name">{config.appName}</div>
-			<div className="last-updated">Last updated: {config.lastUpdated}</div>
+			<AppName>{config.appName}</AppName>
+			<LastUpdated>Last updated: {config.lastUpdated}</LastUpdated>
 
 			<h2>Introduction</h2>
 			<p>
@@ -69,14 +73,14 @@ export default function Privacy() {
 				complete control over your photos through iOS system settings.
 			</p>
 
-			<div className="contact">
+			<Contact>
 				<h2>Contact Us</h2>
 				<p>If you have any questions about this privacy policy, please contact us at:</p>
 				<p>
 					<strong>Email: </strong>
 					<a href={`mailto:${config.contactEmail}`}>{config.contactEmail}</a>
 				</p>
-			</div>
-		</div>
+			</Contact>
+		</Container>
 	)
 }

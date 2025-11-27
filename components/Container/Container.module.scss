@@ -1,0 +1,23 @@
+@use '../../styles/mixins' as *;
+
+.container {
+  @include container;
+
+  &.feedbackContainer {
+    background: white;
+    padding: 0;
+    padding-top: var(--spacing-4xl);
+    overflow: hidden;
+  }
+}
+
+@include mobile {
+  .container {
+    padding: var(--container-padding-mobile);
+    border-radius: var(--container-border-radius-mobile);
+
+    &.feedbackContainer {
+      padding-top: 0;
+    }
+  }
+}

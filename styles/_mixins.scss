@@ -1,0 +1,75 @@
+// SCSS миксины для повторяющихся паттернов
+
+// Медиа-запрос для мобильных устройств
+@mixin mobile {
+  @media (max-width: 600px) {
+    @content;
+  }
+}
+
+// Медиа-запрос для темной темы
+@mixin dark-theme {
+  @media (prefers-color-scheme: dark) {
+    @content;
+  }
+}
+
+// Медиа-запрос для уменьшенной прозрачности
+@mixin reduced-transparency {
+  @media (prefers-reduced-transparency: reduce) {
+    @content;
+  }
+}
+
+// Медиа-запрос для уменьшенной анимации
+@mixin reduced-motion {
+  @media (prefers-reduced-motion: reduce) {
+    @content;
+  }
+}
+
+// Сброс стилей кнопки
+@mixin button-reset {
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+}
+
+// Плавный переход
+@mixin transition($properties: all, $duration: 0.2s, $easing: ease) {
+  transition: $properties $duration $easing;
+}
+
+// Стили для ссылок
+@mixin link-styles {
+  color: var(--accent-blue);
+  text-decoration: none;
+  @include transition(opacity);
+
+  &:hover {
+    opacity: 0.7;
+  }
+
+  &:active {
+    opacity: 0.5;
+  }
+}
+
+// Стили для контейнера
+@mixin container {
+  max-width: var(--container-max-width);
+  margin: 0 auto;
+  background-color: var(--bg-secondary);
+  padding: var(--container-padding);
+  border-radius: var(--container-border-radius);
+  box-shadow: var(--container-shadow);
+}
+
+// Стили для карточки/блока
+@mixin card($bg: var(--bg-tertiary), $padding: var(--padding-contact)) {
+  background-color: $bg;
+  padding: $padding;
+  border-radius: var(--border-radius-2xl);
+  border: var(--border-width-thin) solid var(--border-color);
+}

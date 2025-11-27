@@ -1,12 +1,16 @@
+import Contact from '@/components/Contact'
+import Container from '@/components/Container'
+import Content from '@/components/Content'
+import Subtitle from '@/components/Subtitle'
 import { config } from '@/config'
 
 export default function Home() {
 	return (
-		<div className="container">
+		<Container>
 			<h1>{config.appName}</h1>
-			<p className="subtitle">Professional RAW photo editing for iOS</p>
+			<Subtitle>Professional RAW photo editing for iOS</Subtitle>
 
-			<div className="content">
+			<Content>
 				<h2>About</h2>
 				<p>
 					{config.appName} is a powerful mobile application for editing RAW photo files directly on your iOS device. All
@@ -21,15 +25,15 @@ export default function Home() {
 					<li>Save edited photos to your library</li>
 				</ul>
 
-				<div className="contact">
+				<Contact>
 					<h2>Contact Us</h2>
 					<p>If you have any questions, please contact us at:</p>
 					<p>
 						<strong>Email: </strong>
 						<a href={`mailto:${config.contactEmail}`}>{config.contactEmail}</a>
 					</p>
-				</div>
-			</div>
-		</div>
+				</Contact>
+			</Content>
+		</Container>
 	)
 }
