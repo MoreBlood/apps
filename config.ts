@@ -45,7 +45,7 @@ const apps: AppConfig[] = [
 		appName: 'AQI Sense',
 		tagline: 'AQI Sense is an iOS app for checking air quality near you and around the world.',
 		description:
-			'AQI Sense shows live AQI and pollutant levels from WAQI, Sensor.Community, and OpenSenseMap, so you can pick the data source you prefer.\n\nFeed — your saved stations and nearby ones in one list; pull to refresh for the latest readings.\n\nMap — stations on a map with clustering; tap a marker to open station details.\n\nStation details — current AQI, breakdown by pollutant (PM2.5, PM10, O₃, NO₂, etc.), multi-day forecast (O₃, PM10, PM25, UVI), and a small location map.\n\nSearch by place or keyword to find and favorite stations. In Settings you choose the data provider and the AQI scale: US EPA, China (HJ 633-2012), or European CAQI. Built with SwiftUI and SwiftData; first run includes a short onboarding.',
+			'AQI Sense shows live AQI and pollutant levels from WAQI, Sensor.Community, and OpenSenseMap. Feed with saved and nearby stations, map view with clustering, station details with forecast. Choose data provider and AQI scale (US EPA, China, European CAQI) in Settings.',
 		contactEmail: 'artihovich.it+aqisense@gmail.com',
 		lastUpdated: 'February 2026',
 		feedbackFormUrl:

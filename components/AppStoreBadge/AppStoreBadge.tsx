@@ -1,3 +1,5 @@
+import NextImage from 'next/image'
+
 interface AppStoreBadgeProps {
 	storeLink: string
 }
@@ -11,7 +13,7 @@ export default function AppStoreBadge({ storeLink }: AppStoreBadgeProps) {
 			aria-label="Download on the App Store"
 			style={{ display: 'inline-block', lineHeight: 0 }}
 		>
-			<img
+			<NextImage
 				src="/app-store.svg"
 				alt="Download on the App Store"
 				width={135}
