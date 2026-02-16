@@ -8,6 +8,7 @@ import styles from './Navigation.module.scss'
 export default function Navigation() {
 	const pathname = usePathname()
 	const [isMenuOpen, setIsMenuOpen] = useState(false)
+	const appSlug = pathname === '/' ? null : (pathname.split('/').filter(Boolean)[0] ?? null)
 
 	const toggleMenu = () => {
 		setIsMenuOpen(!isMenuOpen)
@@ -36,27 +37,38 @@ export default function Navigation() {
 				<Link href="/" className={`${styles.navLink} ${pathname === '/' ? styles.active : ''}`} onClick={closeMenu}>
 					Home
 				</Link>
-				<Link
-					href="/privacy"
-					className={`${styles.navLink} ${pathname === '/privacy/' ? styles.active : ''}`}
-					onClick={closeMenu}
-				>
-					Privacy Policy
-				</Link>
-				<Link
-					href="/terms"
-					className={`${styles.navLink} ${pathname === '/terms/' ? styles.active : ''}`}
-					onClick={closeMenu}
-				>
-					Terms of Service
-				</Link>
-				<Link
-					href="/feedback"
-					className={`${styles.navLink} ${pathname === '/feedback/' ? styles.active : ''}`}
-					onClick={closeMenu}
-				>
-					Feedback
-				</Link>
+				{appSlug && (
+					<>
+						<Link
+							href={`/${appSlug}`}
+							className={`${styles.navLink} ${pathname === `/${appSlug}` ? styles.active : ''}`}
+							onClick={closeMenu}
+						>
+							Overview
+						</Link>
+						<Link
+							href={`/${appSlug}/privacy`}
+							className={`${styles.navLink} ${pathname === `/${appSlug}/privacy` ? styles.active : ''}`}
+							onClick={closeMenu}
+						>
+							Privacy Policy
+						</Link>
+						<Link
+							href={`/${appSlug}/terms`}
+							className={`${styles.navLink} ${pathname === `/${appSlug}/terms` ? styles.active : ''}`}
+							onClick={closeMenu}
+						>
+							Terms of Service
+						</Link>
+						<Link
+							href={`/${appSlug}/feedback`}
+							className={`${styles.navLink} ${pathname === `/${appSlug}/feedback` ? styles.active : ''}`}
+							onClick={closeMenu}
+						>
+							Feedback
+						</Link>
+					</>
+				)}
 			</nav>
 		</div>
 	)
