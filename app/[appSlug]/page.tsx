@@ -1,10 +1,17 @@
+import NextImage from 'next/image'
+import NextLink from 'next/link'
 import { notFound } from 'next/navigation'
-import AppStoreBadge from '@/components/AppStoreBadge'
-import Contact from '@/components/Contact'
-import Container from '@/components/Container'
-import Content from '@/components/Content'
+import {
+	Box,
+	Container,
+	Heading,
+	Link,
+	Section,
+	Strong,
+	Text
+} from '@radix-ui/themes'
 import DescriptionText from '@/components/DescriptionText'
-import Subtitle from '@/components/Subtitle'
+import { assetPath } from '@/lib/basePath'
 import { getAppBySlug } from '@/config'
 
 export default async function AppLanding({ params }: { params: Promise<{ appSlug: string }> }) {
@@ -13,28 +20,58 @@ export default async function AppLanding({ params }: { params: Promise<{ appSlug
 	if (!app) notFound()
 
 	return (
-		<Container>
-			<h1>{app.appName}</h1>
-			<Subtitle>{app.tagline}</Subtitle>
+		<Container size="2">
+			<Heading size="8" mb="2" as="h1">
+				{app.appName}
+			</Heading>
+			<Text size="3" color="gray" mb="4" as="p">
+				{app.tagline}
+			</Text>
 			{app.storeLink && (
-				<p style={{ marginTop: 'var(--spacing-xl)', marginBottom: 0 }}>
-					<AppStoreBadge storeLink={app.storeLink} />
-				</p>
+				<Box mb="4">
+					<Link asChild>
+						<NextLink
+							href={app.storeLink}
+							target="_blank"
+							rel="noopener noreferrer"
+							aria-label="Download on the App Store"
+							style={{ display: 'inline-block', lineHeight: 0 }}
+						>
+							<NextImage
+								src={assetPath('/app-store.svg')}
+								alt="Download on the App Store"
+								width={135}
+								height={40}
+								style={{ height: 40, width: 'auto' }}
+							/>
+						</NextLink>
+					</Link>
+				</Box>
 			)}
 
-			<Content>
-				<h2>About</h2>
-				{app.DescriptionContent ? <app.DescriptionContent app={app} /> : <DescriptionText text={app.description} />}
+			<Section size="2">
+				<Heading size="6" mb="3" as="h2">
+					About
+				</Heading>
+				{app.DescriptionContent ? (
+					<app.DescriptionContent app={app} />
+				) : (
+					<DescriptionText text={app.description} />
+				)}
 
-				<Contact>
-					<h2>Contact Us</h2>
-					<p>If you have any questions, please contact us at:</p>
-					<p>
-						<strong>Email: </strong>
-						<a href={`mailto:${app.contactEmail}`}>{app.contactEmail}</a>
-					</p>
-				</Contact>
-			</Content>
+				<Box mt="6" pt="6" style={{ borderTop: '1px solid var(--gray-a6)' }}>
+					<Heading size="6" mb="3" as="h2">
+						Contact Us
+					</Heading>
+					<Text as="p" mb="2">
+						If you have any questions, please contact us at:
+					</Text>
+					<Text as="p">
+						<Strong>Email: </Strong>
+						<Link href={`mailto:${app.contactEmail}`}>{app.contactEmail}</Link>
+					</Text>
+				</Box>
+			</Section>
 		</Container>
 	)
 }

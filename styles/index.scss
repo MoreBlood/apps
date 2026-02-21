@@ -1,12 +1,6 @@
-// RAW Clinic - Главный файл стилей с поддержкой светлой/темной темы
-
-// Импорт модулей в правильном порядке
-@use 'functions';
-@use 'variables';
-@use 'mixins';
-@use 'reset';
-@use 'typography';
-@use 'layout';
-@use 'navigation';
-@use 'responsive';
-@use 'accessibility';
+// Global styles: Radix Themes CSS is imported in app/layout.tsx.
+// Theme switcher: no light border in dark mode
+[data-theme-switcher] .rt-SegmentedControlRoot {
+	border-color: var(--gray-a6);
+	box-shadow: none;
+}

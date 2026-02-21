@@ -1,6 +1,5 @@
 import { notFound } from 'next/navigation'
-import Container from '@/components/Container'
-import styles from '@/components/Container/Container.module.scss'
+import { Box, Container } from '@radix-ui/themes'
 import { getAppBySlug } from '@/config'
 
 export default async function Feedback({ params }: { params: Promise<{ appSlug: string }> }) {
@@ -9,18 +8,18 @@ export default async function Feedback({ params }: { params: Promise<{ appSlug: 
 	if (!app) notFound()
 
 	return (
-		<Container className={styles.feedbackContainer}>
-			<iframe
-				src={app.feedbackFormUrl}
-				width="100%"
-				height="1480px"
-				frameBorder="0"
-				marginHeight={0}
-				marginWidth={0}
-				title={`${app.appName} Feedback Form`}
-			>
-				Loading…
-			</iframe>
+		<Container size="2">
+			<Box pt="6" style={{ overflow: 'hidden' }}>
+				<iframe
+					src={app.feedbackFormUrl}
+					width="100%"
+					height="1480px"
+					frameBorder={0}
+					title={`${app.appName} Feedback Form`}
+				>
+					Loading…
+				</iframe>
+			</Box>
 		</Container>
 	)
 }
