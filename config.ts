@@ -8,6 +8,35 @@ export type PrivacyContentProps = { app: AppConfig }
 export type TermsContentProps = { app: AppConfig; appSlug: string }
 export type DescriptionContentProps = { app: AppConfig }
 
+/** Radix Theme accent color name (used for Theme accentColor prop; custom hex via data-app-theme in CSS). */
+export type RadixAccentColor =
+	| 'gray'
+	| 'gold'
+	| 'bronze'
+	| 'brown'
+	| 'yellow'
+	| 'amber'
+	| 'orange'
+	| 'tomato'
+	| 'red'
+	| 'ruby'
+	| 'crimson'
+	| 'pink'
+	| 'plum'
+	| 'purple'
+	| 'violet'
+	| 'iris'
+	| 'indigo'
+	| 'blue'
+	| 'cyan'
+	| 'teal'
+	| 'jade'
+	| 'green'
+	| 'grass'
+	| 'lime'
+	| 'mint'
+	| 'sky'
+
 export type AppConfig = {
 	slug: string
 	appName: string
@@ -16,9 +45,11 @@ export type AppConfig = {
 	contactEmail: string
 	lastUpdated: string
 	feedbackFormUrl: string
+	/** Radix Theme accent color for this app's routes. */
+	accentColor: RadixAccentColor
 	/** App Store URL. Optional. */
 	storeLink?: string
-	/** Custom description (About) content. Omit to use default (description string + optional features). */
+	/** Custom description (About) content. Omit to use default layout. */
 	DescriptionContent?: ComponentType<DescriptionContentProps>
 	/** Custom privacy policy content. Omit to use default layout. */
 	PrivacyContent?: ComponentType<PrivacyContentProps>
@@ -38,6 +69,7 @@ const apps: AppConfig[] = [
 		feedbackFormUrl:
 			'https://docs.google.com/forms/d/e/1FAIpQLSfddrmPd8al4Gnbs8gezfCQ-zna6U1ZIE2tpBH1WWLHwxoxqg/viewform?embedded=true',
 		storeLink: 'https://apps.apple.com/app/raw-clinic/id6755300857',
+		accentColor: 'red',
 		DescriptionContent: RawClinicDescriptionContent
 	},
 	{
@@ -50,6 +82,7 @@ const apps: AppConfig[] = [
 		lastUpdated: 'February 2026',
 		feedbackFormUrl:
 			'https://docs.google.com/forms/d/e/1FAIpQLSdU8Zo2oFgkXz8I3weouoeViQzUI-Sig2GgbTDVIjhiyV1U4Q/viewform?usp=publish-editor',
+		accentColor: 'green',
 		DescriptionContent: AQISenseDescriptionContent,
 		PrivacyContent: AQISensePrivacyContent,
 		TermsContent: AQISenseTermsContent
