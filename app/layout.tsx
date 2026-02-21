@@ -17,6 +17,9 @@ const canonicalBase = `${siteUrl.replace(/\/$/, '')}${basePath ? `/${basePath.re
 
 export const metadata: Metadata = {
 	metadataBase: new URL(siteUrl),
+	verification: {
+		google: '9OhCZhfOt3p9_KR27LiHqmUcz0QLXssaHC9NKnjjMWY'
+	},
 	title: siteName,
 	description: `Mobile applications by ${siteName}.`,
 	openGraph: {
