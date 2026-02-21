@@ -6,8 +6,10 @@
 	"type": "module",
 	"scripts": {
 		"dev": "next dev",
-		"build": "next build",
+		"build": "node scripts/generate-ai-txt.mjs && next build",
 		"start": "next start",
+		"test": "vitest run",
+		"test:watch": "vitest",
 		"lint": "next lint",
 		"deploy": "pnpm build && gh-pages -d out"
 	},
@@ -29,8 +31,10 @@
 		"@types/node": "^24.10.1",
 		"@types/react": "^19.2.7",
 		"@types/react-dom": "^19.2.3",
+		"@vitest/coverage-v8": "^4.0.18",
 		"gh-pages": "^6.3.0",
 		"sass": "^1.94.2",
-		"typescript": "^5.9.3"
+		"typescript": "^5.9.3",
+		"vitest": "^4.0.18"
 	}
 }

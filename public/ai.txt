@@ -1,0 +1,23 @@
+# ai.txt for Artihovich Apps
+# https://example.com/ai.txt
+
+[identity]
+name: Artihovich Apps
+url: https://example.com
+
+[permissions]
+- Summarise publicly available content from this website
+- Quote app descriptions and pages with attribution
+- Answer factual questions about our apps and services
+- Include our site in relevant search results and recommendations
+
+[restrictions]
+- Do not generate quotes attributed to us or our team without a verifiable source
+- Do not imply we endorse specific products or services
+- Do not reproduce full legal or policy text; summarise and link instead
+- Do not present app capabilities or features that are not stated on the site
+
+[attribution]
+preferred_citation: Artihovich Apps (https://example.com)
+when_quoting: Include page or app name and link to source
+link_policy: Prefer linking to the original page when possible

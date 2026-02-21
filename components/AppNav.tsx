@@ -87,8 +87,9 @@ export default function AppNav() {
 	}
 
 	return (
-		<Box mb="6" pb="3" style={{ borderBottom: '1px solid var(--gray-a6)' }}>
-			<Flex gap="4" wrap="wrap" align="center" justify="between">
+		<Box asChild mb="6" pb="3" style={{ borderBottom: '1px solid var(--gray-a6)' }}>
+			<nav aria-label="Main navigation">
+				<Flex gap="4" wrap="wrap" align="center" justify="between">
 				<Box display={{ initial: 'none', sm: 'block' }} style={{ minWidth: 0, flex: '1 1 auto' }}>
 					<SegmentedControl.Root value={navValue} onValueChange={(v) => v && router.push(v)} size="2">
 						{items.map(({ href, label }) => (
@@ -145,6 +146,7 @@ export default function AppNav() {
 					<ThemeSwitcher mounted={mounted} />
 				</Box>
 			</Flex>
+			</nav>
 		</Box>
 	)
 }

@@ -1,6 +1,21 @@
+import type { Metadata } from 'next'
 import { notFound } from 'next/navigation'
-import { Box, Container } from '@radix-ui/themes'
+import { Box, Container, Text } from '@radix-ui/themes'
 import { getAppBySlug } from '@/config'
+
+export async function generateMetadata({
+	params
+}: {
+	params: Promise<{ appSlug: string }>
+}): Promise<Metadata> {
+	const { appSlug } = await params
+	const app = getAppBySlug(appSlug)
+	if (!app) return { title: 'App not found' }
+	return {
+		title: `Feedback - ${app.appName}`,
+		description: `Send feedback for ${app.appName}. ${app.tagline}.`
+	}
+}
 
 export default async function Feedback({ params }: { params: Promise<{ appSlug: string }> }) {
 	const { appSlug } = await params
@@ -9,7 +24,10 @@ export default async function Feedback({ params }: { params: Promise<{ appSlug: 
 
 	return (
 		<Container size="2">
-			<Box pt="6" style={{ overflow: 'hidden' }}>
+			<Text as="p" size="2" color="gray" mb="3">
+				Feedback form opens below.
+			</Text>
+			<Box pt="2" style={{ overflow: 'hidden' }}>
 				<iframe
 					src={app.feedbackFormUrl}
 					width="100%"

@@ -12,9 +12,25 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 	if (!app) {
 		return { title: 'App not found' }
 	}
+	const title = app.appName
+	const description = `${app.appName} - ${app.tagline}. ${app.description}`
 	return {
-		title: app.appName,
-		description: `${app.appName} - ${app.tagline}. ${app.description}`
+		title,
+		description,
+		openGraph: {
+			title,
+			description,
+			type: 'website',
+			locale: 'en'
+		},
+		twitter: {
+			card: 'summary',
+			title,
+			description
+		},
+		alternates: {
+			canonical: `/${appSlug}/`
+		}
 	}
 }
 

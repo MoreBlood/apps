@@ -1,4 +1,21 @@
 // Global styles: Radix Themes CSS is imported in app/layout.tsx.
+
+// Skip link: visible only when focused
+.skip-link {
+	position: absolute;
+	left: -9999px;
+	z-index: 9999;
+	padding: var(--space-2) var(--space-4);
+	background: var(--accent-9);
+	color: white;
+	border-radius: var(--radius-2);
+	font-weight: 500;
+	&:focus {
+		left: var(--space-4);
+		top: var(--space-4);
+	}
+}
+
 // Theme switcher: no light border in dark mode
 [data-theme-switcher] .rt-SegmentedControlRoot {
 	border-color: var(--gray-a6);
