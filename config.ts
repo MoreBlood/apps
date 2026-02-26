@@ -82,6 +82,7 @@ const apps: AppConfig[] = [
 		lastUpdated: 'February 2026',
 		feedbackFormUrl:
 			'https://docs.google.com/forms/d/e/1FAIpQLSdU8Zo2oFgkXz8I3weouoeViQzUI-Sig2GgbTDVIjhiyV1U4Q/viewform?usp=publish-editor',
+  storeLink: 'https://apps.apple.com/us/app/aqi-sense/id6759257996',
 		accentColor: 'green',
 		DescriptionContent: AQISenseDescriptionContent,
 		PrivacyContent: AQISensePrivacyContent,
