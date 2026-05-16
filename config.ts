@@ -3,6 +3,8 @@ import AQISenseDescriptionContent from '@/components/descriptions/AQISenseDescri
 import RawClinicDescriptionContent from '@/components/descriptions/RawClinicDescriptionContent'
 import AQISensePrivacyContent from '@/components/legal/AQISensePrivacyContent'
 import AQISenseTermsContent from '@/components/legal/AQISenseTermsContent'
+import RawClinicPrivacyContent from '@/components/legal/RawClinicPrivacyContent'
+import RawClinicTermsContent from '@/components/legal/RawClinicTermsContent'
 
 export type PrivacyContentProps = { app: AppConfig }
 export type TermsContentProps = { app: AppConfig; appSlug: string }
@@ -65,12 +67,14 @@ const apps: AppConfig[] = [
 		description:
 			'RAW Clinic is a powerful mobile application for editing RAW photo files directly on your iOS device. All processing happens locally on your device, ensuring your photos remain private and secure.',
 		contactEmail: 'artihovich.it+rawclinic@gmail.com',
-		lastUpdated: 'November 26, 2025',
+		lastUpdated: 'May 17, 2026',
 		feedbackFormUrl:
 			'https://docs.google.com/forms/d/e/1FAIpQLSfddrmPd8al4Gnbs8gezfCQ-zna6U1ZIE2tpBH1WWLHwxoxqg/viewform?embedded=true',
 		storeLink: 'https://apps.apple.com/app/raw-clinic/id6755300857',
 		accentColor: 'red',
-		DescriptionContent: RawClinicDescriptionContent
+		DescriptionContent: RawClinicDescriptionContent,
+		PrivacyContent: RawClinicPrivacyContent,
+		TermsContent: RawClinicTermsContent
 	},
 	{
 		slug: 'aqi-sense',
