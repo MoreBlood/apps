@@ -72,10 +72,18 @@
 
 .feedback-form__categories {
 	width: 100%;
+	min-width: 0;
+
+	.rt-RadioCardsItem {
+		justify-content: flex-start;
+		align-items: flex-start;
+		text-align: left;
+	}
 }
 
 .feedback-form__category {
 	min-width: 0;
+	width: 100%;
 	text-align: left;
 	cursor: pointer;
 	transition:
@@ -98,16 +106,40 @@
 	display: inline-flex;
 	align-items: center;
 	justify-content: center;
+	flex-shrink: 0;
 	width: 1.75rem;
 	height: 1.75rem;
 	border-radius: var(--radius-2);
-	background: var(--accent-a3);
-	color: var(--accent-11);
+	border: 1px solid transparent;
 
 	svg {
 		width: 1rem;
 		height: 1rem;
 	}
+}
+
+.feedback-form__category-icon--bug {
+	background: var(--red-a3);
+	color: var(--red-11);
+	border-color: var(--red-a6);
+}
+
+.feedback-form__category-icon--feature {
+	background: var(--amber-a3);
+	color: var(--amber-11);
+	border-color: var(--amber-a6);
+}
+
+.feedback-form__category-icon--question {
+	background: var(--blue-a3);
+	color: var(--blue-11);
+	border-color: var(--blue-a6);
+}
+
+.feedback-form__category-icon--other {
+	background: var(--gray-a3);
+	color: var(--gray-11);
+	border-color: var(--gray-a6);
 }
 
 .feedback-form__actions {

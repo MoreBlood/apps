@@ -10,14 +10,57 @@
 	width: 2rem;
 	height: 2rem;
 	border-radius: var(--radius-2);
-	background: var(--accent-a4);
-	color: var(--accent-11);
-	border: 1px solid var(--accent-a6);
+	border: 1px solid transparent;
+	background: var(--gray-a3);
+	color: var(--gray-11);
+	border-color: var(--gray-a6);
 
 	svg {
 		width: 1.1rem;
 		height: 1.1rem;
 	}
+}
+
+.faq-section__icon--getting-started {
+	background: var(--jade-a3);
+	color: var(--jade-11);
+	border-color: var(--jade-a6);
+}
+
+.faq-section__icon--editing {
+	background: var(--violet-a3);
+	color: var(--violet-11);
+	border-color: var(--violet-a6);
+}
+
+.faq-section__icon--privacy {
+	background: var(--indigo-a3);
+	color: var(--indigo-11);
+	border-color: var(--indigo-a6);
+}
+
+.faq-section__icon--troubleshooting {
+	background: var(--red-a3);
+	color: var(--red-11);
+	border-color: var(--red-a6);
+}
+
+.faq-section__icon--data {
+	background: var(--cyan-a3);
+	color: var(--cyan-11);
+	border-color: var(--cyan-a6);
+}
+
+.faq-section__icon--providers-scales {
+	background: var(--orange-a3);
+	color: var(--orange-11);
+	border-color: var(--orange-a6);
+}
+
+.faq-section__icon--features {
+	background: var(--purple-a3);
+	color: var(--purple-11);
+	border-color: var(--purple-a6);
 }
 
 .faq-list {

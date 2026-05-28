@@ -176,7 +176,10 @@ export default function FeedbackForm({ appSlug, appName, contactEmail }: Props) 
 							<RadioCards.Item key={category} value={category} className="feedback-form__category">
 								<Flex direction="column" gap="1" align="start">
 									<Flex align="center" gap="2">
-										<span className="feedback-form__category-icon" aria-hidden>
+										<span
+											className={`feedback-form__category-icon feedback-form__category-icon--${category}`}
+											aria-hidden
+										>
 											<Icon />
 										</span>
 										<Text weight="medium">{meta.label}</Text>

@@ -73,7 +73,7 @@ export default function FeedbackEmailFallback({ appName, contactEmail, payload, 
 						Send by email
 					</Link>
 				</Button>
-				<Text as="p" size="2" color="gray" align="center">
+				<Text as="p" size="2" color="gray">
 					To{' '}
 					<Link href={`mailto:${contactEmail}`} size="2">
 						{contactEmail}
@@ -102,7 +102,7 @@ export default function FeedbackEmailFallback({ appName, contactEmail, payload, 
 				</Box>
 			</Box>
 
-			<Flex justify="center">
+			<Flex justify="start">
 				<Button type="button" variant="outline" size="2" color="gray" onClick={onRetry}>
 					Try the online form again
 				</Button>

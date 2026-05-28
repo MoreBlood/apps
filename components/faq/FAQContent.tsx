@@ -16,7 +16,7 @@ function FAQSectionBlock({ section }: { section: FAQSection }) {
 			<section aria-labelledby={`faq-${section.id}`}>
 				<Heading size="5" mb="3" as="h2" id={`faq-${section.id}`}>
 					<Flex align="center" gap="2" className="faq-section__heading">
-						<span className="faq-section__icon" aria-hidden>
+						<span className={`faq-section__icon faq-section__icon--${section.id}`} aria-hidden>
 							<SectionIcon />
 						</span>
 						{section.title}
