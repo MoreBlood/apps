@@ -105,38 +105,47 @@ export const landingBySlug: Record<string, AppLandingConfig> = {
 			lead: 'A deliberate toolset — no bloat, no subscriptions for core editing. Just the controls RAW shooters reach for first.',
 			items: [
 				{
+					icon: 'upload',
 					title: 'RAW import',
 					description: 'Open RAW files from your library and start editing in seconds.'
 				},
 				{
+					icon: 'sun',
 					title: 'Exposure & tone',
 					description: 'Balance brightness, contrast, and tonal range with precision.'
 				},
 				{
+					icon: 'mixer',
 					title: 'White balance',
 					description: 'Correct color temperature and tint for natural skin and skies.'
 				},
 				{
+					icon: 'curves',
 					title: 'Curves',
 					description: 'Sculpt light and color with point-based curve control.'
 				},
 				{
+					icon: 'layers',
 					title: 'Detail recovery',
 					description: 'Pull back information in shadows and highlights.'
 				},
 				{
+					icon: 'color-wheel',
 					title: 'Saturation & vibrance',
 					description: 'Control color intensity without crushing skin tones.'
 				},
 				{
+					icon: 'history',
 					title: 'Nondestructive edits',
 					description: 'Your original RAW remains the source of truth.'
 				},
 				{
+					icon: 'device',
 					title: 'Local processing',
 					description: 'The edit pipeline runs on your device only.'
 				},
 				{
+					icon: 'export',
 					title: 'Photos export',
 					description: 'Deliver finished images back to your library.'
 				}
@@ -269,38 +278,47 @@ export const landingBySlug: Record<string, AppLandingConfig> = {
 			lead: 'Community sensors and global indices together — interpreted the way your region expects.',
 			items: [
 				{
+					icon: 'globe',
 					title: 'WAQI',
 					description: 'World Air Quality Index coverage for cities worldwide.'
 				},
 				{
+					icon: 'sensor',
 					title: 'Sensor.Community',
 					description: 'Hyperlocal community sensor network readings.'
 				},
 				{
+					icon: 'pin',
 					title: 'OpenSenseMap',
 					description: 'Citizen science stations from the open sensor map.'
 				},
 				{
+					icon: 'star',
 					title: 'US EPA scale',
 					description: 'Categories familiar across the United States.'
 				},
 				{
+					icon: 'scale',
 					title: 'China HJ 633',
 					description: 'National standard scale for China.'
 				},
 				{
+					icon: 'globe',
 					title: 'European CAQI',
 					description: 'Common Air Quality Index for Europe.'
 				},
 				{
+					icon: 'search',
 					title: 'Search',
 					description: 'Find stations by place or keyword.'
 				},
 				{
+					icon: 'chart',
 					title: 'Forecasts',
 					description: 'Plan ahead with provider-supplied outlooks.'
 				},
 				{
+					icon: 'heart',
 					title: 'Favorites',
 					description: 'Pin stations you check every day.'
 				}

@@ -1,36 +1,113 @@
+'use client'
+
+import type { KeyboardEvent, MouseEvent } from 'react'
 import clsx from 'clsx'
+import { DeviceScreen, IPadMockup, IPhoneMockup } from '@/components/device'
+import { useLandingStageScale } from '@/hooks/useLandingStageScale'
+import { getLandingStageScreenshots } from '@/lib/app-screenshot'
+import { getLandingStageLayoutKey } from '@/lib/landing-stage-scale'
+import { landingStageId } from '@/lib/landing-stage-tuner'
 import type { LandingFeatureVisual } from '@/types/landing'
+import LandingStageDebugPanel from './LandingStageDebugPanel'
+import {
+	createInitialOverride,
+	useLandingStageTunerStage
+} from './LandingStageTunerContext'
 
 type Variant = 'hero' | 'compact' | LandingFeatureVisual
 
 type Props = {
+	appSlug: string
+	appName: string
 	variant?: Variant
 	className?: string
 }
 
-export default function LandingDeviceStage({ variant = 'hero', className }: Props) {
+export default function LandingDeviceStage({
+	appSlug,
+	appName,
+	variant = 'hero',
+	className
+}: Props) {
+	const stageId = landingStageId(appSlug, variant)
+	const { tuner, enabled: tunerEnabled, isActive } = useLandingStageTunerStage(appSlug, variant)
+	const { stageRef, debugReport } = useLandingStageScale(variant, { stageId })
+	const { phone: phoneScreenshot, phoneSecondary, tablet: tabletScreenshot } =
+		getLandingStageScreenshots(appSlug, variant)
+
+	const handleStageClick = (e: MouseEvent | KeyboardEvent) => {
+		e.stopPropagation()
+		if (!tunerEnabled || !tuner?.enabled || !stageRef.current) return
+		const { width } = stageRef.current.getBoundingClientRect()
+		const layoutKey = getLandingStageLayoutKey(variant, width)
+		const existing = tuner.getOverride(stageId)
+		tuner.open(
+			{ stageId, variant, layoutKey, appSlug },
+			existing ?? createInitialOverride(layoutKey)
+		)
+	}
+
 	return (
-		<div
-			className={clsx(
-				'landing-stage',
-				variant === 'hero' && 'landing-stage--hero',
-				variant === 'compact' && 'landing-stage--compact',
-				variant !== 'hero' && variant !== 'compact' && `landing-stage--${variant}`,
-				className
-			)}
-			aria-hidden
-		>
+		<>
+			<div
+				ref={stageRef}
+				className={clsx(
+					'landing-stage',
+					(variant === 'hero' || variant === 'compact') && `landing-stage--${variant}`,
+					variant !== 'hero' && variant !== 'compact' && `landing-stage--${variant}`,
+					tunerEnabled && 'landing-stage--tuner-target',
+					isActive && 'landing-stage--tuner-active',
+					className
+				)}
+				aria-hidden={!tunerEnabled}
+				onClick={tunerEnabled ? handleStageClick : undefined}
+				onKeyDown={
+					tunerEnabled
+						? (e) => {
+								if (e.key === 'Enter' || e.key === ' ') {
+									e.preventDefault()
+									handleStageClick()
+								}
+							}
+						: undefined
+				}
+				role={tunerEnabled ? 'button' : undefined}
+				tabIndex={tunerEnabled ? 0 : undefined}
+			>
 			<div className="landing-stage__glow" />
-			<div className="landing-stage__tablet">
-				<div className="landing-stage__screen landing-stage__screen--tablet" />
+			<div className="landing-stage__cluster">
+				<div className="landing-stage__device landing-stage__device--ipad">
+					<IPadMockup color="black" wrapperClassName="landing-stage__mockup">
+						<DeviceScreen
+							src={tabletScreenshot}
+							alt={`${appName} on iPad`}
+							className="landing-stage__screen landing-stage__screen--tablet"
+						/>
+					</IPadMockup>
+				</div>
+				<div className="landing-stage__device landing-stage__device--iphone">
+					<IPhoneMockup wrapperClassName="landing-stage__mockup">
+						<DeviceScreen
+							src={phoneScreenshot}
+							alt={`${appName} screenshot`}
+							className="landing-stage__screen landing-stage__screen--phone"
+						/>
+					</IPhoneMockup>
+				</div>
+				{variant === 'hero' && (
+					<div className="landing-stage__device landing-stage__device--iphone landing-stage__device--secondary">
+						<IPhoneMockup wrapperClassName="landing-stage__mockup">
+							<DeviceScreen
+								src={phoneSecondary ?? phoneScreenshot}
+								alt=""
+								className="landing-stage__screen landing-stage__screen--phone landing-stage__screen--alt"
+							/>
+						</IPhoneMockup>
+					</div>
+				)}
 			</div>
-			<div className="landing-stage__phone">
-				<div className="landing-stage__screen landing-stage__screen--phone" />
-				<div className="landing-stage__island" />
 			</div>
-			<div className="landing-stage__phone landing-stage__phone--secondary">
-				<div className="landing-stage__screen landing-stage__screen--phone landing-stage__screen--alt" />
-			</div>
-		</div>
+			{debugReport ? <LandingStageDebugPanel text={debugReport} /> : null}
+		</>
 	)
 }

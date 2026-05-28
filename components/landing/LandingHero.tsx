@@ -47,7 +47,12 @@ export default function LandingHero({ app, landing }: Props) {
 					</ul>
 				</LandingHeroItem>
 				<LandingHeroItem>
-					<LandingDeviceStage variant="hero" className="landing-hero__stage" />
+					<LandingDeviceStage
+						appSlug={app.slug}
+						appName={app.appName}
+						variant="hero"
+						className="landing-hero__stage"
+					/>
 				</LandingHeroItem>
 			</LandingHeroReveal>
 		</section>

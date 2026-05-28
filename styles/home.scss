@@ -182,20 +182,9 @@
 		width: 3.5rem;
 		height: 3.5rem;
 		border-radius: 0.9rem;
-		display: flex;
-		align-items: center;
-		justify-content: center;
+		overflow: hidden;
 		margin-bottom: 1rem;
-		font-size: 1.125rem;
-		font-weight: 700;
-		color: white;
-		background: linear-gradient(
-			145deg,
-			var(--card-accent-10, var(--accent-10)),
-			var(--card-accent-8, var(--accent-8))
-		);
 		box-shadow: 0 8px 20px -6px var(--card-accent-a8, var(--accent-a8));
-		border: 1px solid rgb(255 255 255 / 0.2);
 	}
 
 	&__eyebrow {
@@ -243,30 +232,39 @@
 	}
 
 	&__visual {
-		display: flex;
-		align-items: center;
-		justify-content: center;
-		min-height: 8rem;
+		// Layout box = scaled iPhone size (transform scale does not shrink flow)
+		--home-card-mockup-scale: 0.3;
+		position: relative;
+		width: calc(375px * var(--home-card-mockup-scale));
+		height: calc(812px * var(--home-card-mockup-scale));
+		flex-shrink: 0;
+		align-self: center;
+		justify-self: center;
 
 		@media (max-width: 519px) {
 			display: none;
 		}
 	}
 
+	&__mockup {
+		position: absolute;
+		left: 50%;
+		top: 50%;
+		width: 375px;
+		margin: 0;
+		transform: translate(-50%, -50%) scale(var(--home-card-mockup-scale));
+		transform-origin: center center;
+		filter: drop-shadow(0 16px 32px -12px var(--gray-a8));
+		transition: transform 0.25s ease;
+	}
+
 	&__screen {
-		width: 100%;
-		max-width: 9rem;
-		aspect-ratio: 9 / 16;
-		border-radius: 1.25rem;
-		border: 3px solid var(--gray-12);
 		background: linear-gradient(
 			200deg,
 			var(--card-accent-9, var(--accent-9)),
 			var(--card-accent-11, var(--accent-11)) 55%,
 			var(--gray-10)
 		);
-		box-shadow: 0 16px 32px -12px var(--gray-a8);
-		transform: rotate(8deg);
 	}
 
 	@media (hover: hover) {
@@ -279,8 +277,8 @@
 				color: var(--card-accent-12, var(--accent-12));
 			}
 
-			.home-app-card__screen {
-				transform: rotate(4deg) scale(1.03);
+			.home-app-card__mockup {
+				transform: translate(-50%, -50%) scale(calc(var(--home-card-mockup-scale) * 1.03));
 			}
 		}
 	}

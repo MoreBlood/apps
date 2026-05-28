@@ -1,4 +1,5 @@
 // Global styles: Radix Themes CSS is imported in app/layout.tsx.
+@use 'device-mockup';
 @use 'landing';
 @use 'home';
 @use 'roadmap';
@@ -13,6 +14,13 @@ html {
 
 body {
 	overflow-x: hidden;
+}
+
+.app-icon {
+	display: block;
+	width: 100%;
+	height: 100%;
+	object-fit: cover;
 }
 
 .app-shell {

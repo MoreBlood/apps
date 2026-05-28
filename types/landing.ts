@@ -27,7 +27,27 @@ export type LandingFeature = {
 	visual: LandingFeatureVisual
 }
 
+export type LandingGridIconId =
+	| 'upload'
+	| 'sun'
+	| 'mixer'
+	| 'curves'
+	| 'layers'
+	| 'color-wheel'
+	| 'history'
+	| 'device'
+	| 'export'
+	| 'globe'
+	| 'sensor'
+	| 'pin'
+	| 'star'
+	| 'scale'
+	| 'search'
+	| 'chart'
+	| 'heart'
+
 export type LandingGridItem = {
+	icon: LandingGridIconId
 	title: string
 	description: string
 }

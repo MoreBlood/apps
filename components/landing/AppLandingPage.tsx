@@ -5,9 +5,11 @@ import { Link, Strong, Text } from '@radix-ui/themes'
 import type { LandingAppInfo } from '@/config'
 import { getLandingBySlug } from '@/config/landing-content'
 import type { AppLandingConfig, LandingFeature } from '@/types/landing'
+import { getLandingGridIcon } from './landing-grid-icons'
 import LandingAppIcon from './LandingAppIcon'
 import LandingDeviceStage from './LandingDeviceStage'
 import LandingHero from './LandingHero'
+import { LandingStageTunerProvider } from './LandingStageTunerContext'
 import { LandingReveal, LandingRevealItem, LandingRevealStagger } from './LandingReveal'
 import LandingStoreButton from './LandingStoreButton'
 import { usePreferVerticalReveal } from './usePreferVerticalReveal'
@@ -40,9 +42,11 @@ function CtaPanel({
 }
 
 function FeatureSection({
+	app,
 	feature,
 	verticalReveal
 }: {
+	app: LandingAppInfo
 	feature: LandingFeature
 	verticalReveal: boolean
 }) {
@@ -70,7 +74,7 @@ function FeatureSection({
 				delay={0.08}
 				duration={0.75}
 			>
-				<LandingDeviceStage variant={feature.visual} />
+				<LandingDeviceStage appSlug={app.slug} appName={app.appName} variant={feature.visual} />
 			</LandingReveal>
 		</section>
 	)
@@ -110,12 +114,21 @@ function FeatureGrid({ grid }: { grid: AppLandingConfig['grid'] }) {
 				<p className="landing-grid-section__lead">{grid.lead}</p>
 			</LandingReveal>
 			<LandingRevealStagger as="ul" className="landing-grid-section__grid" stagger={0.06}>
-				{grid.items.map((item) => (
-					<LandingRevealItem key={item.title} className="landing-grid-section__card">
-						<h3>{item.title}</h3>
-						<p>{item.description}</p>
-					</LandingRevealItem>
-				))}
+				{grid.items.map((item) => {
+					const ItemIcon = getLandingGridIcon(item.icon)
+
+					return (
+						<LandingRevealItem key={item.title} className="landing-grid-section__card">
+							<h3 className="landing-grid-section__card-title">
+								<span className="landing-grid-section__icon" aria-hidden>
+									<ItemIcon />
+								</span>
+								{item.title}
+							</h3>
+							<p>{item.description}</p>
+						</LandingRevealItem>
+					)
+				})}
 			</LandingRevealStagger>
 		</LandingReveal>
 	)
@@ -148,15 +161,9 @@ export default function AppLandingPage({ app }: Props) {
 	const year = new Date().getFullYear()
 
 	return (
+		<LandingStageTunerProvider>
 		<article className="landing" data-landing-app={app.slug}>
 			<LandingHero app={app} landing={landing} />
-
-			<CtaPanel
-				app={app}
-				id={`${app.slug}-get-early`}
-				title={`Get ${app.appName}`}
-				subtitle={app.tagline}
-			/>
 
 			<HighlightsSection items={landing.highlights} />
 			<ShowcaseQuote showcase={landing.showcase} />
@@ -165,6 +172,7 @@ export default function AppLandingPage({ app }: Props) {
 				{landing.features.map((feature) => (
 					<FeatureSection
 						key={feature.title}
+						app={app}
 						feature={feature}
 						verticalReveal={verticalReveal}
 					/>
@@ -175,7 +183,12 @@ export default function AppLandingPage({ app }: Props) {
 			<TechBanner tech={landing.tech} />
 
 			<LandingReveal as="section" className="landing-closing" duration={0.75}>
-				<LandingDeviceStage variant="compact" className="landing-closing__stage" />
+				<LandingDeviceStage
+					appSlug={app.slug}
+					appName={app.appName}
+					variant="compact"
+					className="landing-closing__stage"
+				/>
 				<h2 className="landing-closing__title">{landing.closingTitle}</h2>
 				<p className="landing-closing__lead">{landing.closingLead}</p>
 			</LandingReveal>
@@ -217,5 +230,6 @@ export default function AppLandingPage({ app }: Props) {
 				</div>
 			</LandingReveal>
 		</article>
+		</LandingStageTunerProvider>
 	)
 }
