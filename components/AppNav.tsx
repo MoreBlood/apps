@@ -20,6 +20,8 @@ const navItems = (appSlug: string | null) => {
 	return [
 		...base,
 		{ href: `/${appSlug}`, label: 'Overview' },
+		{ href: `/${appSlug}/roadmap`, label: 'Roadmap' },
+		{ href: `/${appSlug}/faq`, label: 'FAQ' },
 		{ href: `/${appSlug}/privacy`, label: 'Privacy' },
 		{ href: `/${appSlug}/terms`, label: 'Terms' },
 		{ href: `/${appSlug}/feedback`, label: 'Feedback' }
@@ -90,7 +92,7 @@ export default function AppNav() {
 		<Box asChild mb="6" pb="3" style={{ borderBottom: '1px solid var(--gray-a6)' }}>
 			<nav aria-label="Main navigation">
 				<Flex gap="4" wrap="wrap" align="center" justify="between">
-				<Box display={{ initial: 'none', sm: 'block' }} style={{ minWidth: 0, flex: '1 1 auto' }}>
+				<Box display={{ initial: 'none', lg: 'block' }} className="app-nav-desktop" style={{ minWidth: 0, flex: '1 1 auto' }}>
 					<SegmentedControl.Root value={navValue} onValueChange={(v) => v && router.push(v)} size="2">
 						{items.map(({ href, label }) => (
 							<SegmentedControl.Item key={href} value={href}>
@@ -100,14 +102,14 @@ export default function AppNav() {
 					</SegmentedControl.Root>
 				</Box>
 
-				<Box display={{ initial: 'block', sm: 'none' }}>
+				<Box display={{ initial: 'block', lg: 'none' }}>
 					<Dialog.Root open={mobileOpen} onOpenChange={setMobileOpen}>
 						<Dialog.Trigger>
 							<IconButton variant="soft" size="3" aria-label="Open menu">
 								<HamburgerMenuIcon />
 							</IconButton>
 						</Dialog.Trigger>
-						<Dialog.Content size="2" style={{ maxWidth: 320 }}>
+						<Dialog.Content size="2" className="app-nav-dialog">
 							<Dialog.Title>Menu</Dialog.Title>
 							<Flex direction="column" gap="3" mt="3">
 								{items.map(({ href, label }) => {
@@ -118,6 +120,9 @@ export default function AppNav() {
 												asChild
 												style={{
 													cursor: 'pointer',
+													minHeight: '2.75rem',
+													display: 'flex',
+													alignItems: 'center',
 													padding: 'var(--space-2) var(--space-3)',
 													borderRadius: 'var(--radius-2)',
 													background: isActive ? 'var(--accent-9)' : 'transparent',
@@ -142,7 +147,7 @@ export default function AppNav() {
 					</Dialog.Root>
 				</Box>
 
-				<Box display={{ initial: 'none', sm: 'block' }}>
+				<Box display={{ initial: 'none', lg: 'block' }} flexShrink="0">
 					<ThemeSwitcher mounted={mounted} />
 				</Box>
 			</Flex>

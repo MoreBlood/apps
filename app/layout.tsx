@@ -1,6 +1,6 @@
 import type { Metadata, Viewport } from 'next'
 import { Flex } from '@radix-ui/themes'
-import AppFooter from '@/components/AppFooter'
+import ConditionalAppFooter from '@/components/ConditionalAppFooter'
 import AppNav from '@/components/AppNav'
 import ThemeProvider from '@/components/ThemeProvider'
 import { siteName } from '@/config'
@@ -36,6 +36,9 @@ export const metadata: Metadata = {
 }
 
 export const viewport: Viewport = {
+	width: 'device-width',
+	initialScale: 1,
+	viewportFit: 'cover',
 	colorScheme: 'light dark'
 }
 
@@ -72,16 +75,19 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
 					</a>
 					<Flex
 						direction="column"
-						px="4"
-						py="4"
-						style={{ minHeight: '100vh', maxWidth: '100%', margin: '0 auto' }}
+						className="app-shell"
+						style={{
+							minHeight: '100vh',
+							maxWidth: '100%',
+							margin: '0 auto'
+						}}
 					>
 						<AppNav />
 						<Flex asChild direction="column" flexGrow="1">
 							{/* biome-ignore lint: stable id required for skip-link target */}
 							<main id="main-content">{children}</main>
 						</Flex>
-						<AppFooter />
+						<ConditionalAppFooter />
 					</Flex>
 				</ThemeProvider>
 			</body>

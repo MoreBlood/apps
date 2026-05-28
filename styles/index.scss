@@ -1,4 +1,60 @@
 // Global styles: Radix Themes CSS is imported in app/layout.tsx.
+@use 'landing';
+@use 'home';
+@use 'roadmap';
+@use 'faq';
+@use 'feedback';
+
+html {
+	overflow-x: hidden;
+	-webkit-text-size-adjust: 100%;
+	text-size-adjust: 100%;
+}
+
+body {
+	overflow-x: hidden;
+}
+
+.app-shell {
+	padding-inline: max(var(--space-4), env(safe-area-inset-left, 0px))
+		max(var(--space-4), env(safe-area-inset-right, 0px));
+	padding-top: max(var(--space-4), env(safe-area-inset-top, 0px));
+	padding-bottom: max(var(--space-4), env(safe-area-inset-bottom, 0px));
+}
+
+#main-content {
+	min-width: 0;
+	width: 100%;
+
+	a {
+		overflow-wrap: anywhere;
+		word-break: break-word;
+	}
+}
+
+.app-nav-desktop {
+	min-width: 0;
+	flex: 1 1 auto;
+	overflow-x: auto;
+	-webkit-overflow-scrolling: touch;
+	overscroll-behavior-x: contain;
+	scrollbar-width: none;
+
+	&::-webkit-scrollbar {
+		display: none;
+	}
+
+	.rt-SegmentedControlRoot {
+		width: max-content;
+		max-width: none;
+	}
+}
+
+.app-nav-dialog {
+	width: min(calc(100vw - var(--space-5)), 22rem);
+	max-width: min(calc(100vw - var(--space-5)), 22rem);
+	margin-inline: auto;
+}
 
 // Skip link: visible only when focused
 .skip-link {
@@ -11,8 +67,8 @@
 	border-radius: var(--radius-2);
 	font-weight: 500;
 	&:focus {
-		left: var(--space-4);
-		top: var(--space-4);
+		left: max(var(--space-4), env(safe-area-inset-left, 0px));
+		top: max(var(--space-4), env(safe-area-inset-top, 0px));
 	}
 }
 

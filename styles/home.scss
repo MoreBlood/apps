@@ -1,0 +1,327 @@
+// Home page — extends landing layout tokens
+
+.home-page {
+	&__hero {
+		padding-block: clamp(0.75rem, 2.5vw, 1.25rem) clamp(1.25rem, 3vw, 2rem);
+		text-align: center;
+
+		.landing-hero__backdrop {
+			inset: -10% -10% 40%;
+			mask-image: linear-gradient(to bottom, black 40%, transparent 92%);
+		}
+
+		.landing-hero__inner {
+			display: flex;
+			flex-direction: column;
+			align-items: center;
+			justify-content: center;
+			gap: clamp(0.875rem, 2.5vw, 1.25rem);
+			text-align: center;
+			margin-inline: auto;
+		}
+
+		// Animation wrappers: center eyebrow, title, and lead as a column
+		.landing-hero__inner > * {
+			display: flex;
+			flex-direction: column;
+			align-items: center;
+			width: 100%;
+			margin: 0;
+			text-align: center;
+		}
+
+		.landing-hero__eyebrow {
+			width: auto;
+			margin: 0;
+		}
+
+		.landing-hero__title {
+			margin-inline: auto;
+			line-height: 1.12;
+			text-align: center;
+			max-width: 100%;
+
+			@media (min-width: 768px) {
+				max-width: 14ch;
+			}
+		}
+
+		.landing-hero__lead {
+			font-size: clamp(1.0625rem, 2.2vw, 1.1875rem);
+			line-height: 1.55;
+			margin-inline: auto;
+			text-align: center;
+			max-width: 32rem;
+		}
+	}
+
+	&__apps {
+		padding-block: 0 clamp(2.5rem, 5vw, 3.5rem);
+	}
+
+	&__apps-title {
+		font-size: 1.125rem;
+		font-weight: 600;
+		letter-spacing: -0.02em;
+		margin: 0 0 1rem;
+		padding-bottom: 0.75rem;
+		border-bottom: 1px solid var(--landing-border, var(--gray-a6));
+		color: var(--landing-text, var(--gray-12));
+	}
+
+	&__apps-grid {
+		display: grid;
+		grid-template-columns: 1fr;
+		gap: 1.25rem;
+		list-style: none;
+		padding: 0;
+		margin: 0;
+
+		@media (min-width: 900px) {
+			grid-template-columns: repeat(2, 1fr);
+			gap: 1.5rem;
+		}
+	}
+
+	&__apps-item {
+		min-width: 0;
+		height: 100%;
+
+		> a {
+			height: 100%;
+		}
+	}
+
+	&__closing {
+		padding-block: clamp(2.5rem, 6vw, 4rem);
+		border-top: 1px solid var(--landing-border, var(--gray-a6));
+	}
+
+	&__closing-quote {
+		margin: 0;
+		padding: clamp(1.75rem, 4vw, 2.5rem) clamp(1.25rem, 4vw, 2rem);
+		border-radius: var(--radius-5);
+		background: var(--landing-surface-elevated, var(--gray-a2));
+		border: 1px solid var(--landing-border, var(--gray-a6));
+		text-align: center;
+		position: relative;
+
+		&::before {
+			content: '“';
+			position: absolute;
+			top: 0.35rem;
+			left: 1rem;
+			font-size: clamp(2.5rem, 10vw, 4rem);
+			line-height: 1;
+			font-weight: 700;
+			color: var(--accent-9);
+			opacity: 0.55;
+			font-family: Georgia, 'Times New Roman', serif;
+		}
+
+		p {
+			font-size: clamp(1.125rem, 2.8vw, 1.5rem);
+			line-height: 1.5;
+			font-weight: 500;
+			letter-spacing: -0.02em;
+			color: var(--landing-text, var(--gray-12));
+			margin: 0 0 1rem;
+			max-width: 38rem;
+			margin-inline: auto;
+			text-wrap: balance;
+		}
+
+		footer {
+			font-size: 0.875rem;
+			color: var(--landing-text-muted, var(--gray-11));
+			letter-spacing: 0.04em;
+			text-transform: uppercase;
+		}
+	}
+}
+
+// App card — per-app accent via data-accent (Radix color scales)
+.home-app-card {
+	position: relative;
+	display: block;
+	height: 100%;
+	border-radius: var(--radius-5);
+	text-decoration: none;
+	color: inherit;
+	overflow: hidden;
+	border: 1px solid var(--gray-a6);
+	background: linear-gradient(160deg, var(--gray-a2), var(--color-background));
+	transition:
+		transform 0.35s cubic-bezier(0.22, 1, 0.36, 1),
+		border-color 0.35s ease,
+		box-shadow 0.35s ease;
+
+	&__glow {
+		position: absolute;
+		inset: -20% -10% auto;
+		height: 60%;
+		opacity: 0.45;
+		pointer-events: none;
+		background: radial-gradient(ellipse at 30% 0%, var(--card-accent-a5, var(--accent-a5)), transparent 65%);
+	}
+
+	&__inner {
+		position: relative;
+		display: grid;
+		gap: 1.5rem;
+		padding: clamp(1.5rem, 4vw, 2rem);
+		min-height: 100%;
+
+		@media (min-width: 520px) {
+			grid-template-columns: 1fr min(38%, 11rem);
+			align-items: center;
+		}
+	}
+
+	&__icon {
+		width: 3.5rem;
+		height: 3.5rem;
+		border-radius: 0.9rem;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		margin-bottom: 1rem;
+		font-size: 1.125rem;
+		font-weight: 700;
+		color: white;
+		background: linear-gradient(
+			145deg,
+			var(--card-accent-10, var(--accent-10)),
+			var(--card-accent-8, var(--accent-8))
+		);
+		box-shadow: 0 8px 20px -6px var(--card-accent-a8, var(--accent-a8));
+		border: 1px solid rgb(255 255 255 / 0.2);
+	}
+
+	&__eyebrow {
+		font-size: 0.6875rem;
+		font-weight: 600;
+		letter-spacing: 0.12em;
+		text-transform: uppercase;
+		color: var(--card-accent-12, var(--accent-12));
+		margin: 0 0 0.5rem;
+	}
+
+	&__title {
+		font-size: clamp(1.375rem, 3vw, 1.75rem);
+		font-weight: 700;
+		letter-spacing: -0.03em;
+		margin: 0 0 0.35rem;
+		color: var(--gray-12);
+	}
+
+	&__tagline {
+		font-size: 1rem;
+		font-weight: 500;
+		color: var(--gray-12);
+		margin: 0 0 0.65rem;
+		line-height: 1.35;
+	}
+
+	&__excerpt {
+		font-size: 0.9375rem;
+		line-height: 1.55;
+		color: var(--gray-11);
+		margin: 0 0 1.25rem;
+		display: -webkit-box;
+		-webkit-line-clamp: 3;
+		-webkit-box-orient: vertical;
+		overflow: hidden;
+	}
+
+	&__cta {
+		display: inline-flex;
+		align-items: center;
+		font-size: 0.9375rem;
+		font-weight: 600;
+		color: var(--card-accent-11, var(--accent-11));
+	}
+
+	&__visual {
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		min-height: 8rem;
+
+		@media (max-width: 519px) {
+			display: none;
+		}
+	}
+
+	&__screen {
+		width: 100%;
+		max-width: 9rem;
+		aspect-ratio: 9 / 16;
+		border-radius: 1.25rem;
+		border: 3px solid var(--gray-12);
+		background: linear-gradient(
+			200deg,
+			var(--card-accent-9, var(--accent-9)),
+			var(--card-accent-11, var(--accent-11)) 55%,
+			var(--gray-10)
+		);
+		box-shadow: 0 16px 32px -12px var(--gray-a8);
+		transform: rotate(8deg);
+	}
+
+	@media (hover: hover) {
+		&:hover {
+			transform: translateY(-4px);
+			border-color: var(--card-accent-a8, var(--accent-a8));
+			box-shadow: 0 20px 40px -20px var(--card-accent-a8, var(--accent-a8));
+
+			.home-app-card__cta {
+				color: var(--card-accent-12, var(--accent-12));
+			}
+
+			.home-app-card__screen {
+				transform: rotate(4deg) scale(1.03);
+			}
+		}
+	}
+
+	&:focus-visible {
+		outline: 2px solid var(--card-accent-8, var(--accent-8));
+		outline-offset: 3px;
+	}
+
+	// Per-app accent bindings
+	&[data-accent='red'] {
+		--card-accent-8: var(--red-8);
+		--card-accent-9: var(--red-9);
+		--card-accent-10: var(--red-10);
+		--card-accent-11: var(--red-11);
+		--card-accent-12: var(--red-12);
+		--card-accent-a5: var(--red-a5);
+		--card-accent-a8: var(--red-a8);
+	}
+
+	&[data-accent='green'] {
+		--card-accent-8: var(--green-8);
+		--card-accent-9: var(--green-9);
+		--card-accent-10: var(--green-10);
+		--card-accent-11: var(--green-11);
+		--card-accent-12: var(--green-12);
+		--card-accent-a5: var(--green-a5);
+		--card-accent-a8: var(--green-a8);
+	}
+
+	&[data-accent='blue'] {
+		--card-accent-8: var(--blue-8);
+		--card-accent-9: var(--blue-9);
+		--card-accent-10: var(--blue-10);
+		--card-accent-11: var(--blue-11);
+		--card-accent-12: var(--blue-12);
+		--card-accent-a5: var(--blue-a5);
+		--card-accent-a8: var(--blue-a8);
+	}
+}
+
+.home-page__apps-item {
+	list-style: none;
+}

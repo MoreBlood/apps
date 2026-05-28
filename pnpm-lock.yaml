@@ -14,6 +14,12 @@ dependencies:
   clsx:
     specifier: ^2.1.1
     version: 2.1.1
+  framer-motion:
+    specifier: ^12.40.0
+    version: 12.40.0(react-dom@19.2.0)(react@19.2.0)
+  lenis:
+    specifier: ^1.3.23
+    version: 1.3.23(react@19.2.0)
   modern-normalize:
     specifier: ^3.0.1
     version: 3.0.1
@@ -29,6 +35,9 @@ dependencies:
   react-dom:
     specifier: ^19.2.0
     version: 19.2.0(react@19.2.0)
+  zod:
+    specifier: ^4.4.3
+    version: 4.4.3
 
 devDependencies:
   '@biomejs/biome':
@@ -2831,6 +2840,27 @@ packages:
       path-exists: 4.0.0
     dev: true
 
+  /framer-motion@12.40.0(react-dom@19.2.0)(react@19.2.0):
+    resolution: {integrity: sha512-uaBd3qC1v3KQqBEjwTUd183K6PbS+j0yR9w9VmEOLWA/tnUcSn8Xa3uck7t4dgpDoUss8xQTcj8W2L07lrnLFg==}
+    peerDependencies:
+      '@emotion/is-prop-valid': '*'
+      react: ^18.0.0 || ^19.0.0
+      react-dom: ^18.0.0 || ^19.0.0
+    peerDependenciesMeta:
+      '@emotion/is-prop-valid':
+        optional: true
+      react:
+        optional: true
+      react-dom:
+        optional: true
+    dependencies:
+      motion-dom: 12.40.0
+      motion-utils: 12.39.0
+      react: 19.2.0
+      react-dom: 19.2.0(react@19.2.0)
+      tslib: 2.8.1
+    dev: false
+
   /fs-extra@11.3.2:
     resolution: {integrity: sha512-Xr9F6z6up6Ws+NjzMCZc6WXg2YFRlrLP9NQDO3VQrWrfiojdhS56TzueT88ze0uBdCTwEIhQ3ptnmKeWGFAe0A==}
     engines: {node: '>=14.14'}
@@ -2957,6 +2987,23 @@ packages:
       graceful-fs: 4.2.11
     dev: true
 
+  /lenis@1.3.23(react@19.2.0):
+    resolution: {integrity: sha512-YxYq3TJqj9sJNv0V9SkyQHejt14xwyIwgDaaMK89Uf9SxQfIszu+gTQSSphh6BWlLTNVKvvXAGkg+Zf+oFIevg==}
+    peerDependencies:
+      '@nuxt/kit': '>=3.0.0'
+      react: '>=17.0.0'
+      vue: '>=3.0.0'
+    peerDependenciesMeta:
+      '@nuxt/kit':
+        optional: true
+      react:
+        optional: true
+      vue:
+        optional: true
+    dependencies:
+      react: 19.2.0
+    dev: false
+
   /locate-path@5.0.0:
     resolution: {integrity: sha512-t7hw9pI+WvuwNJXwk5zVHpyhIqzg2qTlklJOf0mVxGSbe3Fp2VieZcduNYjaLDoy6p9uGpQEGWG87WpMKlNq8g==}
     engines: {node: '>=8'}
@@ -3007,6 +3054,16 @@ packages:
   /modern-normalize@3.0.1:
     resolution: {integrity: sha512-VqlMdYi59Uch6fnUPxnpijWUQe+TW6zeWCvyr6Mb7JibheHzSuAAoJi2c71ZwIaWKpECpGpYHoaaBp6rBRr+/g==}
     engines: {node: '>=6'}
+    dev: false
+
+  /motion-dom@12.40.0:
+    resolution: {integrity: sha512-HxU3ZaBwNPVQUBQf1xxgq+7JrPNZvjLVxgbpEZL7RrWJnsxOf0/OM+yrHG9ogLQ31Do/r57Oz2gQWPK+6q62mg==}
+    dependencies:
+      motion-utils: 12.39.0
+    dev: false
+
+  /motion-utils@12.39.0:
+    resolution: {integrity: sha512-8nadJAJjTtqRkmRF36FoJTrywK9nnFmnPwnSMyxaOCU7GDjN9RTMJIxx9De8ErM+vpPhMccr/6fo5WciyQLnMQ==}
     dev: false
 
   /nanoid@3.3.11:
@@ -3678,3 +3735,7 @@ packages:
       siginfo: 2.0.0
       stackback: 0.0.2
     dev: true
+
+  /zod@4.4.3:
+    resolution: {integrity: sha512-ytENFjIJFl2UwYglde2jchW2Hwm4GJFLDiSXWdTrJQBIN9Fcyp7n4DhxJEiWNAJMV1/BqWfW/kkg71UDcHJyTQ==}
+    dev: false
