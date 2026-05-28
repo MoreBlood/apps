@@ -13,11 +13,30 @@ import {
 import { usePathname, useRouter } from 'next/navigation'
 import { useTheme } from 'next-themes'
 import { useEffect, useMemo, useState } from 'react'
+import {
+	ROOT_STATIC_SEGMENTS,
+	getAppSlugFromPathname,
+	normalizeSitePath
+} from '@/lib/site-paths'
 
-const navItems = (appSlug: string | null) => {
-	const base = [{ href: '/', label: 'Home' }]
-	if (!appSlug) return base
-	return [
+type NavItem = { href: string; label: string }
+
+function dedupeNavItems(items: NavItem[]): NavItem[] {
+	const seen = new Set<string>()
+	return items.filter((item) => {
+		if (seen.has(item.href)) return false
+		seen.add(item.href)
+		return true
+	})
+}
+
+const navItems = (appSlug: string | null): NavItem[] => {
+	const base: NavItem[] = [
+		{ href: '/', label: 'Home' },
+		{ href: '/blog', label: 'Blog' }
+	]
+	if (!appSlug || ROOT_STATIC_SEGMENTS.has(appSlug)) return base
+	return dedupeNavItems([
 		...base,
 		{ href: `/${appSlug}`, label: 'Overview' },
 		{ href: `/${appSlug}/roadmap`, label: 'Roadmap' },
@@ -25,12 +44,7 @@ const navItems = (appSlug: string | null) => {
 		{ href: `/${appSlug}/privacy`, label: 'Privacy' },
 		{ href: `/${appSlug}/terms`, label: 'Terms' },
 		{ href: `/${appSlug}/feedback`, label: 'Feedback' }
-	]
-}
-
-function normalizePath(p: string) {
-	const s = p.replace(/\/$/, '')
-	return s || '/'
+	])
 }
 
 type ThemeValue = 'light' | 'dark' | 'system'
@@ -73,11 +87,11 @@ export default function AppNav() {
 	const [mounted, setMounted] = useState(false)
 	const [mobileOpen, setMobileOpen] = useState(false)
 
-	const normalizedPath = useMemo(() => normalizePath(pathname), [pathname])
-	const appSlug = normalizedPath === '/' ? null : (normalizedPath.split('/').filter(Boolean)[0] ?? null)
-	const items = useMemo(() => navItems(appSlug), [appSlug])
+	const normalizedPath = useMemo(() => normalizeSitePath(pathname ?? '/'), [pathname])
+	const appSlug = useMemo(() => getAppSlugFromPathname(pathname), [pathname])
+	const items = useMemo(() => dedupeNavItems(navItems(appSlug)), [appSlug])
 	const navValue = useMemo(() => {
-		const match = items.find((i) => normalizePath(i.href) === normalizedPath)
+		const match = items.find((i) => normalizeSitePath(i.href) === normalizedPath)
 		return match ? match.href : normalizedPath
 	}, [items, normalizedPath])
 
@@ -95,7 +109,7 @@ export default function AppNav() {
 				<Box display={{ initial: 'none', lg: 'block' }} className="app-nav-desktop" style={{ minWidth: 0, flex: '1 1 auto' }}>
 					<SegmentedControl.Root value={navValue} onValueChange={(v) => v && router.push(v)} size="2">
 						{items.map(({ href, label }) => (
-							<SegmentedControl.Item key={href} value={href}>
+							<SegmentedControl.Item key={`${href}:${label}`} value={href}>
 								{label}
 							</SegmentedControl.Item>
 						))}
@@ -113,9 +127,9 @@ export default function AppNav() {
 							<Dialog.Title>Menu</Dialog.Title>
 							<Flex direction="column" gap="3" mt="3">
 								{items.map(({ href, label }) => {
-									const isActive = normalizedPath === normalizePath(href)
+									const isActive = normalizedPath === normalizeSitePath(href)
 									return (
-										<Dialog.Close key={href}>
+										<Dialog.Close key={`${href}:${label}`}>
 											<Box
 												asChild
 												style={{

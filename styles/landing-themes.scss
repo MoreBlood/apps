@@ -1,0 +1,407 @@
+// Per-app landing visual identity (accent comes from ThemeProvider / data-app-theme).
+
+// —— RAW Clinic — editorial ProRAW, warm, photography ———————————————————————
+
+.landing--rawclinic {
+	--landing-card-radius: var(--radius-3);
+	--landing-section-radius: var(--radius-4);
+	--landing-hero-eyebrow-radius: 2px;
+	--landing-feature-bullet-radius: 1px;
+	--landing-grid-panel-bg: color-mix(in srgb, var(--gray-12) 4%, var(--landing-surface-elevated));
+	--landing-showcase-quote-font: Georgia, 'Times New Roman', serif;
+	--landing-feature-gap: clamp(4rem, 9vw, 6.5rem);
+	--landing-hero-title-gradient: linear-gradient(
+		165deg,
+		var(--gray-12) 0%,
+		color-mix(in srgb, var(--accent-11) 55%, var(--gray-11)) 100%
+	);
+
+	.landing-hero {
+		padding-block: clamp(2.25rem, 7vw, 4.5rem) clamp(3.25rem, 9vw, 5.5rem);
+
+		&__backdrop {
+			inset: -40% -8% -8%;
+			background:
+				radial-gradient(ellipse 95% 55% at 50% -5%, var(--accent-a6), transparent 68%),
+				radial-gradient(ellipse 40% 50% at 0% 45%, color-mix(in srgb, var(--accent-9) 35%, transparent), transparent 70%),
+				radial-gradient(ellipse 35% 45% at 100% 55%, var(--gray-a4), transparent 65%);
+			mask-image: radial-gradient(ellipse 120% 85% at 50% 0%, black 8%, transparent 72%);
+			-webkit-mask-image: radial-gradient(ellipse 120% 85% at 50% 0%, black 8%, transparent 72%);
+		}
+
+		&__eyebrow {
+			letter-spacing: 0.14em;
+			text-transform: uppercase;
+			background: color-mix(in srgb, var(--accent-a5) 80%, var(--gray-a3));
+		}
+
+		&__title {
+			letter-spacing: -0.04em;
+			font-weight: 700;
+		}
+
+		&__pillar-value {
+			font-size: 1.625rem;
+			color: var(--accent-11);
+		}
+	}
+
+	.landing-showcase {
+		&__quote {
+			text-align: left;
+			border: 1px solid var(--landing-border);
+			border-left: 3px solid var(--accent-9);
+			background: linear-gradient(
+				135deg,
+				color-mix(in srgb, var(--accent-a3) 40%, var(--landing-surface-elevated)),
+				var(--landing-surface-elevated)
+			);
+
+			&::before {
+				left: 1.25rem;
+				opacity: 0.45;
+			}
+
+			p {
+				font-family: var(--landing-showcase-quote-font);
+				font-weight: 400;
+				font-style: italic;
+				max-width: none;
+			}
+		}
+	}
+
+	.landing__features {
+		gap: var(--landing-feature-gap);
+	}
+
+	.landing-feature {
+		&__eyebrow {
+			letter-spacing: 0.16em;
+			color: var(--accent-11);
+		}
+
+		&__bullets li::before {
+			width: 0.55rem;
+			height: 2px;
+			top: 0.65em;
+			border-radius: 0;
+			box-shadow: none;
+			background: var(--accent-9);
+		}
+	}
+
+	--landing-final-bg: var(--gray-12);
+	--landing-final-fg: var(--gray-1);
+	--landing-final-muted: color-mix(in srgb, var(--gray-11) 88%, var(--gray-1));
+	--landing-final-aurora-a: color-mix(in srgb, var(--accent-9) 82%, transparent);
+	--landing-final-aurora-b: color-mix(in srgb, var(--accent-8) 68%, transparent);
+	--landing-final-aurora-c: color-mix(in srgb, var(--accent-7) 58%, transparent);
+	--landing-final-aurora-d: color-mix(in srgb, var(--accent-a6) 48%, transparent);
+	--landing-final-aurora-e: color-mix(in srgb, var(--accent-a5) 28%, transparent);
+	--landing-final-aurora-f: color-mix(in srgb, var(--accent-10) 62%, transparent);
+
+	--landing-feature-card-bg: color-mix(in srgb, var(--gray-3) 70%, var(--color-background));
+	--landing-feature-icon-bg: linear-gradient(
+		180deg,
+		color-mix(in srgb, var(--accent-9) 35%, #ffe066) 0%,
+		color-mix(in srgb, var(--accent-10) 25%, #ffc800) 100%
+	);
+	--landing-feature-icon-fg: var(--gray-12);
+	--landing-feature-card-radius: 1.75rem;
+
+	.landing-cta-panel--final {
+		.landing-cta-panel__title {
+			font-weight: 700;
+		}
+
+		.landing-cta-panel__card {
+			background: transparent;
+			border: none;
+			box-shadow: none;
+		}
+	}
+
+	.landing-blog--teaser {
+		border-top-color: color-mix(in srgb, var(--accent-a5) 35%, var(--landing-border));
+	}
+
+	.landing-grid-section {
+		border-color: color-mix(in srgb, var(--accent-a6) 35%, var(--landing-border));
+
+		&__card {
+			border-radius: var(--landing-card-radius);
+			background: color-mix(in srgb, var(--color-background) 88%, var(--landing-surface-elevated));
+
+			@media (hover: hover) {
+				&:hover {
+					border-color: var(--accent-a8);
+					box-shadow: 0 16px 40px -20px var(--accent-a7);
+				}
+			}
+		}
+	}
+
+	.landing-photo {
+		&__frame--placeholder {
+			border-radius: var(--radius-2);
+			border-style: solid;
+			border-color: var(--gray-a6);
+			background:
+				linear-gradient(160deg, var(--gray-a4), var(--accent-a3) 50%, var(--gray-a5)),
+				repeating-linear-gradient(
+					90deg,
+					transparent,
+					transparent 24px,
+					var(--gray-a3) 24px,
+					var(--gray-a3) 25px
+				);
+		}
+
+		&--spotlight .landing-photo__frame {
+			border-radius: var(--radius-2);
+			border: 1px solid var(--gray-a5);
+			box-shadow: none;
+		}
+
+		&--spotlight .landing-photo__compare-label {
+			color: var(--accent-11);
+		}
+
+		&--spotlight .landing-compare__page-control {
+			background: color-mix(in srgb, var(--gray-12) 5%, var(--gray-a3));
+			border: 1px solid var(--gray-a5);
+		}
+
+		&--spotlight .landing-compare__dot--active::after {
+			background: var(--accent-11);
+		}
+	}
+
+	.landing-cta-panel__card {
+		border-radius: var(--landing-section-radius);
+		background: linear-gradient(
+			165deg,
+			color-mix(in srgb, var(--accent-a4) 50%, var(--landing-surface-elevated)),
+			var(--landing-surface-elevated) 45%,
+			color-mix(in srgb, var(--color-background) 90%, transparent)
+		);
+		border-color: color-mix(in srgb, var(--accent-a7) 45%, var(--landing-border));
+	}
+
+	.landing-closing__title {
+		max-width: 24ch;
+		letter-spacing: -0.04em;
+	}
+
+	.landing-stage__glow {
+		background: radial-gradient(ellipse at center, var(--accent-a6), transparent 68%);
+		opacity: 0.85;
+	}
+}
+
+// —— AQI Sense — calm data UI, airy, environmental ———————————————————————————
+
+.landing--aqi-sense {
+	--landing-card-radius: var(--radius-5);
+	--landing-section-radius: var(--radius-6, var(--radius-5));
+	--landing-hero-eyebrow-radius: 999px;
+	--landing-feature-bullet-radius: 50%;
+	--landing-feature-card-bg: color-mix(in srgb, var(--accent-a2) 22%, var(--gray-2));
+	--landing-feature-icon-bg: linear-gradient(180deg, var(--accent-8), var(--accent-9));
+	--landing-feature-icon-fg: var(--gray-1);
+	--landing-grid-panel-bg: color-mix(in srgb, var(--accent-a3) 28%, transparent);
+	--landing-showcase-quote-font: inherit;
+	--landing-feature-gap: clamp(4rem, 10vw, 7rem);
+	--landing-hero-title-gradient: linear-gradient(
+		180deg,
+		var(--gray-12) 15%,
+		color-mix(in srgb, var(--accent-11) 70%, var(--gray-11)) 100%
+	);
+
+	.landing-hero {
+		padding-block: clamp(2.5rem, 8vw, 5rem) clamp(3.5rem, 10vw, 6rem);
+
+		&__backdrop {
+			inset: -25% 0 0;
+			background:
+				linear-gradient(180deg, var(--accent-a4) 0%, transparent 42%),
+				radial-gradient(ellipse 80% 50% at 20% 20%, var(--accent-a5), transparent 55%),
+				radial-gradient(ellipse 70% 45% at 80% 30%, color-mix(in srgb, var(--accent-6) 40%, transparent), transparent 60%),
+				radial-gradient(ellipse 100% 40% at 50% 100%, var(--accent-a2), transparent 70%);
+			mask-image: linear-gradient(180deg, black 0%, black 55%, transparent 100%);
+			-webkit-mask-image: linear-gradient(180deg, black 0%, black 55%, transparent 100%);
+			opacity: 0.95;
+		}
+
+		&__eyebrow {
+			letter-spacing: 0.08em;
+			background: var(--accent-a3);
+			border-color: var(--accent-a5);
+			color: var(--accent-12);
+		}
+
+		&__title {
+			letter-spacing: -0.03em;
+			font-weight: 650;
+		}
+
+		&__lead {
+			max-width: 36rem;
+			line-height: 1.65;
+		}
+
+		&__pillar-value {
+			font-variant-numeric: tabular-nums;
+			font-feature-settings: 'tnum' 1;
+			color: var(--accent-11);
+		}
+	}
+
+	.landing__features {
+		gap: var(--landing-feature-gap);
+	}
+
+	.landing-feature {
+		@media (min-width: 900px) {
+			gap: 5rem;
+		}
+
+		&__eyebrow {
+			letter-spacing: 0.1em;
+			padding: 0.2rem 0;
+		}
+
+		&__title {
+			font-weight: 650;
+			letter-spacing: -0.025em;
+		}
+
+		&__bullets li::before {
+			box-shadow: 0 0 0 4px var(--accent-a3);
+		}
+	}
+
+	.landing-grid-section {
+		border: 1px solid var(--accent-a5);
+		background: var(--landing-grid-panel-bg);
+		backdrop-filter: blur(8px);
+
+		&__card {
+			border-radius: var(--landing-card-radius);
+			background: var(--color-panel-solid, var(--color-background));
+			border-color: var(--accent-a4);
+
+			@media (hover: hover) {
+				&:hover {
+					transform: translateY(-4px);
+					border-color: var(--accent-a7);
+					box-shadow: 0 14px 36px -18px var(--accent-a6);
+				}
+			}
+		}
+
+		&__icon {
+			display: inline-flex;
+			align-items: center;
+			justify-content: center;
+			width: 2rem;
+			height: 2rem;
+			margin-inline-end: 0.35rem;
+			border-radius: 999px;
+			background: var(--accent-a4);
+			vertical-align: -0.35em;
+
+			svg {
+				width: 1.1rem;
+				height: 1.1rem;
+			}
+		}
+	}
+
+	.landing-photo {
+		&__eyebrow {
+			letter-spacing: 0.1em;
+		}
+
+		&__frame--placeholder {
+			border-radius: var(--landing-card-radius);
+			border: 1px solid var(--accent-a5);
+			background:
+				radial-gradient(circle at 1px 1px, var(--accent-a4) 1px, transparent 1px),
+				linear-gradient(180deg, var(--accent-a2), var(--gray-a2));
+			background-size:
+				18px 18px,
+				100% 100%;
+		}
+
+		&--spotlight .landing-photo__frame {
+			border-radius: var(--landing-card-radius);
+		}
+	}
+
+	.landing-cta-panel__card {
+		border-radius: var(--landing-section-radius);
+		background: linear-gradient(
+			180deg,
+			color-mix(in srgb, var(--accent-a3) 55%, var(--color-background)),
+			var(--color-background)
+		);
+		border-color: var(--accent-a5);
+		box-shadow: 0 24px 48px -28px var(--accent-a6);
+	}
+
+	.landing-closing__title {
+		max-width: 20ch;
+		font-weight: 650;
+	}
+
+	.landing-stage__glow {
+		background: radial-gradient(ellipse at center, var(--accent-a5), transparent 72%);
+		filter: blur(48px);
+		opacity: 0.55;
+	}
+
+	.landing-blog__card {
+		border-radius: var(--landing-card-radius);
+		border-color: var(--accent-a4);
+	}
+}
+
+// Dark mode fine-tuning
+:where(.dark, .dark-theme) {
+	.landing--rawclinic {
+		--landing-hero-title-gradient: linear-gradient(
+			165deg,
+			#fff 0%,
+			color-mix(in srgb, var(--accent-10) 65%, var(--gray-12)) 100%
+		);
+		--landing-grid-panel-bg: color-mix(in srgb, var(--accent-a2) 25%, var(--gray-2));
+		--landing-final-bg: color-mix(in srgb, var(--gray-1) 4%, #000);
+		--landing-final-fg: var(--gray-12);
+		--landing-final-muted: var(--gray-11);
+		--landing-final-aurora-a: color-mix(in srgb, var(--accent-9) 65%, transparent);
+		--landing-final-aurora-b: color-mix(in srgb, var(--accent-8) 50%, transparent);
+		--landing-final-aurora-c: color-mix(in srgb, var(--accent-7) 40%, transparent);
+		--landing-final-aurora-f: color-mix(in srgb, var(--accent-10) 45%, transparent);
+		--landing-feature-card-bg: color-mix(in srgb, var(--gray-3) 80%, var(--gray-2));
+
+		.landing-grid-section__card {
+			background: color-mix(in srgb, var(--gray-2) 92%, var(--accent-a2));
+		}
+	}
+
+	.landing--aqi-sense {
+		--landing-feature-card-bg: color-mix(in srgb, var(--gray-3) 75%, var(--gray-2));
+		--landing-hero-title-gradient: linear-gradient(
+			180deg,
+			#fff 0%,
+			color-mix(in srgb, var(--accent-10) 55%, var(--gray-12)) 100%
+		);
+		--landing-grid-panel-bg: color-mix(in srgb, var(--accent-a3) 18%, var(--gray-2));
+
+		.landing-grid-section__card {
+			background: var(--gray-2);
+		}
+	}
+}

@@ -83,9 +83,9 @@ const apps: AppConfig[] = [
 	{
 		slug: 'rawclinic',
 		appName: 'RAW Clinic',
-		tagline: 'Professional RAW photo editing for iOS',
+		tagline: 'Edit Apple ProRAW on iPhone — no laptop required',
 		description:
-			'RAW Clinic is a powerful mobile application for editing RAW photo files directly on your iOS device. All processing happens locally on your device, ensuring your photos remain private and secure.',
+			'Apple Pro RAW is not dead: develop ProRAW on device, dial back Deep Fusion\'s baked-in look, and finish photos without a PC. Shoot with Apple Camera, grade in a focused queue, and export when ready — free on iPhone and iPad.',
 		contactEmail: 'artihovich.it+rawclinic@gmail.com',
 		lastUpdated: 'May 17, 2026',
 		web3formsAccessKey: '3bf5de50-6275-4597-adcc-41db5b91d56a',

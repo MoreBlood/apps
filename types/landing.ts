@@ -54,7 +54,14 @@ export type LandingGridItem = {
 
 export type LandingShowcase = {
 	quote: string
-	attribution: string
+	attribution?: string
+}
+
+export type LandingBlogSection = {
+	/** Default: "Read our blog". */
+	title?: string
+	/** Default: `/blog`. */
+	href?: string
 }
 
 export type LandingTechItem = {
@@ -62,24 +69,55 @@ export type LandingTechItem = {
 	description: string
 }
 
+/** Editorial photo block — set `src` when marketing still is ready. */
+export type LandingPhotoMoment = {
+	id: string
+	layout: 'spotlight' | 'cinema' | 'split'
+	eyebrow?: string
+	title?: string
+	caption: string
+	/** Primary image (also used as left slot in spotlight). */
+	src?: string
+	/** Right slot for spotlight layout only. */
+	srcSecondary?: string
+	alt?: string
+	/** Labels under each image in spotlight comparison (primary = left, secondary = right). */
+	compareLabels?: { primary: string; secondary: string }
+	/** Cycle through pairs from `config/compare-content.ts`. */
+	compareSet?: string
+	/** Autoplay interval for compare carousel (ms). Default 5000. */
+	compareIntervalMs?: number
+	/** Insert split moment after this feature index (0-based). */
+	afterFeature?: number
+}
+
 export type AppLandingConfig = {
 	heroEyebrow: string
 	heroTitle: string
 	heroLead: string
 	pillars: LandingPillar[]
-	showcase: LandingShowcase
-	highlights: LandingHighlight[]
+	showcase?: LandingShowcase
+	/** Halide-style photo bands — placeholders until assets are added. */
+	photoMoments?: LandingPhotoMoment[]
+	highlights?: LandingHighlight[]
 	features: LandingFeature[]
 	grid: {
-		title: string
-		lead: string
+		/** Headline above the primary 2×2 grid. */
+		title?: string
+		lead?: string
+		/** Halide-style 2×2 hero feature cards (typically four). */
+		primary?: LandingGridItem[]
+		/** Headline above the smaller secondary grid. */
+		secondaryTitle?: string
+		secondaryLead?: string
 		items: LandingGridItem[]
 	}
-	tech: {
+	tech?: {
 		title: string
 		lead: string
 		items: LandingTechItem[]
 	}
+	blog?: LandingBlogSection
 	closingTitle: string
 	closingLead: string
 	platformsLine: string

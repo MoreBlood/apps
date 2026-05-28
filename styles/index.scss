@@ -1,7 +1,10 @@
 // Global styles: Radix Themes CSS is imported in app/layout.tsx.
 @use 'device-mockup';
 @use 'landing';
+@use 'landing-photos';
+@use 'landing-themes';
 @use 'home';
+@use 'blog';
 @use 'roadmap';
 @use 'faq';
 @use 'feedback';
@@ -62,6 +65,18 @@ body {
 	width: min(calc(100vw - var(--space-5)), 22rem);
 	max-width: min(calc(100vw - var(--space-5)), 22rem);
 	margin-inline: auto;
+}
+
+.visually-hidden {
+	position: absolute;
+	width: 1px;
+	height: 1px;
+	padding: 0;
+	margin: -1px;
+	overflow: hidden;
+	clip: rect(0, 0, 0, 0);
+	white-space: nowrap;
+	border: 0;
 }
 
 // Skip link: visible only when focused

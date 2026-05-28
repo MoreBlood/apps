@@ -1,14 +1,25 @@
 'use client'
 
+import { Fragment } from 'react'
+import clsx from 'clsx'
 import NextLink from 'next/link'
 import { Link, Strong, Text } from '@radix-ui/themes'
 import type { LandingAppInfo } from '@/config'
 import { getLandingBySlug } from '@/config/landing-content'
-import type { AppLandingConfig, LandingFeature } from '@/types/landing'
+import type {
+	AppLandingConfig,
+	LandingFeature,
+	LandingHighlight,
+	LandingShowcase,
+	LandingTechItem
+} from '@/types/landing'
 import { getLandingGridIcon } from './landing-grid-icons'
 import LandingAppIcon from './LandingAppIcon'
 import LandingDeviceStage from './LandingDeviceStage'
 import LandingHero from './LandingHero'
+import LandingBlogSection from './LandingBlogSection'
+import LandingPhotoMoment from './LandingPhotoMoment'
+import LandingPrimaryGrid from './LandingPrimaryGrid'
 import { LandingStageTunerProvider } from './LandingStageTunerContext'
 import { LandingReveal, LandingRevealItem, LandingRevealStagger } from './LandingReveal'
 import LandingStoreButton from './LandingStoreButton'
@@ -20,23 +31,47 @@ function CtaPanel({
 	app,
 	title,
 	subtitle,
-	id
+	platformsLine,
+	id,
+	variant = 'default'
 }: {
 	app: LandingAppInfo
 	title: string
 	subtitle: string
+	platformsLine?: string
 	id: string
+	variant?: 'default' | 'final'
 }) {
+	const isFinal = variant === 'final'
+
 	return (
-		<LandingReveal as="section" className="landing-cta-panel" aria-labelledby={id}>
-			<div className="landing-cta-panel__card">
-				<LandingAppIcon app={app} />
-				<h2 className="landing-cta-panel__title" id={id}>
-					{title}
-				</h2>
-				<p className="landing-cta-panel__sub">{subtitle}</p>
-				<LandingStoreButton app={app} label="Download on the App Store" size="large" />
-			</div>
+		<LandingReveal
+			as="section"
+			className={clsx('landing-cta-panel', isFinal && 'landing-cta-panel--final')}
+			aria-labelledby={id}
+			duration={isFinal ? 0.8 : 0.7}
+		>
+			{isFinal ? (
+				<>
+					<LandingAppIcon app={app} />
+					<h2 className="landing-cta-panel__title" id={id}>
+						{title}
+					</h2>
+					<p className="landing-cta-panel__sub">{subtitle}</p>
+					{platformsLine && <p className="landing-cta-panel__platforms">{platformsLine}</p>}
+					<LandingStoreButton app={app} label="Download on the App Store" size="large" />
+				</>
+			) : (
+				<div className="landing-cta-panel__card">
+					<LandingAppIcon app={app} />
+					<h2 className="landing-cta-panel__title" id={id}>
+						{title}
+					</h2>
+					<p className="landing-cta-panel__sub">{subtitle}</p>
+					{platformsLine && <p className="landing-cta-panel__platforms">{platformsLine}</p>}
+					<LandingStoreButton app={app} label="Download on the App Store" size="large" />
+				</div>
+			)}
 		</LandingReveal>
 	)
 }
@@ -80,7 +115,7 @@ function FeatureSection({
 	)
 }
 
-function HighlightsSection({ items }: { items: AppLandingConfig['highlights'] }) {
+function HighlightsSection({ items }: { items: LandingHighlight[] }) {
 	return (
 		<LandingReveal as="section" className="landing-highlights" aria-label="Key capabilities">
 			<LandingRevealStagger as="ul" className="landing-highlights__grid" stagger={0.1}>
@@ -95,24 +130,42 @@ function HighlightsSection({ items }: { items: AppLandingConfig['highlights'] })
 	)
 }
 
-function ShowcaseQuote({ showcase }: { showcase: AppLandingConfig['showcase'] }) {
+function ShowcaseQuote({ showcase }: { showcase: LandingShowcase }) {
 	return (
 		<LandingReveal as="section" className="landing-showcase" aria-label="Product philosophy" duration={0.8}>
 			<blockquote className="landing-showcase__quote">
 				<p>{showcase.quote}</p>
-				<footer>{showcase.attribution}</footer>
+				{showcase.attribution && <footer>{showcase.attribution}</footer>}
 			</blockquote>
 		</LandingReveal>
 	)
 }
 
-function FeatureGrid({ grid }: { grid: AppLandingConfig['grid'] }) {
+function FeatureGrid({
+	grid,
+	compact = false
+}: {
+	grid: AppLandingConfig['grid']
+	compact?: boolean
+}) {
+	if (grid.items.length === 0) return null
+
+	const headerTitle = compact ? grid.secondaryTitle : grid.title
+	const headerLead = compact ? grid.secondaryLead : grid.lead
+	const showHeader = Boolean(headerTitle || headerLead)
+
 	return (
-		<LandingReveal as="section" className="landing-grid-section" duration={0.7}>
-			<LandingReveal className="landing-grid-section__header" direction="none" delay={0.05}>
-				<h2 className="landing-grid-section__title">{grid.title}</h2>
-				<p className="landing-grid-section__lead">{grid.lead}</p>
-			</LandingReveal>
+		<LandingReveal
+			as="section"
+			className={clsx('landing-grid-section', compact && 'landing-grid-section--compact')}
+			duration={0.7}
+		>
+			{showHeader && (
+				<LandingReveal className="landing-grid-section__header" direction="none" delay={0.05}>
+					{headerTitle && <h2 className="landing-grid-section__title">{headerTitle}</h2>}
+					{headerLead && <p className="landing-grid-section__lead">{headerLead}</p>}
+				</LandingReveal>
+			)}
 			<LandingRevealStagger as="ul" className="landing-grid-section__grid" stagger={0.06}>
 				{grid.items.map((item) => {
 					const ItemIcon = getLandingGridIcon(item.icon)
@@ -134,7 +187,11 @@ function FeatureGrid({ grid }: { grid: AppLandingConfig['grid'] }) {
 	)
 }
 
-function TechBanner({ tech }: { tech: AppLandingConfig['tech'] }) {
+function TechBanner({
+	tech
+}: {
+	tech: { title: string; lead: string; items: LandingTechItem[] }
+}) {
 	return (
 		<LandingReveal as="section" className="landing-tech" duration={0.7}>
 			<LandingReveal className="landing-tech__header" direction="none">
@@ -162,42 +219,67 @@ export default function AppLandingPage({ app }: Props) {
 
 	return (
 		<LandingStageTunerProvider>
-		<article className="landing" data-landing-app={app.slug}>
+		<article
+			className={`landing landing--${app.slug}`}
+			data-landing-app={app.slug}
+		>
 			<LandingHero app={app} landing={landing} />
 
-			<HighlightsSection items={landing.highlights} />
-			<ShowcaseQuote showcase={landing.showcase} />
+			{landing.photoMoments
+				?.filter((moment) => moment.layout === 'spotlight')
+				.map((moment) => <LandingPhotoMoment key={moment.id} moment={moment} />)}
 
-			<div className="landing__features" id={`features-${app.slug}`}>
-				{landing.features.map((feature) => (
-					<FeatureSection
-						key={feature.title}
-						app={app}
-						feature={feature}
-						verticalReveal={verticalReveal}
-					/>
-				))}
-			</div>
+			{landing.highlights && landing.highlights.length > 0 && (
+				<HighlightsSection items={landing.highlights} />
+			)}
 
-			<FeatureGrid grid={landing.grid} />
-			<TechBanner tech={landing.tech} />
+			{landing.showcase && <ShowcaseQuote showcase={landing.showcase} />}
 
-			<LandingReveal as="section" className="landing-closing" duration={0.75}>
-				<LandingDeviceStage
-					appSlug={app.slug}
-					appName={app.appName}
-					variant="compact"
-					className="landing-closing__stage"
+			{landing.photoMoments
+				?.filter((moment) => moment.layout === 'cinema')
+				.map((moment) => <LandingPhotoMoment key={moment.id} moment={moment} />)}
+
+			{landing.grid.primary && landing.grid.primary.length > 0 && (
+				<LandingPrimaryGrid
+					id={`features-${app.slug}`}
+					title={landing.grid.title}
+					lead={landing.grid.lead}
+					items={landing.grid.primary}
 				/>
-				<h2 className="landing-closing__title">{landing.closingTitle}</h2>
-				<p className="landing-closing__lead">{landing.closingLead}</p>
-			</LandingReveal>
+			)}
+
+			<FeatureGrid grid={landing.grid} compact={Boolean(landing.grid.primary?.length)} />
+
+			{landing.features.length > 0 && (
+				<div className="landing__features landing__features--deep">
+					{landing.features.map((feature, index) => (
+						<Fragment key={feature.title}>
+							<FeatureSection
+								app={app}
+								feature={feature}
+								verticalReveal={verticalReveal}
+							/>
+							{landing.photoMoments
+								?.filter((moment) => moment.afterFeature === index)
+								.map((moment) => (
+									<LandingPhotoMoment key={moment.id} moment={moment} />
+								))}
+						</Fragment>
+					))}
+				</div>
+			)}
+
+			{landing.tech && <TechBanner tech={landing.tech} />}
+
+			{landing.blog != null && <LandingBlogSection section={landing.blog} />}
 
 			<CtaPanel
 				app={app}
 				id={`${app.slug}-get-final`}
-				title={`Get ${app.appName}`}
-				subtitle={landing.platformsLine}
+				variant="final"
+				title={landing.closingTitle}
+				subtitle={landing.closingLead}
+				platformsLine={landing.platformsLine}
 			/>
 
 			<LandingReveal as="footer" className="landing-footer" direction="up" duration={0.5}>
@@ -225,6 +307,9 @@ export default function AppLandingPage({ app }: Props) {
 						</Link>
 						<Link asChild>
 							<NextLink href={`/${app.slug}/feedback`}>Feedback</NextLink>
+						</Link>
+						<Link asChild>
+							<NextLink href="/blog">Blog</NextLink>
 						</Link>
 					</nav>
 				</div>
