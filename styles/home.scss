@@ -2,13 +2,12 @@
 
 .home-page {
 	&__hero {
-		padding-block: clamp(0.75rem, 2.5vw, 1.25rem) clamp(1.25rem, 3vw, 2rem);
+		// Pull hero under the nav spacer so the accent glow matches app landings
+		--home-hero-nav-overlap: calc(var(--space-6) + var(--space-3));
+		margin-top: calc(-1 * var(--home-hero-nav-overlap));
+		padding-block: calc(clamp(0.75rem, 2.5vw, 1.25rem) + var(--home-hero-nav-overlap))
+			clamp(1.25rem, 3vw, 2rem);
 		text-align: center;
-
-		.landing-hero__backdrop {
-			inset: -10% -10% 40%;
-			mask-image: linear-gradient(to bottom, black 40%, transparent 92%);
-		}
 
 		.landing-hero__inner {
 			display: flex;
@@ -232,11 +231,10 @@
 	}
 
 	&__visual {
-		// Layout box = scaled iPhone size (transform scale does not shrink flow)
-		// ~375×812 visual at 0.3 scale, using native viewBox dimensions
-		--home-card-mockup-scale: 0.146;
-		--home-card-mockup-w: 769px;
-		--home-card-mockup-h: 1603px;
+		// Final display size — SVG scales via viewBox inside this box
+		--home-card-mockup-scale: 0.3;
+		--home-card-mockup-w: 375px;
+		--home-card-mockup-h: 812px;
 		position: relative;
 		width: calc(var(--home-card-mockup-w) * var(--home-card-mockup-scale));
 		height: calc(var(--home-card-mockup-h) * var(--home-card-mockup-scale));
@@ -251,14 +249,27 @@
 
 	&__mockup {
 		position: absolute;
-		left: 50%;
-		top: 50%;
-		width: var(--home-card-mockup-w);
+		inset: 0;
+		width: 100%;
+		height: 100%;
 		margin: 0;
-		transform: translate(-50%, -50%) scale(var(--home-card-mockup-scale));
 		transform-origin: center center;
 		filter: drop-shadow(0 16px 32px -12px var(--gray-a8));
-		transition: transform 0.25s ease;
+		transition:
+			transform 0.25s ease,
+			filter 0.25s ease;
+
+		&.device-mockup {
+			width: 100%;
+			height: 100%;
+			max-width: none;
+		}
+
+		.device-mockup-frame {
+			display: block;
+			width: 100%;
+			height: 100%;
+		}
 	}
 
 	&__screen {
@@ -281,7 +292,7 @@
 			}
 
 			.home-app-card__mockup {
-				transform: translate(-50%, -50%) scale(calc(var(--home-card-mockup-scale) * 1.03));
+				transform: scale(1.03);
 			}
 		}
 	}

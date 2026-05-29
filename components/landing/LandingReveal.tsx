@@ -139,11 +139,17 @@ export function LandingRevealStagger({
 export function LandingRevealItem({
 	children,
 	className,
-	as = 'li'
+	as = 'li',
+	onMouseEnter,
+	onMouseMove,
+	onMouseLeave
 }: {
 	children: React.ReactNode
 	className?: string
 	as?: 'li' | 'div'
+	onMouseEnter?: HTMLMotionProps<'li'>['onMouseEnter']
+	onMouseMove?: HTMLMotionProps<'li'>['onMouseMove']
+	onMouseLeave?: HTMLMotionProps<'li'>['onMouseLeave']
 }) {
 	const reduceMotion = useReducedMotion()
 	const Component = motion[as]
@@ -151,6 +157,9 @@ export function LandingRevealItem({
 	return (
 		<Component
 			className={className}
+			onMouseEnter={onMouseEnter}
+			onMouseMove={onMouseMove}
+			onMouseLeave={onMouseLeave}
 			variants={
 				reduceMotion
 					? undefined

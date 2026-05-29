@@ -1,0 +1,201 @@
+// Reusable machined-metal surface — compose with modifier classes on the host element.
+
+.landing-surface {
+	--landing-surface-radius: var(--landing-card-radius, clamp(20px, 5vw, 30px));
+	--landing-card-dots-gap: 1.125rem;
+	--landing-card-dot-size: 1px;
+	--landing-card-dot-color: color-mix(in srgb, var(--gray-12) 26%, transparent);
+	--landing-card-dots-opacity: 0.9;
+	--landing-card-grain-opacity: 0.34;
+	--landing-card-grain-blend: soft-light;
+	--landing-card-noise-svg: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='128' height='128'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.78' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.55'/%3E%3C/svg%3E");
+
+	position: relative;
+	isolation: isolate;
+	overflow: hidden;
+	border-radius: var(--landing-surface-radius);
+
+	@supports (overflow: clip) {
+		overflow: clip;
+	}
+
+	&--radius-card {
+		--landing-surface-radius: var(--landing-card-radius, clamp(20px, 5vw, 30px));
+	}
+
+	&--radius-tile {
+		--landing-surface-radius: clamp(1.125rem, 3vw, 1.375rem);
+	}
+
+	&--radius-section {
+		--landing-surface-radius: var(--landing-section-radius, var(--radius-5));
+	}
+
+	// Single contour: squircle on the host only; inner layers are clipped, not re-rounded
+	&--apple-corners {
+		@supports (corner-shape: squircle) {
+			corner-shape: squircle;
+		}
+	}
+
+	&__texture {
+		position: absolute;
+		inset: 0;
+		z-index: 1;
+		pointer-events: none;
+
+		&::before,
+		&::after {
+			content: '';
+			position: absolute;
+			inset: 0;
+			pointer-events: none;
+		}
+
+		&::before {
+			z-index: 1;
+			opacity: 0;
+		}
+
+		&::after {
+			z-index: 0;
+			opacity: 0;
+		}
+	}
+
+	&--dots &__texture::before {
+		opacity: var(--landing-card-dots-opacity);
+		background-image: radial-gradient(
+			circle var(--landing-card-dot-size) at center,
+			var(--landing-card-dot-color) 0,
+			transparent 100%
+		);
+		background-size: var(--landing-card-dots-gap) var(--landing-card-dots-gap);
+		background-position: 0 0;
+	}
+
+	&--grain &__texture::after {
+		opacity: var(--landing-card-grain-opacity);
+		mix-blend-mode: var(--landing-card-grain-blend);
+		background-image: var(--landing-card-noise-svg);
+		background-size: 128px 128px;
+	}
+
+	&__pointer {
+		display: none;
+		position: absolute;
+		inset: 0;
+		z-index: 2;
+		pointer-events: none;
+		opacity: 0;
+		mix-blend-mode: var(--landing-pointer-blend);
+		transition: opacity 0.55s var(--landing-ease);
+
+		&::before {
+			content: '';
+			position: absolute;
+			inset: -12%;
+			background:
+				radial-gradient(
+					circle calc(var(--landing-pointer-size) * 0.42) at var(--landing-pointer-x)
+						var(--landing-pointer-y),
+					var(--landing-pointer-core) 0%,
+					transparent 72%
+				),
+				radial-gradient(
+					circle var(--landing-pointer-size) at var(--landing-pointer-x) var(--landing-pointer-y),
+					var(--landing-pointer-glow) 0%,
+					var(--landing-pointer-glow-mid) 48%,
+					transparent 82%
+				);
+			filter: blur(var(--landing-pointer-blur));
+		}
+
+		@media (prefers-reduced-motion: reduce) {
+			transition: none;
+
+			&::before {
+				filter: none;
+			}
+		}
+	}
+
+	&--pointer &__pointer {
+		display: block;
+	}
+
+	&--pointer[data-pointer-active='true'] &__pointer {
+		opacity: 1;
+	}
+
+	&--metal {
+		border: 1px solid var(--landing-metal-rim-shade);
+		background: var(--landing-feature-card-bg);
+		box-shadow:
+			inset 0 1px 0 var(--landing-feature-card-highlight),
+			inset 0 -1px 0 var(--landing-feature-card-shadow),
+			inset 0 -20px 28px -22px var(--landing-metal-well),
+			0 0 0 1px var(--landing-metal-rim-light),
+			0 1px 2px var(--landing-metal-contact),
+			0 10px 32px -14px var(--landing-metal-ambient);
+		transition:
+			border-color 0.35s var(--landing-ease),
+			box-shadow 0.35s var(--landing-ease);
+
+		@media (hover: hover) {
+			&:hover {
+				border-color: var(--landing-metal-rim-light);
+				box-shadow:
+					inset 0 1px 0 color-mix(in srgb, white 58%, transparent),
+					inset 0 -1px 0 var(--landing-feature-card-shadow),
+					inset 0 -14px 22px -18px color-mix(in srgb, black 3%, transparent),
+					0 0 0 1px color-mix(in srgb, white 36%, var(--gray-a6)),
+					0 2px 4px var(--landing-metal-contact),
+					0 14px 40px -12px color-mix(in srgb, var(--gray-12) 14%, transparent);
+			}
+		}
+	}
+
+	&--specular::before {
+		content: '';
+		position: absolute;
+		inset: 0;
+		z-index: 1;
+		pointer-events: none;
+		background: linear-gradient(
+			180deg,
+			var(--landing-metal-specular) 0%,
+			transparent 24%
+		);
+		opacity: 0.38;
+		transition: opacity 0.35s var(--landing-ease);
+	}
+
+	&--specular.landing-surface--metal:hover::before {
+		opacity: 0.62;
+	}
+
+	&--rim::after {
+		content: '';
+		position: absolute;
+		inset: 0;
+		z-index: 3;
+		pointer-events: none;
+		box-shadow: inset 0 0 0 1px color-mix(in srgb, white 14%, transparent);
+		opacity: 0.55;
+		transition:
+			opacity 0.35s var(--landing-ease),
+			box-shadow 0.35s var(--landing-ease);
+	}
+
+	&--rim.landing-surface--metal:hover::after {
+		opacity: 0.78;
+		box-shadow: inset 0 0 0 1px color-mix(in srgb, white 26%, transparent);
+	}
+}
+
+:where(.dark, .dark-theme) .landing-surface {
+	--landing-card-dot-color: color-mix(in srgb, white 22%, transparent);
+	--landing-card-grain-opacity: 0.28;
+	--landing-card-grain-blend: overlay;
+}

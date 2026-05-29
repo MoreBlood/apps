@@ -1,9 +1,14 @@
 'use client'
 
-import { useId, type ReactNode } from 'react'
+import { useId } from 'react'
 import NextLink from 'next/link'
 import { ArrowRightIcon } from '@radix-ui/react-icons'
 import type { LandingBlogSection as LandingBlogSectionConfig } from '@/types/landing'
+import {
+	LANDING_SURFACE_METAL_DOTS,
+	landingSurfaceClassName
+} from '@/lib/landing-surface'
+import LandingSurfaceLayers from './LandingSurfaceLayers'
 import { LandingReveal } from './LandingReveal'
 
 type Props = {
@@ -11,11 +16,28 @@ type Props = {
 	section?: LandingBlogSectionConfig
 }
 
-function TeaserLink({ href, children }: { href: string; children: ReactNode }) {
+const teaserSurface = LANDING_SURFACE_METAL_DOTS
+
+type TeaserCardProps = {
+	href: string
+	eyebrow: string
+	title: string
+	titleId: string
+}
+
+function BlogTeaserCard({ href, eyebrow, title, titleId }: TeaserCardProps) {
 	return (
-		<NextLink href={href} className="landing-blog__title-link">
-			{children}
-			<ArrowRightIcon className="landing-blog__arrow" aria-hidden />
+		<NextLink
+			href={href}
+			className={landingSurfaceClassName(teaserSurface, 'landing-blog__teaser-item')}
+			aria-labelledby={titleId}
+		>
+			<LandingSurfaceLayers effects={teaserSurface} />
+			<p className="landing-blog__eyebrow">{eyebrow}</p>
+			<h2 className="landing-blog__title" id={titleId}>
+				<span className="landing-blog__title-text">{title}</span>
+				<ArrowRightIcon className="landing-blog__arrow" aria-hidden />
+			</h2>
 		</NextLink>
 	)
 }
@@ -36,19 +58,19 @@ export default function LandingBlogSection({ appSlug, section }: Props) {
 			aria-label="Blog and roadmap"
 		>
 			<div className="landing-blog__teaser-grid">
-				<article className="landing-blog__teaser-item" aria-labelledby={blogTitleId}>
-					<p className="landing-blog__eyebrow">Essays & updates</p>
-					<h2 className="landing-blog__title" id={blogTitleId}>
-						<TeaserLink href={blogHref}>{blogTitle}</TeaserLink>
-					</h2>
-				</article>
+				<BlogTeaserCard
+					href={blogHref}
+					eyebrow="Essays & updates"
+					title={blogTitle}
+					titleId={blogTitleId}
+				/>
 				{roadmapTitle && (
-					<article className="landing-blog__teaser-item" aria-labelledby={roadmapTitleId}>
-						<p className="landing-blog__eyebrow">{roadmapEyebrow}</p>
-						<h2 className="landing-blog__title" id={roadmapTitleId}>
-							<TeaserLink href={roadmapHref}>{roadmapTitle}</TeaserLink>
-						</h2>
-					</article>
+					<BlogTeaserCard
+						href={roadmapHref}
+						eyebrow={roadmapEyebrow}
+						title={roadmapTitle}
+						titleId={roadmapTitleId}
+					/>
 				)}
 			</div>
 		</LandingReveal>

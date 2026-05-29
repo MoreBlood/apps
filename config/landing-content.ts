@@ -58,10 +58,10 @@ export const landingBySlug: Record<string, AppLandingConfig> = {
 					description: 'Embedded, Balanced, or Neutral baselines.'
 				},
 				{
-					icon: 'color-wheel',
-					title: 'Embedded preview compare',
+					icon: 'device',
+					title: 'Built-in RAW camera',
 					description:
-						'See what Apple baked in while you grade. ProRAW and most camera RAW your library can open.'
+						'Shoot DNG in-app on iPhone or iPad. Capture and grade without leaving RAW Clinic.'
 				},
 				{
 					icon: 'mixer',

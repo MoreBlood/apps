@@ -66,24 +66,27 @@ function renameAttrs(s) {
 	return out
 }
 
-/** CSS/SVG filter blend modes not valid on SVG `<feBlend mode>`. */
-function fixUnsupportedBlendModes(s) {
+/** Drop Figma filter stacks — they break in React/SVG DOM and are mostly decorative. */
+function stripSvgFilters(s) {
 	return s
-		.replaceAll('mode="plus-lighter"', 'mode="lighten"')
-		.replaceAll('mode="plus-darker"', 'mode="darken"')
-		.replaceAll('mix-blend-mode:plus-lighter"', 'mix-blend-mode:lighten"')
-		.replaceAll('mix-blend-mode:plus-darker"', 'mix-blend-mode:darken"')
+		.replace(/<filter\b[^>]*>[\s\S]*?<\/filter>/gi, '')
+		.replace(/<g\s+filter="url\([^"]+\)"\s*>/gi, '<g>')
+		.replace(/<g\s+filter=\{`url\(#\$\{uid\}-[^`]+\)`\}\s*>/gi, '<g>')
+		.replace(/\sfilter="url\(#([^)]+)\)"/gi, '')
+		.replace(/\sfilter=\{`url\(#\$\{uid\}-([^`]+)\)`\}\}/gi, '')
+}
+
+/** Remove mix-blend-mode hints that also glitch in browsers. */
+function stripBlendStyles(s) {
+	return s
+		.replace(/\sstyle="mix-blend-mode:[^"]*"/gi, '')
+		.replace(/\sstyle=\{\{ mixBlendMode: "[^"]*" \}\}/gi, '')
 }
 
 function fixStyles(s) {
-	return fixUnsupportedBlendModes(s)
+	return stripBlendStyles(s)
 		.replaceAll('style="mask-type:luminance"', 'style={{ maskType: "luminance" }}')
 		.replaceAll('style="mask-type:alpha"', 'style={{ maskType: "alpha" }}')
-		.replaceAll(/style="mix-blend-mode:([^"]+)"/g, (_, mode) => {
-			const mapped =
-				mode === 'plus-lighter' ? 'lighten' : mode === 'plus-darker' ? 'darken' : mode
-			return `style={{ mixBlendMode: "${mapped}" }}`
-		})
 }
 
 function prefixIds(svg, uidVar) {
@@ -95,14 +98,19 @@ function prefixIds(svg, uidVar) {
 		)
 }
 
+function prepareSvgMarkup(svg) {
+	return stripBlendStyles(stripSvgFilters(svg))
+}
+
 function convertSvgToInner(svg, target) {
 	let inner = svg.replace(/^[\s\S]*?<svg[^>]*>/, '').replace(/<\/svg>\s*$/, '')
+	// Defs are emitted separately — do not duplicate filter-heavy markup in the body.
+	inner = inner.replace(/<defs>[\s\S]*<\/defs>/, '')
 	if (!target.screenPattern.test(inner)) {
 		throw new Error(`Screen placeholder not found in ${target.input}`)
 	}
 	inner = inner.replace(target.screenPattern, '__SCREEN_SLOT__')
 	inner = renameAttrs(inner)
-	inner = fixUnsupportedBlendModes(inner)
 	inner = fixStyles(inner)
 	inner = prefixIds(inner, 'uid')
 	inner = inner.replace('__SCREEN_SLOT__', target.screenSlot({ uid: 'uid' }))
@@ -110,17 +118,23 @@ function convertSvgToInner(svg, target) {
 }
 
 function convertDefs(defs) {
-	let d = defs
+	let d = stripSvgFilters(defs)
 	d = renameAttrs(d)
-	d = fixUnsupportedBlendModes(d)
 	d = fixStyles(d)
 	d = prefixIds(d, 'uid')
+	// Gradients / clipPaths only — drop empty defs.
+	if (!/<(linearGradient|radialGradient|clipPath|mask)\b/i.test(d)) {
+		return ''
+	}
 	return d
 }
 
 for (const target of TARGETS) {
 	const svgPath = path.join(ROOT, target.input)
-	const svg = fs.readFileSync(svgPath, 'utf8')
+	const rawSvg = fs.readFileSync(svgPath, 'utf8')
+	const svg = prepareSvgMarkup(rawSvg)
+	fs.writeFileSync(svgPath, svg)
+
 	const defsMatch = svg.match(/<defs>[\s\S]*<\/defs>/)
 	if (!defsMatch) throw new Error(`No defs in ${target.input}`)
 
@@ -144,11 +158,11 @@ export function ${target.exportName}({ children, className, ...props }: ${target
 \t\t\tviewBox="0 0 ${target.viewBox.w} ${target.viewBox.h}"
 \t\t\tfill="none"
 \t\t\txmlns="http://www.w3.org/2000/svg"
+\t\t\tpreserveAspectRatio="xMidYMid meet"
 \t\t\tclassName={clsx('device-mockup-frame', className)}
 \t\t\t{...props}
 \t\t>
-\t\t\t${body.trim()}
-\t\t\t${defs.trim()}
+\t\t\t${body.trim()}${defs.trim() ? `\n\t\t\t${defs.trim()}` : ''}
 \t\t</svg>
 \t)
 }

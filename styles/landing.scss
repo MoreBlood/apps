@@ -2,12 +2,41 @@
 
 .landing {
 	--landing-max: 76rem;
-	--landing-feature-card-bg: color-mix(in srgb, var(--gray-3) 55%, var(--color-background));
+	// Machined aluminum — same tokens as .app-nav-pill active thumb
+	--landing-metal-top: color-mix(in srgb, white 46%, var(--gray-1));
+	--landing-metal-mid: var(--gray-2);
+	--landing-metal-bottom: color-mix(in srgb, var(--gray-12) 8%, var(--gray-4));
+	--landing-metal-rim: color-mix(in srgb, var(--gray-12) 12%, var(--gray-a7));
+	--landing-metal-rim-light: color-mix(in srgb, white 30%, var(--gray-a6));
+	--landing-metal-rim-shade: color-mix(in srgb, black 6%, var(--gray-a5));
+	--landing-metal-specular: color-mix(in srgb, white 58%, transparent);
+	--landing-metal-highlight: color-mix(in srgb, white 52%, transparent);
+	--landing-metal-shadow: color-mix(in srgb, black 10%, transparent);
+	--landing-metal-well: color-mix(in srgb, black 7%, transparent);
+	--landing-metal-contact: color-mix(in srgb, black 5%, transparent);
+	--landing-metal-ambient: color-mix(in srgb, var(--gray-12) 10%, transparent);
+	--landing-pointer-x: 50%;
+	--landing-pointer-y: 50%;
+	--landing-pointer-size: clamp(9rem, 52vw, 14rem);
+	--landing-pointer-core: color-mix(in srgb, var(--accent-9) 22%, transparent);
+	--landing-pointer-glow: color-mix(in srgb, var(--accent-9) 12%, transparent);
+	--landing-pointer-glow-mid: color-mix(in srgb, var(--accent-10) 5%, transparent);
+	--landing-pointer-blend: soft-light;
+	--landing-pointer-blur: 12px;
+	--landing-feature-card-bg: linear-gradient(
+		180deg,
+		var(--landing-metal-top) 0%,
+		var(--landing-metal-mid) 45%,
+		var(--landing-metal-bottom) 100%
+	);
+	--landing-feature-card-rim: var(--landing-metal-rim);
+	--landing-feature-card-highlight: var(--landing-metal-highlight);
+	--landing-feature-card-shadow: var(--landing-metal-shadow);
 	--landing-feature-icon-bg: linear-gradient(180deg, #ffe066 0%, #ffc800 100%);
 	--landing-feature-icon-fg: #1d1d1f;
-	--landing-feature-card-radius: 1.75rem;
+	--landing-feature-card-radius: clamp(20px, 5vw, 30px);
+	--landing-card-radius: clamp(20px, 5vw, 30px);
 	--landing-ease: cubic-bezier(0.22, 1, 0.36, 1);
-	--landing-card-radius: var(--radius-4);
 	--landing-section-radius: var(--radius-5);
 	--landing-hero-eyebrow-radius: 999px;
 	--landing-feature-bullet-radius: 50%;
@@ -942,22 +971,14 @@ $mockup-iphone-h: 1603px;
 			padding: 1.35rem 1.1rem;
 		}
 
-		border: none;
-		border-radius: var(--landing-feature-card-radius, 1.75rem);
-		background: var(--landing-feature-card-bg);
-		transition:
-			transform 0.35s var(--landing-ease),
-			box-shadow 0.35s var(--landing-ease);
-
-		@media (hover: hover) {
-			&:hover {
-				transform: translateY(-2px);
-				box-shadow: 0 18px 40px -28px var(--gray-a9);
-			}
+		> :not(.landing-surface__texture):not(.landing-surface__pointer) {
+			position: relative;
+			z-index: 4;
 		}
 	}
 
 	&__icon {
+		position: relative;
 		display: inline-flex;
 		flex-shrink: 0;
 		align-items: center;
@@ -965,16 +986,76 @@ $mockup-iphone-h: 1603px;
 		width: 2.75rem;
 		height: 2.75rem;
 		margin-bottom: 1.125rem;
+		overflow: hidden;
 		border-radius: 0.625rem;
 		background: var(--landing-feature-icon-bg);
 		color: var(--landing-feature-icon-fg);
+		border: 1px solid var(--landing-metal-rim-shade);
 		box-shadow:
-			0 1px 0 rgb(255 255 255 / 0.35) inset,
-			0 1px 2px rgb(0 0 0 / 0.06);
+			inset 0 1px 0 var(--landing-feature-card-highlight),
+			inset 0 -1px 0 var(--landing-feature-card-shadow),
+			inset 0 2px 6px var(--landing-metal-well),
+			0 1px 0 color-mix(in srgb, white 30%, transparent);
+
+		&::before {
+			content: '';
+			position: absolute;
+			inset: 0;
+			border-radius: inherit;
+			pointer-events: none;
+			background: linear-gradient(
+				180deg,
+				color-mix(in srgb, white 38%, transparent) 0%,
+				transparent 48%
+			);
+			opacity: 0.36;
+			transition: opacity 0.35s var(--landing-ease);
+		}
+
+		transition:
+			transform 0.35s var(--landing-ease),
+			border-color 0.35s var(--landing-ease),
+			box-shadow 0.35s var(--landing-ease),
+			background 0.35s var(--landing-ease),
+			color 0.25s ease;
 
 		svg {
+			position: relative;
+			z-index: 1;
 			width: 1.375rem;
 			height: 1.375rem;
+			filter: drop-shadow(0 0.5px 0 color-mix(in srgb, white 35%, transparent));
+			transition:
+				transform 0.35s var(--landing-ease),
+				filter 0.35s var(--landing-ease);
+		}
+
+		@media (hover: hover) {
+			.landing-primary-grid__card:hover & {
+				border-color: var(--landing-metal-rim-light);
+				box-shadow:
+					inset 0 1px 0 color-mix(in srgb, white 62%, transparent),
+					inset 0 -1px 0 color-mix(in srgb, black 6%, transparent),
+					inset 0 1px 3px color-mix(in srgb, black 3%, transparent),
+					0 2px 0 color-mix(in srgb, white 40%, transparent),
+					0 0 0 1px var(--landing-metal-rim-light);
+
+				&::before {
+					opacity: 0.58;
+				}
+
+				@media (prefers-reduced-motion: no-preference) {
+					transform: scale(1.06);
+				}
+
+				svg {
+					filter: drop-shadow(0 1px 2px color-mix(in srgb, white 55%, transparent));
+
+					@media (prefers-reduced-motion: no-preference) {
+						transform: scale(1.06);
+					}
+				}
+			}
 		}
 	}
 
@@ -987,6 +1068,19 @@ $mockup-iphone-h: 1603px;
 		max-width: 18ch;
 		text-wrap: balance;
 		color: var(--landing-text);
+		transition:
+			color 0.3s var(--landing-ease),
+			transform 0.35s var(--landing-ease);
+
+		@media (hover: hover) {
+			.landing-primary-grid__card:hover & {
+				color: var(--gray-12);
+
+				@media (prefers-reduced-motion: no-preference) {
+					transform: translateY(-1px);
+				}
+			}
+		}
 	}
 
 	&__desc {
@@ -996,6 +1090,13 @@ $mockup-iphone-h: 1603px;
 		margin: 0;
 		max-width: 28ch;
 		text-wrap: pretty;
+		transition: color 0.3s var(--landing-ease);
+
+		@media (hover: hover) {
+			.landing-primary-grid__card:hover & {
+				color: var(--landing-text);
+			}
+		}
 	}
 }
 
@@ -1121,6 +1222,20 @@ $mockup-iphone-h: 1603px;
 	@media (max-width: 899px) {
 		.landing-feature__visual {
 			order: -1;
+		}
+
+		.landing-feature__content {
+			width: 100%;
+			max-width: 36rem;
+			margin-inline: auto;
+			text-align: center;
+		}
+
+		.landing-feature__bullets {
+			margin-inline: auto;
+			width: fit-content;
+			max-width: 100%;
+			text-align: left;
 		}
 	}
 
@@ -1589,6 +1704,18 @@ $mockup-iphone-h: 1603px;
 	--landing-frosted-thumb-top: color-mix(in srgb, white 24%, var(--gray-4));
 	--landing-frosted-thumb-mid: color-mix(in srgb, white 8%, var(--gray-3));
 	--landing-frosted-thumb-bottom: color-mix(in srgb, black 18%, var(--gray-3));
+	--landing-metal-top: color-mix(in srgb, white 24%, var(--gray-4));
+	--landing-metal-mid: color-mix(in srgb, white 8%, var(--gray-3));
+	--landing-metal-bottom: color-mix(in srgb, black 18%, var(--gray-3));
+	--landing-metal-rim: color-mix(in srgb, white 14%, var(--gray-a6));
+	--landing-metal-rim-light: color-mix(in srgb, white 18%, var(--gray-a5));
+	--landing-metal-rim-shade: color-mix(in srgb, black 22%, var(--gray-a4));
+	--landing-metal-specular: color-mix(in srgb, white 22%, transparent);
+	--landing-metal-highlight: color-mix(in srgb, white 48%, transparent);
+	--landing-metal-shadow: color-mix(in srgb, black 10%, transparent);
+	--landing-metal-well: color-mix(in srgb, black 22%, transparent);
+	--landing-metal-contact: color-mix(in srgb, black 35%, transparent);
+	--landing-metal-ambient: color-mix(in srgb, black 48%, transparent);
 }
 
 :where(.dark, .dark-theme) .landing {

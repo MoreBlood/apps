@@ -2,7 +2,13 @@
 
 import { useId } from 'react'
 import type { LandingGridItem } from '@/types/landing'
+import {
+	LANDING_SURFACE_GRID,
+	landingSurfaceClassName,
+	landingSurfacePointerHandlers
+} from '@/lib/landing-surface'
 import { getLandingGridIcon } from './landing-grid-icons'
+import LandingSurfaceLayers from './LandingSurfaceLayers'
 import { LandingReveal, LandingRevealItem, LandingRevealStagger } from './LandingReveal'
 
 type Props = {
@@ -11,6 +17,8 @@ type Props = {
 	lead?: string
 	items: LandingGridItem[]
 }
+
+const gridSurface = LANDING_SURFACE_GRID
 
 export default function LandingPrimaryGrid({ id, title, lead, items }: Props) {
 	const titleId = useId()
@@ -40,7 +48,12 @@ export default function LandingPrimaryGrid({ id, title, lead, items }: Props) {
 					const ItemIcon = getLandingGridIcon(item.icon)
 
 					return (
-						<LandingRevealItem key={item.title} className="landing-primary-grid__card">
+						<LandingRevealItem
+							key={item.title}
+							className={landingSurfaceClassName(gridSurface, 'landing-primary-grid__card')}
+							{...landingSurfacePointerHandlers(gridSurface)}
+						>
+							<LandingSurfaceLayers effects={gridSurface} />
 							<span className="landing-primary-grid__icon" aria-hidden>
 								<ItemIcon />
 							</span>

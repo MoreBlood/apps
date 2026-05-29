@@ -3,7 +3,6 @@
 // —— RAW Clinic — editorial ProRAW, warm, photography ———————————————————————
 
 .landing--rawclinic {
-	--landing-card-radius: var(--radius-3);
 	--landing-section-radius: var(--radius-4);
 	--landing-hero-eyebrow-radius: 999px;
 	--landing-feature-bullet-radius: 50%;
@@ -94,15 +93,59 @@
 	--landing-final-aurora-e: color-mix(in srgb, var(--accent-a5) 28%, transparent);
 	--landing-final-aurora-f: color-mix(in srgb, var(--accent-10) 62%, transparent);
 
-	--landing-feature-card-bg: color-mix(in srgb, var(--gray-3) 70%, var(--color-background));
-	--landing-feature-icon-bg: linear-gradient(165deg, var(--accent-7), var(--accent-9));
-	--landing-feature-icon-fg: var(--gray-1);
-	--landing-feature-card-radius: 1.75rem;
+	// Icon chip — recessed track metal (nav pill track)
+	--landing-feature-icon-top: color-mix(in srgb, var(--gray-12) 7%, var(--gray-3));
+	--landing-feature-icon-mid: var(--gray-4);
+	--landing-feature-icon-bottom: color-mix(in srgb, var(--gray-12) 16%, var(--gray-5));
+	--landing-feature-icon-bg: linear-gradient(
+		180deg,
+		var(--landing-feature-icon-top) 0%,
+		var(--landing-feature-icon-mid) 45%,
+		var(--landing-feature-icon-bottom) 100%
+	);
+	--landing-feature-icon-fg: var(--gray-11);
+	--landing-feature-card-radius: clamp(20px, 5vw, 30px);
+	--landing-card-radius: clamp(20px, 5vw, 30px);
+	--landing-pointer-core: color-mix(in srgb, var(--accent-9) 28%, transparent);
+	--landing-pointer-glow: color-mix(in srgb, var(--accent-9) 14%, transparent);
+	--landing-pointer-glow-mid: color-mix(in srgb, var(--accent-10) 6%, transparent);
+	--landing-pointer-size: clamp(10rem, 58vw, 15rem);
+
+	--landing-card-dot-color: color-mix(in srgb, var(--gray-12) 24%, var(--accent-a7));
+	--landing-card-grain-opacity: 0.32;
+
+	--landing-pointer-blend: screen;
+	--landing-pointer-blur: 14px;
 
 	.landing-primary-grid__icon {
 		box-shadow:
-			0 1px 0 color-mix(in srgb, var(--gray-1) 28%, transparent) inset,
-			0 2px 10px color-mix(in srgb, var(--accent-9) 32%, transparent);
+			inset 0 1px 0 var(--landing-feature-card-highlight),
+			inset 0 -1px 0 var(--landing-feature-card-shadow),
+			inset 0 3px 8px color-mix(in srgb, black 14%, transparent),
+			0 1px 0 color-mix(in srgb, white 24%, transparent),
+			0 0 0 1px var(--landing-metal-rim-light);
+	}
+
+	@media (hover: hover) {
+		.landing-primary-grid__card:hover .landing-primary-grid__icon {
+			background: linear-gradient(
+				180deg,
+				color-mix(in srgb, white 10%, var(--landing-feature-icon-top)) 0%,
+				var(--landing-feature-icon-mid) 42%,
+				var(--landing-feature-icon-bottom) 100%
+			);
+			box-shadow:
+				inset 0 1px 0 color-mix(in srgb, white 58%, transparent),
+				inset 0 -1px 0 color-mix(in srgb, black 5%, transparent),
+				inset 0 1px 2px color-mix(in srgb, black 2%, transparent),
+				0 2px 0 color-mix(in srgb, white 34%, transparent),
+				0 0 0 1px color-mix(in srgb, var(--accent-a7) 55%, var(--landing-metal-rim-light)),
+				0 4px 14px -6px color-mix(in srgb, var(--accent-9) 18%, transparent);
+		}
+
+		.landing-primary-grid__card:hover .landing-primary-grid__title {
+			color: var(--accent-11);
+		}
 	}
 
 	.landing-cta-panel--final {
@@ -120,16 +163,8 @@
 	.landing-blog--teaser {
 		border-top-color: color-mix(in srgb, var(--accent-a5) 35%, var(--landing-border));
 
-		.landing-blog__teaser-item {
-			background: color-mix(in srgb, var(--accent-a2) 40%, var(--landing-surface-elevated));
-			border-color: color-mix(in srgb, var(--accent-a6) 40%, var(--landing-border));
-
-			@media (hover: hover) {
-				&:hover {
-					border-color: var(--accent-a8);
-					box-shadow: 0 12px 32px -20px var(--accent-a7);
-				}
-			}
+		.landing-blog__teaser-item.landing-surface--metal:hover {
+			border-color: color-mix(in srgb, var(--accent-a7) 55%, var(--landing-metal-rim-light));
 		}
 	}
 
@@ -376,6 +411,9 @@
 // Dark mode fine-tuning
 :where(.dark, .dark-theme) {
 	.landing--rawclinic {
+		--landing-feature-icon-top: color-mix(in srgb, white 11%, var(--gray-3));
+		--landing-feature-icon-mid: color-mix(in srgb, white 4%, var(--gray-2));
+		--landing-feature-icon-bottom: color-mix(in srgb, black 28%, var(--gray-2));
 		--landing-hero-title-gradient: linear-gradient(
 			165deg,
 			#fff 0%,
@@ -389,7 +427,6 @@
 		--landing-final-aurora-b: color-mix(in srgb, var(--accent-8) 50%, transparent);
 		--landing-final-aurora-c: color-mix(in srgb, var(--accent-7) 40%, transparent);
 		--landing-final-aurora-f: color-mix(in srgb, var(--accent-10) 45%, transparent);
-		--landing-feature-card-bg: color-mix(in srgb, var(--gray-3) 80%, var(--gray-2));
 
 		.landing-grid-section__card {
 			background: color-mix(in srgb, var(--gray-2) 92%, var(--accent-a2));
