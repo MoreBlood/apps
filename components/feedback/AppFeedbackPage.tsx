@@ -1,5 +1,6 @@
 import { ChatBubbleIcon } from '@radix-ui/react-icons'
 import { Box, Container, Flex, Heading, Text } from '@radix-ui/themes'
+import AppContactCta from '@/components/AppContactCta'
 import FeedbackForm from '@/components/feedback/FeedbackForm'
 import type { AppConfig } from '@/config'
 
@@ -32,6 +33,14 @@ export default function AppFeedbackPage({ app, appSlug }: Props) {
 			<Box className="feedback-page__panel">
 				<FeedbackForm appSlug={appSlug} appName={app.appName} contactEmail={app.contactEmail} />
 			</Box>
+
+			<AppContactCta
+				appSlug={appSlug}
+				contactEmail={app.contactEmail}
+				title="Prefer email?"
+				lead="You can also reach us directly at the address below."
+				showFeedback={false}
+			/>
 		</Container>
 	)
 }

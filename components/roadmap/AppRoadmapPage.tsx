@@ -1,6 +1,7 @@
 import NextLink from 'next/link'
 import { ArrowDownIcon, ArrowRightIcon } from '@radix-ui/react-icons'
-import { Box, Link, Text } from '@radix-ui/themes'
+import { Container, Link, Text } from '@radix-ui/themes'
+import AppContactCta from '@/components/AppContactCta'
 import type { AppConfig } from '@/config'
 import { getRoadmapBySlug } from '@/config/roadmap-content'
 import { groupItemsByColumn, STATUS_LABEL } from '@/lib/roadmap-grouping'
@@ -147,28 +148,26 @@ export default function AppRoadmapPage({ app }: Props) {
 				</span>
 			</p>
 
-			<footer className="roadmap__footer">
-				<Box mb="3">
-					<p className="roadmap__footer-lead">
-						Missing something important? Tell us what would make {app.appName} better for you.
-					</p>
-				</Box>
-				<div className="roadmap__footer-actions">
-					<Link asChild size="2" weight="medium">
-						<NextLink href={`/${app.slug}/feedback`}>Send feedback</NextLink>
-					</Link>
-					{app.storeLink && (
-						<Link asChild size="2" href={app.storeLink} target="_blank" rel="noopener noreferrer">
+			<Container size="2" className="roadmap__footer">
+				<AppContactCta
+					appSlug={app.slug}
+					contactEmail={app.contactEmail}
+					title="Missing something important?"
+					lead={`Tell us what would make ${app.appName} better for you.`}
+				/>
+				{app.storeLink && (
+					<Text as="p" size="2" mt="4">
+						<Link asChild href={app.storeLink} target="_blank" rel="noopener noreferrer">
 							Download on the App Store
 						</Link>
-					)}
-				</div>
+					</Text>
+				)}
 				<Text as="p" size="1" color="gray" mt="4">
 					<Link asChild>
 						<NextLink href={`/${app.slug}`}>← Back to overview</NextLink>
 					</Link>
 				</Text>
-			</footer>
+			</Container>
 		</article>
 	)
 }

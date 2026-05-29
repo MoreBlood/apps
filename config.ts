@@ -83,7 +83,7 @@ const apps: AppConfig[] = [
 	{
 		slug: 'rawclinic',
 		appName: 'RAW Clinic',
-		tagline: 'Edit Apple ProRAW on iPhone — no laptop required',
+		tagline: 'Edit Apple ProRAW on iPhone',
 		description:
 			'Apple Pro RAW is not dead: develop ProRAW on device, dial back Deep Fusion\'s baked-in look, and finish photos without a PC. Shoot with Apple Camera, grade in a focused queue, and export when ready — free on iPhone and iPad.',
 		contactEmail: 'artihovich.it+rawclinic@gmail.com',

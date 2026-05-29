@@ -272,17 +272,15 @@
 				display: block;
 				width: 0.5rem;
 				height: 0.5rem;
-				border-radius: 999px;
+				border-radius: 50%;
 				background: color-mix(in srgb, var(--gray-11) 45%, var(--gray-a8));
 				transition:
-					width 0.38s cubic-bezier(0.32, 0.72, 0, 1),
-					height 0.38s cubic-bezier(0.32, 0.72, 0, 1),
+					transform 0.38s cubic-bezier(0.32, 0.72, 0, 1),
 					background 0.28s ease;
 			}
 
 			&--active::after {
-				width: 1.125rem;
-				height: 0.4375rem;
+				transform: scale(1.35);
 				background: var(--gray-12);
 			}
 

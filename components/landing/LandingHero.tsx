@@ -18,11 +18,26 @@ export default function LandingHero({ app, landing }: Props) {
 			<div className="landing-hero__backdrop" aria-hidden />
 			<LandingHeroReveal className="landing-hero__inner">
 				<LandingHeroItem>
-					<p className="landing-hero__eyebrow">{landing.heroEyebrow}</p>
+					<div className="landing-hero__showcase">
+						<LandingDeviceStage
+							appSlug={app.slug}
+							appName={app.appName}
+							variant="hero"
+							className="landing-hero__stage"
+						/>
+					</div>
 				</LandingHeroItem>
 				<LandingHeroItem>
-					<h1 className="landing-hero__title" id={`${app.slug}-hero-title`}>
-						{landing.heroTitle}
+					<h1
+						className="landing-hero__title"
+						id={`${app.slug}-hero-title`}
+						data-lines={landing.heroTitle.includes('\n') ? 'multi' : undefined}
+					>
+						{landing.heroTitle.split('\n').map((line) => (
+							<span className="landing-hero__title-line" key={line}>
+								{line}
+							</span>
+						))}
 					</h1>
 				</LandingHeroItem>
 				<LandingHeroItem>
@@ -35,24 +50,6 @@ export default function LandingHero({ app, landing }: Props) {
 							Explore features
 						</LandingAnchorLink>
 					</div>
-				</LandingHeroItem>
-				<LandingHeroItem>
-					<ul className="landing-hero__pillars">
-						{landing.pillars.map((pillar) => (
-							<li key={pillar.label} className="landing-hero__pillar">
-								<span className="landing-hero__pillar-value">{pillar.value}</span>
-								<span className="landing-hero__pillar-label">{pillar.label}</span>
-							</li>
-						))}
-					</ul>
-				</LandingHeroItem>
-				<LandingHeroItem>
-					<LandingDeviceStage
-						appSlug={app.slug}
-						appName={app.appName}
-						variant="hero"
-						className="landing-hero__stage"
-					/>
 				</LandingHeroItem>
 			</LandingHeroReveal>
 		</section>

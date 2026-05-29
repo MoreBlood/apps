@@ -1,5 +1,7 @@
 import type { Metadata } from 'next'
 import { notFound } from 'next/navigation'
+import { Container } from '@radix-ui/themes'
+import AppContactCta from '@/components/AppContactCta'
 import { DefaultPrivacyContent } from '@/components/legal'
 import { getAppBySlug } from '@/config'
 
@@ -23,5 +25,12 @@ export default async function Privacy({ params }: { params: Promise<{ appSlug: s
 	if (!app) notFound()
 
 	const Content = app.PrivacyContent ?? DefaultPrivacyContent
-	return <Content app={app} />
+	return (
+		<>
+			<Content app={app} />
+			<Container size="2">
+				<AppContactCta appSlug={appSlug} contactEmail={app.contactEmail} />
+			</Container>
+		</>
+	)
 }

@@ -60,10 +60,11 @@ describe('computeLandingStageScale', () => {
 		const iphone = slots.find((s) => s.id === 'iphone')!
 		const secondary = slots.find((s) => s.id === 'iphone-secondary')!
 		expect(ipad.left).toBe(0.77)
+		expect(ipad.top).toBe(-0.06)
 		expect(ipad.scaleMult).toBe(1.2)
 		expect(ipad.zIndex).toBe(2)
 		expect(iphone.left).toBe(0.615)
-		expect(iphone.top).toBe(0.565)
+		expect(iphone.top).toBe(0.5)
 		expect(secondary.zIndex).toBe(0)
 	})
 

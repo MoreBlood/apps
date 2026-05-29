@@ -1,6 +1,6 @@
 import type { Metadata, Viewport } from 'next'
 import { Flex } from '@radix-ui/themes'
-import ConditionalAppFooter from '@/components/ConditionalAppFooter'
+import AppFooter from '@/components/AppFooter'
 import AppNav from '@/components/AppNav'
 import ThemeProvider from '@/components/ThemeProvider'
 import { siteName } from '@/config'
@@ -88,7 +88,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
 							{/* biome-ignore lint: stable id required for skip-link target */}
 							<main id="main-content">{children}</main>
 						</Flex>
-						<ConditionalAppFooter />
+						<AppFooter />
 					</Flex>
 				</ThemeProvider>
 			</body>

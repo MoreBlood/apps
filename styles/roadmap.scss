@@ -320,25 +320,5 @@
 
 	&__footer {
 		margin-top: clamp(1rem, 3vw, 2rem);
-		padding-top: 2rem;
-		border-top: 1px solid var(--gray-a6);
-		text-align: center;
-	}
-
-	&__footer-lead {
-		font-size: 0.9375rem;
-		line-height: 1.5;
-		color: var(--gray-11);
-		margin: 0;
-		max-width: 28rem;
-		margin-inline: auto;
-	}
-
-	&__footer-actions {
-		display: flex;
-		flex-wrap: wrap;
-		gap: 0.75rem 1.5rem;
-		justify-content: center;
-		align-items: center;
 	}
 }

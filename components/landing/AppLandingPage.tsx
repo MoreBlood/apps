@@ -2,8 +2,6 @@
 
 import { Fragment } from 'react'
 import clsx from 'clsx'
-import NextLink from 'next/link'
-import { Link, Strong, Text } from '@radix-ui/themes'
 import type { LandingAppInfo } from '@/config'
 import { getLandingBySlug } from '@/config/landing-content'
 import type {
@@ -215,8 +213,6 @@ export default function AppLandingPage({ app }: Props) {
 	const verticalReveal = usePreferVerticalReveal()
 	if (!landing) return null
 
-	const year = new Date().getFullYear()
-
 	return (
 		<LandingStageTunerProvider>
 		<article
@@ -271,8 +267,6 @@ export default function AppLandingPage({ app }: Props) {
 
 			{landing.tech && <TechBanner tech={landing.tech} />}
 
-			{landing.blog != null && <LandingBlogSection section={landing.blog} />}
-
 			<CtaPanel
 				app={app}
 				id={`${app.slug}-get-final`}
@@ -282,38 +276,7 @@ export default function AppLandingPage({ app }: Props) {
 				platformsLine={landing.platformsLine}
 			/>
 
-			<LandingReveal as="footer" className="landing-footer" direction="up" duration={0.5}>
-				<Text as="p" className="landing-footer__brand">
-					<Strong>{app.appName}</Strong>
-					<span className="landing-footer__dot" aria-hidden>
-						·
-					</span>
-					{app.tagline}
-				</Text>
-				<Text as="p" className="landing-footer__contact">
-					Questions?{' '}
-					<Link href={`mailto:${app.contactEmail}`}>{app.contactEmail}</Link>
-				</Text>
-				<div className="landing-footer__row">
-					<span>
-						© {year} {app.appName}
-					</span>
-					<nav className="landing-footer__nav" aria-label="Legal">
-						<Link asChild>
-							<NextLink href={`/${app.slug}/privacy`}>Privacy</NextLink>
-						</Link>
-						<Link asChild>
-							<NextLink href={`/${app.slug}/terms`}>Terms</NextLink>
-						</Link>
-						<Link asChild>
-							<NextLink href={`/${app.slug}/feedback`}>Feedback</NextLink>
-						</Link>
-						<Link asChild>
-							<NextLink href="/blog">Blog</NextLink>
-						</Link>
-					</nav>
-				</div>
-			</LandingReveal>
+			{landing.blog != null && <LandingBlogSection appSlug={app.slug} section={landing.blog} />}
 		</article>
 		</LandingStageTunerProvider>
 	)

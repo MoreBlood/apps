@@ -1,5 +1,5 @@
-import NextLink from 'next/link'
-import { Box, Container, Flex, Heading, Link, Strong, Text } from '@radix-ui/themes'
+import { Box, Container, Flex, Heading, Text } from '@radix-ui/themes'
+import AppContactCta from '@/components/AppContactCta'
 import FAQAccordionItem from '@/components/faq/FAQAccordionItem'
 import { getFAQSectionIcon } from '@/components/faq/faq-icons'
 import type { AppConfig } from '@/config'
@@ -54,26 +54,7 @@ export default function FAQContent({ app, appSlug }: FAQContentProps) {
 				<FAQSectionBlock key={section.id} section={section} />
 			))}
 
-			<Box pt="6" style={{ borderTop: '1px solid var(--gray-a6)' }}>
-				<Heading size="5" mb="2" as="h2">
-					Still have questions?
-				</Heading>
-				<Text as="p" mb="3">
-					We are happy to help. Reach out by email or send feedback through the form.
-				</Text>
-				<Flex direction="column" gap="2">
-					<Text as="p">
-						<Strong>Email: </Strong>
-						<Link href={`mailto:${app.contactEmail}`}>{app.contactEmail}</Link>
-					</Text>
-					<Text as="p">
-						<Strong>Feedback: </Strong>
-						<Link asChild>
-							<NextLink href={`/${appSlug}/feedback/`}>Open feedback form</NextLink>
-						</Link>
-					</Text>
-				</Flex>
-			</Box>
+			<AppContactCta appSlug={appSlug} contactEmail={app.contactEmail} />
 		</Container>
 	)
 }

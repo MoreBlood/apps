@@ -45,6 +45,7 @@ export type LandingGridIconId =
 	| 'search'
 	| 'chart'
 	| 'heart'
+	| 'lock'
 
 export type LandingGridItem = {
 	icon: LandingGridIconId
@@ -62,6 +63,11 @@ export type LandingBlogSection = {
 	title?: string
 	/** Default: `/blog`. */
 	href?: string
+	/** Optional roadmap teaser (second column). */
+	roadmapEyebrow?: string
+	roadmapTitle?: string
+	/** Default: `/{appSlug}/roadmap`. */
+	roadmapHref?: string
 }
 
 export type LandingTechItem = {

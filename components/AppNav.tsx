@@ -1,82 +1,85 @@
 'use client'
 
-import { DesktopIcon, HamburgerMenuIcon, MoonIcon, SunIcon } from '@radix-ui/react-icons'
-import {
-	Box,
-	Dialog,
-	Flex,
-	IconButton,
-	SegmentedControl,
-	Separator,
-	Text
-} from '@radix-ui/themes'
+import { Cross2Icon, DesktopIcon, HamburgerMenuIcon, MoonIcon, SunIcon } from '@radix-ui/react-icons'
+import { Box, Dialog, IconButton, Text } from '@radix-ui/themes'
+import NextLink from 'next/link'
 import { usePathname, useRouter } from 'next/navigation'
 import { useTheme } from 'next-themes'
-import { useEffect, useMemo, useState } from 'react'
+import { useEffect, useId, useMemo, useState } from 'react'
+import AppIcon from '@/components/AppIcon'
+import { getAppBySlug, getApps, siteName } from '@/config'
+import { homeContent } from '@/config/home-content'
 import {
-	ROOT_STATIC_SEGMENTS,
-	getAppSlugFromPathname,
-	normalizeSitePath
-} from '@/lib/site-paths'
-
-type NavItem = { href: string; label: string }
-
-function dedupeNavItems(items: NavItem[]): NavItem[] {
-	const seen = new Set<string>()
-	return items.filter((item) => {
-		if (seen.has(item.href)) return false
-		seen.add(item.href)
-		return true
-	})
-}
-
-const navItems = (appSlug: string | null): NavItem[] => {
-	const base: NavItem[] = [
-		{ href: '/', label: 'Home' },
-		{ href: '/blog', label: 'Blog' }
-	]
-	if (!appSlug || ROOT_STATIC_SEGMENTS.has(appSlug)) return base
-	return dedupeNavItems([
-		...base,
-		{ href: `/${appSlug}`, label: 'Overview' },
-		{ href: `/${appSlug}/roadmap`, label: 'Roadmap' },
-		{ href: `/${appSlug}/faq`, label: 'FAQ' },
-		{ href: `/${appSlug}/privacy`, label: 'Privacy' },
-		{ href: `/${appSlug}/terms`, label: 'Terms' },
-		{ href: `/${appSlug}/feedback`, label: 'Feedback' }
-	])
-}
+	dedupeSiteNavItems,
+	getSiteNavItems,
+	getSitePageTitle,
+	splitSiteNavItems,
+	type SiteNavItem
+} from '@/lib/site-nav'
+import { getAppSlugFromPathname, normalizeSitePath } from '@/lib/site-paths'
 
 type ThemeValue = 'light' | 'dark' | 'system'
 
+function PillNavLinks({
+	items,
+	normalizedPath
+}: {
+	items: SiteNavItem[]
+	normalizedPath: string
+}) {
+	return items.map(({ href, label }) => {
+		const isActive = normalizedPath === normalizeSitePath(href)
+		return (
+			<NextLink
+				key={`${href}:${label}`}
+				href={href}
+				className="app-nav-pill__item"
+				data-active={isActive || undefined}
+				aria-current={isActive ? 'page' : undefined}
+			>
+				{label}
+			</NextLink>
+		)
+	})
+}
+
+const THEME_CYCLE: ThemeValue[] = ['light', 'dark', 'system']
+
+const THEME_LABELS: Record<ThemeValue, string> = {
+	light: 'Light theme',
+	dark: 'Dark theme',
+	system: 'System theme'
+}
+
+function nextTheme(current: ThemeValue): ThemeValue {
+	const index = THEME_CYCLE.indexOf(current)
+	return THEME_CYCLE[(index + 1) % THEME_CYCLE.length]
+}
+
 function ThemeSwitcher({ mounted }: { mounted: boolean }) {
 	const { theme, setTheme } = useTheme()
-	if (!mounted) return null
+	const current = ((theme as ThemeValue | undefined) ?? 'system') as ThemeValue
+	const next = nextTheme(current)
+	const ThemeIcon = current === 'light' ? SunIcon : current === 'dark' ? MoonIcon : DesktopIcon
+
+	if (!mounted) {
+		return (
+			<Box data-theme-switcher className="app-nav-theme" aria-hidden style={{ width: '2.25rem', height: '2.25rem' }} />
+		)
+	}
+
 	return (
-		<Box data-theme-switcher>
-			<SegmentedControl.Root
-				value={(theme as ThemeValue) ?? 'system'}
-				onValueChange={(v) => v && setTheme(v as ThemeValue)}
-				size="1"
-				variant="classic"
-				aria-label="Theme"
+		<Box data-theme-switcher className="app-nav-theme">
+			<IconButton
+				className="app-nav-metal-btn"
+				variant="soft"
+				size="2"
+				aria-label={`${THEME_LABELS[current]}. Switch to ${THEME_LABELS[next].toLowerCase()}.`}
+				title={`${THEME_LABELS[current]} — click for ${THEME_LABELS[next].toLowerCase()}`}
+				onClick={() => setTheme(next)}
 			>
-				<SegmentedControl.Item value="light" title="Light">
-					<Flex align="center" justify="center">
-						<SunIcon />
-					</Flex>
-				</SegmentedControl.Item>
-				<SegmentedControl.Item value="dark" title="Dark">
-					<Flex align="center" justify="center">
-						<MoonIcon />
-					</Flex>
-				</SegmentedControl.Item>
-				<SegmentedControl.Item value="system" title="System">
-					<Flex align="center" justify="center">
-						<DesktopIcon />
-					</Flex>
-				</SegmentedControl.Item>
-			</SegmentedControl.Root>
+				<ThemeIcon width={18} height={18} aria-hidden />
+			</IconButton>
 		</Box>
 	)
 }
@@ -86,15 +89,16 @@ export default function AppNav() {
 	const router = useRouter()
 	const [mounted, setMounted] = useState(false)
 	const [mobileOpen, setMobileOpen] = useState(false)
+	const appsSectionId = useId()
+	const menuApps = useMemo(() => getApps(), [])
+	const copyrightYear = new Date().getFullYear()
 
 	const normalizedPath = useMemo(() => normalizeSitePath(pathname ?? '/'), [pathname])
 	const appSlug = useMemo(() => getAppSlugFromPathname(pathname), [pathname])
-	const items = useMemo(() => dedupeNavItems(navItems(appSlug)), [appSlug])
-	const navValue = useMemo(() => {
-		const match = items.find((i) => normalizeSitePath(i.href) === normalizedPath)
-		return match ? match.href : normalizedPath
-	}, [items, normalizedPath])
-
+	const items = useMemo(() => dedupeSiteNavItems(getSiteNavItems(appSlug)), [appSlug])
+	const { primary: primaryItems, app: appItems } = useMemo(() => splitSiteNavItems(items), [items])
+	const currentApp = useMemo(() => (appSlug ? getAppBySlug(appSlug) : undefined), [appSlug])
+	const pageTitle = useMemo(() => getSitePageTitle(pathname), [pathname])
 	useEffect(() => setMounted(true), [])
 
 	const goTo = (href: string) => {
@@ -103,68 +107,130 @@ export default function AppNav() {
 	}
 
 	return (
-		<Box asChild mb="6" pb="3" style={{ borderBottom: '1px solid var(--gray-a6)' }}>
-			<nav aria-label="Main navigation">
-				<Flex gap="4" wrap="wrap" align="center" justify="between">
-				<Box display={{ initial: 'none', lg: 'block' }} className="app-nav-desktop" style={{ minWidth: 0, flex: '1 1 auto' }}>
-					<SegmentedControl.Root value={navValue} onValueChange={(v) => v && router.push(v)} size="2">
-						{items.map(({ href, label }) => (
-							<SegmentedControl.Item key={`${href}:${label}`} value={href}>
-								{label}
-							</SegmentedControl.Item>
-						))}
-					</SegmentedControl.Root>
-				</Box>
-
-				<Box display={{ initial: 'block', lg: 'none' }}>
-					<Dialog.Root open={mobileOpen} onOpenChange={setMobileOpen}>
-						<Dialog.Trigger>
-							<IconButton variant="soft" size="3" aria-label="Open menu">
-								<HamburgerMenuIcon />
-							</IconButton>
-						</Dialog.Trigger>
-						<Dialog.Content size="2" className="app-nav-dialog">
-							<Dialog.Title>Menu</Dialog.Title>
-							<Flex direction="column" gap="3" mt="3">
-								{items.map(({ href, label }) => {
-									const isActive = normalizedPath === normalizeSitePath(href)
-									return (
-										<Dialog.Close key={`${href}:${label}`}>
-											<Box
-												asChild
-												style={{
-													cursor: 'pointer',
-													minHeight: '2.75rem',
-													display: 'flex',
-													alignItems: 'center',
-													padding: 'var(--space-2) var(--space-3)',
-													borderRadius: 'var(--radius-2)',
-													background: isActive ? 'var(--accent-9)' : 'transparent',
-													color: isActive ? 'white' : undefined
-												}}
-												onClick={() => goTo(href)}
-											>
-												<Text size="3" weight={isActive ? 'medium' : 'regular'}>
-													{label}
-												</Text>
-											</Box>
+		<Box asChild mb="6" pb="3">
+			<nav aria-label="Main navigation" className="app-nav">
+				<div className="app-nav__bar">
+					<Box className="app-nav__start" display={{ initial: 'block', lg: 'none' }}>
+						<Dialog.Root open={mobileOpen} onOpenChange={setMobileOpen}>
+							<Dialog.Trigger>
+								<IconButton className="app-nav-metal-btn" variant="soft" size="2" aria-label="Open menu">
+									<HamburgerMenuIcon width={18} height={18} aria-hidden />
+								</IconButton>
+							</Dialog.Trigger>
+							<Dialog.Content className="app-nav-dialog" aria-describedby={undefined}>
+								<Dialog.Title className="visually-hidden">Menu</Dialog.Title>
+								<div className="app-nav-dialog__inner">
+									<header className="app-nav-dialog__header">
+										<Dialog.Close className="app-nav-dialog__brand" onClick={() => goTo('/')}>
+											<span>{siteName}</span>
 										</Dialog.Close>
-									)
-								})}
-								<Separator size="4" />
-								<Text size="2" color="gray" mb="1">
-									Theme
-								</Text>
-								<ThemeSwitcher mounted={mounted} />
-							</Flex>
-						</Dialog.Content>
-					</Dialog.Root>
-				</Box>
+										<Dialog.Close className="app-nav-dialog__close">
+											<span className="app-nav-dialog__close-label">
+												<Cross2Icon width={16} height={16} aria-hidden />
+												<span>Close</span>
+											</span>
+										</Dialog.Close>
+									</header>
 
-				<Box display={{ initial: 'none', lg: 'block' }} flexShrink="0">
-					<ThemeSwitcher mounted={mounted} />
-				</Box>
-			</Flex>
+									<nav className="app-nav-dialog__primary" aria-label="Site">
+										{primaryItems.map(({ href, label }) => {
+											const isActive = normalizedPath === normalizeSitePath(href)
+											return (
+												<Dialog.Close
+													key={`${href}:${label}`}
+													className="app-nav-dialog__primary-link"
+													data-active={isActive || undefined}
+													onClick={() => goTo(href)}
+												>
+													<span>{label}</span>
+												</Dialog.Close>
+											)
+										})}
+									</nav>
+
+									{appItems.length > 0 && (
+										<nav className="app-nav-dialog__section" aria-label="Current app">
+											{appItems.map(({ href, label }) => {
+												const isActive = normalizedPath === normalizeSitePath(href)
+												return (
+													<Dialog.Close
+														key={`${href}:${label}`}
+														className="app-nav-dialog__section-link"
+														data-active={isActive || undefined}
+														onClick={() => goTo(href)}
+													>
+														<span>{label}</span>
+													</Dialog.Close>
+												)
+											})}
+										</nav>
+									)}
+
+									<section className="app-nav-dialog__apps" aria-labelledby={appsSectionId}>
+										<h2 className="app-nav-dialog__apps-title" id={appsSectionId}>
+											{homeContent.appsTitle}:
+										</h2>
+										<ul className="app-nav-dialog__apps-list">
+											{menuApps.map((app) => (
+												<li key={app.slug}>
+													<Dialog.Close
+														className="app-nav-dialog__app-row"
+														data-active={appSlug === app.slug || undefined}
+														onClick={() => goTo(`/${app.slug}`)}
+													>
+														<span className="app-nav-dialog__app-row-inner">
+															<span className="app-nav-dialog__app-icon" aria-hidden>
+																<AppIcon slug={app.slug} />
+															</span>
+															<span className="app-nav-dialog__app-copy">
+																<span className="app-nav-dialog__app-name">{app.appName}</span>
+																<span className="app-nav-dialog__app-tagline">{app.tagline}</span>
+															</span>
+														</span>
+													</Dialog.Close>
+												</li>
+											))}
+										</ul>
+									</section>
+
+									<footer className="app-nav-dialog__footer">
+										<Text as="p" size="1" className="app-nav-dialog__copyright">
+											© {copyrightYear} {siteName}
+										</Text>
+										<div className="app-nav-dialog__theme">
+											<ThemeSwitcher mounted={mounted} />
+										</div>
+									</footer>
+								</div>
+							</Dialog.Content>
+						</Dialog.Root>
+					</Box>
+
+					<span className="app-nav__title" aria-current="page">
+						{pageTitle}
+					</span>
+
+					<Box display={{ initial: 'none', lg: 'block' }} className="app-nav-desktop">
+						<div className="app-nav-pill-row">
+							<nav className="app-nav-pill" aria-label="Site">
+								<div className="app-nav-pill__track">
+									<PillNavLinks items={primaryItems} normalizedPath={normalizedPath} />
+								</div>
+							</nav>
+							{appItems.length > 0 && (
+								<nav className="app-nav-pill" aria-label={currentApp?.appName ?? 'App'}>
+									<div className="app-nav-pill__track">
+										<PillNavLinks items={appItems} normalizedPath={normalizedPath} />
+									</div>
+								</nav>
+							)}
+						</div>
+					</Box>
+
+					<Box className="app-nav__end" flexShrink="0">
+						<ThemeSwitcher mounted={mounted} />
+					</Box>
+				</div>
 			</nav>
 		</Box>
 	)

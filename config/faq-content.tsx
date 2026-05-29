@@ -24,11 +24,13 @@ export const faqBySlug: Record<string, (appSlug: string) => AppFAQConfig> = {
 					},
 					{
 						id: 'supported-devices',
-						question: 'Which devices are supported?',
+						question: 'Which iPhone and iPad models can run RAW Clinic?',
 						answer: (
 							<Text as="p">
 								RAW Clinic runs on iPhone and iPad with a recent version of iOS or iPadOS. Performance is best on devices
-								with enough memory for large RAW files; very large files may take longer to preview on older hardware.
+								with enough memory for large RAW files; very large files may take longer to preview on older hardware. You do
+								not need a Pro model to <Strong>edit</Strong> RAW — only to shoot Apple ProRAW in the built-in Camera app (see
+								below in RAW files &amp; editing).
 							</Text>
 						)
 					},
@@ -60,12 +62,66 @@ export const faqBySlug: Record<string, (appSlug: string) => AppFAQConfig> = {
 				items: [
 					{
 						id: 'supported-formats',
-						question: 'Which RAW formats are supported?',
+						question: 'Which RAW files can RAW Clinic edit?',
 						answer: (
 							<Text as="p">
-								RAW Clinic supports common camera RAW formats available through iOS PhotoKit — including DNG and many
-								manufacturer RAW types your device can read. If a file appears in Photos as RAW, RAW Clinic can usually open
-								it. Proprietary formats your iPhone cannot decode are not supported.
+								RAW Clinic opens files your iPhone or iPad already decodes through PhotoKit and Apple&apos;s on-device RAW
+								pipeline (Core Image <code>CIRAWFilter</code>) — including Apple ProRAW and DNG, plus many camera RAW types.
+								If a file appears in Photos as RAW and opens there, RAW Clinic can usually develop it. Proprietary formats iOS
+								cannot decode are not supported.
+							</Text>
+						)
+					},
+					{
+						id: 'edit-without-proraw',
+						question: 'Do I need a Pro iPhone to edit RAW?',
+						answer: (
+							<Text as="p">
+								No. <Strong>Editing</Strong> and <Strong>capturing</Strong> RAW are different. Any iPhone or iPad that runs
+								RAW Clinic can import and grade ProRAW or camera RAW from Photos, Files, or AirDrop — as long as iOS supports
+								that file. An iPhone SE or iPad without ProRAW in Apple Camera can still edit shots taken on a Pro iPhone or a
+								mirrorless camera.
+							</Text>
+						)
+					},
+					{
+						id: 'proraw-capture',
+						question: 'Which iPhones can shoot Apple ProRAW?',
+						answer: (
+							<Text as="p">
+								Apple ProRAW in the built-in Camera app requires{' '}
+								<Link href="https://support.apple.com/en-us/119916" target="_blank" rel="noopener noreferrer">
+									iPhone 12 Pro or later Pro models
+								</Link>{' '}
+								with iOS 14.3 or later. Enable it in Settings → Camera → Formats → Apple ProRAW (or ProRAW &amp; Resolution
+								Control on newer Pro models). ProRAW is not available on non-Pro iPhones or in Portrait mode. See also{' '}
+								<Link href="https://support.apple.com/guide/iphone/take-apple-proraw-photos-iphae1e882a3/ios" target="_blank" rel="noopener noreferrer">
+									Take Apple ProRAW photos
+								</Link>{' '}
+								in the iPhone User Guide.
+							</Text>
+						)
+					},
+					{
+						id: 'third-party-raw-cameras',
+						question: 'Which third-party cameras are supported?',
+						answer: (
+							<Text as="p">
+								Apple publishes the official list of camera models whose RAW files iOS and iPadOS can decode — the same
+								decoders{' '}
+								<Link
+									href="https://developer.apple.com/documentation/coreimage/cirawfilter"
+									target="_blank"
+									rel="noopener noreferrer"
+								>
+									CIRAWFilter
+								</Link>{' '}
+								uses (<code>supportedCameraModels</code>). See{' '}
+								<Link href="https://support.apple.com/en-us/122870" target="_blank" rel="noopener noreferrer">
+									Digital camera RAW formats supported by iOS and iPadOS
+								</Link>{' '}
+								(Canon, FUJIFILM, Nikon, Sony, and others; Apple updates this list over time). If your camera is not listed
+								or iOS cannot open the file, RAW Clinic cannot edit it either.
 							</Text>
 						)
 					},
@@ -104,8 +160,9 @@ export const faqBySlug: Record<string, (appSlug: string) => AppFAQConfig> = {
 						question: 'Is there a built-in camera?',
 						answer: (
 							<Text as="p">
-								RAW Clinic can capture photos in RAW format using the in-app camera when you grant camera permission.
-								Captured images are processed on your device like any other photo you edit in the app.
+								Yes. RAW Clinic can capture RAW with the in-app camera when you grant camera permission — separate from
+								whether Apple Camera offers ProRAW on your iPhone model. Captured files are processed on your device and can be
+								edited in your queue like imports from Photos.
 							</Text>
 						)
 					}
@@ -140,7 +197,9 @@ export const faqBySlug: Record<string, (appSlug: string) => AppFAQConfig> = {
 								<ul>
 									<li>
 										<Text>
-											<Strong>Photos</Strong> — to open RAW files and save exports to your library.
+											<Strong>Photos</Strong> — to open RAW files and save exports. You do not have to grant access to your
+											entire library: iOS lets you allow only the photos you pick. RAW Clinic edits RAW files only — not JPEG or
+											HEIC.
 										</Text>
 									</li>
 									<li>
@@ -148,13 +207,11 @@ export const faqBySlug: Record<string, (appSlug: string) => AppFAQConfig> = {
 											<Strong>Camera</Strong> — only if you use the in-app RAW camera.
 										</Text>
 									</li>
-									<li>
-										<Text>
-											<Strong>Location</Strong> — only to embed coordinates in metadata of photos you capture with the
-											in-app camera, if you allow it.
-										</Text>
-									</li>
 								</ul>
+								<Text as="p">
+									<Strong>Location</Strong> is optional and only relevant to the in-app camera — see{' '}
+									<Link href="#location-why">Why does RAW Clinic ask for location?</Link> below.
+								</Text>
 							</>
 						)
 					},
@@ -181,8 +238,8 @@ export const faqBySlug: Record<string, (appSlug: string) => AppFAQConfig> = {
 						answer: (
 							<Text as="p">
 								Confirm the files are in your Photos library and that RAW Clinic has photo access in iOS Settings. Some
-								cloud-only items may need to download first. If Photos shows the image as RAW, try opening it from the same
-								album inside RAW Clinic.
+								cloud-only items may need to download first. If you allowed access to only selected photos, you can add more
+								anytime in iOS Settings → RAW Clinic → Photos, or when the app asks you to pick additional images.
 							</Text>
 						)
 					},
@@ -192,7 +249,9 @@ export const faqBySlug: Record<string, (appSlug: string) => AppFAQConfig> = {
 						answer: (
 							<Text as="p">
 								RAW files are large and memory-intensive. Close other apps, ensure free storage, and allow previews to finish
-								loading before applying heavy adjustments. Newer devices handle big files more smoothly.
+								loading before applying heavy adjustments. You can also lower preview resolution in the editor settings to speed
+								things up. Files above 48&nbsp;MP may still feel sluggish or look softer while editing — we are working to
+								improve that, but very large ProRAW frames are demanding on any phone.
 							</Text>
 						)
 					},

@@ -1,5 +1,7 @@
 import type { Metadata } from 'next'
 import { notFound } from 'next/navigation'
+import { Container } from '@radix-ui/themes'
+import AppContactCta from '@/components/AppContactCta'
 import { DefaultTermsContent } from '@/components/legal'
 import { getAppBySlug } from '@/config'
 
@@ -23,5 +25,12 @@ export default async function Terms({ params }: { params: Promise<{ appSlug: str
 	if (!app) notFound()
 
 	const Content = app.TermsContent ?? DefaultTermsContent
-	return <Content app={app} appSlug={appSlug} />
+	return (
+		<>
+			<Content app={app} appSlug={appSlug} />
+			<Container size="2">
+				<AppContactCta appSlug={appSlug} contactEmail={app.contactEmail} />
+			</Container>
+		</>
+	)
 }

@@ -3,25 +3,25 @@ import type { AppLandingConfig } from '@/types/landing'
 export const landingBySlug: Record<string, AppLandingConfig> = {
 	rawclinic: {
 		heroEyebrow: 'ProRAW · iPhone & iPad',
-		heroTitle: 'Apple Pro RAW is not dead.',
+		heroTitle: 'Your iPhone shoots great photos.\nMake them greater.',
 		heroLead:
-			'Edit ProRAW on your phone like on a desktop — without copying files or opening a laptop. Dial back what Deep Fusion baked in until the photo looks natural again.',
+			'Develop ProRAW on iPhone or iPad — dial back crunchy Deep Fusion, keep your library private, and skip the laptop and the Lightroom subscription.',
 		pillars: [
-			{ value: 'No PC', label: 'Full workflow' },
-			{ value: 'ProRAW', label: 'Apple RAW' }
+			{ value: 'Free', label: 'No subscription' },
+			{ value: 'Private', label: 'On your device' }
 		],
 		showcase: {
 			quote:
-				'Humans can develop photos better than Deep Fusion — if you reduce sharpening, edge contrast, and the rest of what Apple embedded in the preview.'
+				'You can often finish ProRAW more naturally than Apple\'s embedded preview — easing sharpening, edge contrast, and the polish baked in along the way.'
 		},
 		photoMoments: [
 			{
 				id: 'raw-spotlight',
 				layout: 'spotlight',
 				eyebrow: 'ProRAW in the wild',
-				title: 'Embedded JPEG vs your grade',
+				title: 'Ever notice something off about your photos?',
 				caption:
-					'The same ProRAW frame — Apple\'s embedded preview on the left, a finish from RAW Clinic on the right. Less crunch, more natural light.',
+					'Phone cameras keep getting bigger and smarter, yet the images often feel no better — sometimes harsher. Processing tuned to please everyone doesn\'t always look right to you.',
 				compareSet: 'rawclinic',
 				compareLabels: { primary: 'Embedded JPEG', secondary: 'RAW Clinic' },
 				compareIntervalMs: 5000
@@ -29,75 +29,74 @@ export const landingBySlug: Record<string, AppLandingConfig> = {
 		],
 		features: [
 			{
-				eyebrow: 'Develop',
-				title: 'Finish what Apple started — your way.',
+				eyebrow: 'Shoot',
+				title: 'Capture in Apple Camera or in-app.',
 				description:
-					'Use Embedded, Balanced, or Neutral as a baseline, then pull back over-sharpening and edge contrast and shape exposure, color, and detail — non-destructive, with compare to the embedded preview.',
-				bullets: ['Built on Apple\'s on-device RAW pipeline — not a cloud workaround.'],
-				visualOnLeft: true,
-				visual: 'color'
-			},
-			{
-				eyebrow: 'Workflow',
-				title: 'Shoot with Apple Camera. Edit in RAW Clinic.',
-				description:
-					'iPhone still wins in low light and hand-held shots. Capture ProRAW in the native camera, import into your queue, and grade without a computer — or use any RAW your library can read.',
-				bullets: ['In-app RAW camera when you want capture and edit in one place.'],
+					'Use Apple Camera when you want the best hand-held ProRAW, or shoot inside RAW Clinic when capture and edit should stay in one app.',
 				visual: 'devices'
 			},
 			{
 				eyebrow: 'Queue',
-				title: 'A focused RAW workspace.',
+				title: 'Import, organize, and grade.',
 				description:
-					'Sort, filter, copy grades between frames, and export to Photos only when a shot is ready — the queue persists between sessions.',
+					'Bring in ProRAW from Photos or Files. Sort your queue, copy grades between shots, and develop with baselines that ease Deep Fusion — plus film LUTs, exposure, color, and embedded preview compare.',
+				bullets: ['Built on Apple\'s on-device RAW pipeline.'],
 				visualOnLeft: true,
 				visual: 'editor'
+			},
+			{
+				eyebrow: 'Export',
+				title: 'Export when ready. Repeat.',
+				description:
+					'Save JPG, HEIC, or TIFF to Photos or Share, then move on. No desktop round trip and no paid editor required — your queue waits for the next session.',
+				visual: 'color'
 			}
 		],
 		grid: {
-			title: 'Professional RAW editing, pocket size.',
-			lead: 'Free on iPhone and iPad — the workflow I use every time I develop ProRAW on the go.',
+			title: 'ProRAW editing, pocket size.',
+			lead: 'For photographers and anyone tired of over-processed iPhone shots — free, private, and on your device.',
 			primary: [
 				{
 					icon: 'sun',
-					title: 'Finish what Apple started',
-					description:
-						'Embedded, Balanced, or Neutral baselines — then dial back Deep Fusion and shape exposure, color, and detail.'
+					title: 'Dial back Deep Fusion',
+					description: 'Embedded, Balanced, or Neutral baselines.'
 				},
 				{
-					icon: 'device',
-					title: 'Shoot with Apple Camera',
+					icon: 'color-wheel',
+					title: 'Embedded preview compare',
 					description:
-						'Capture ProRAW in the native camera, import into your queue, and grade without a computer.'
-				},
-				{
-					icon: 'layers',
-					title: 'A focused RAW workspace',
-					description:
-						'Sort, filter, copy grades between frames, and export to Photos when a shot is ready.'
+						'See what Apple baked in while you grade. ProRAW and most camera RAW your library can open.'
 				},
 				{
 					icon: 'mixer',
 					title: 'Film & Fuji LUTs',
-					description: 'Reset, grade, then film looks — or import your own .cube LUT.'
+					description: 'Built-in looks. Import .cube LUTs.'
 				},
 				{
-					icon: 'color-wheel',
-					title: 'Compare while you edit',
-					description: 'Toggle against Apple\'s embedded JPEG preview until the grade looks natural.'
+					icon: 'layers',
+					title: 'Copy grades',
+					description: 'Paste your look across similar shots.'
 				},
 				{
-					icon: 'export',
-					title: 'Export when ready',
-					description: 'JPG, HEIC, or TIFF to Photos or Share when the frame is finished.'
+					icon: 'history',
+					title: 'Nondestructive',
+					description: 'Your original RAW stays intact.'
+				},
+				{
+					icon: 'lock',
+					title: 'On your device only',
+					description: 'Private. No cloud. No account.'
 				}
 			],
 			items: []
 		},
-		blog: {},
-		closingTitle: 'Your RAW journey starts now.',
+		blog: {
+			roadmapEyebrow: 'Product',
+			roadmapTitle: 'See the roadmap'
+		},
+		closingTitle: 'Better ProRAW. Still on your phone.',
 		closingLead:
-			'Try RAW Clinic on your iPhone or iPad — every frame stays flexible until you export.',
+			'Free on the App Store — develop naturally, keep your photos private, and leave the subscription editor behind.',
 		platformsLine: 'Free on the App Store'
 	},
 	'aqi-sense': {

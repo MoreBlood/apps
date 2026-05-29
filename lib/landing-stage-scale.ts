@@ -56,7 +56,7 @@ const LAYOUTS: Record<LandingStageLayoutKey, StageDeviceSlot[]> = {
 			id: 'ipad',
 			...MOCKUP_IPAD,
 			left: 0.77,
-			top: 0.01,
+			top: -0.06,
 			rotate: 0,
 			scaleMult: 1.2,
 			zIndex: 2
@@ -65,7 +65,7 @@ const LAYOUTS: Record<LandingStageLayoutKey, StageDeviceSlot[]> = {
 			id: 'iphone',
 			...MOCKUP_IPHONE,
 			left: 0.615,
-			top: 0.565,
+			top: 0.5,
 			rotate: 0,
 			zIndex: 2
 		},
@@ -73,7 +73,7 @@ const LAYOUTS: Record<LandingStageLayoutKey, StageDeviceSlot[]> = {
 			id: 'iphone-secondary',
 			...MOCKUP_IPHONE,
 			left: 1,
-			top: 0.565,
+			top: 0.5,
 			rotate: 0,
 			zIndex: 0
 		}
@@ -164,8 +164,8 @@ export type ComputeStageScaleOptions = {
 export const LANDING_STAGE_SCALE_OPTIONS: Partial<
 	Record<LandingStageLayoutKey, Omit<ComputeStageScaleOptions, 'debugLabel' | 'layoutKey'>>
 > = {
-	hero: { padding: 27, shadowPad: 28, fitMargin: 1 },
-	'hero-mobile': { padding: 24, shadowPad: 24, fitMargin: 1.06 },
+	hero: { padding: 6, shadowPad: 12, fitMargin: 1, maxScale: 0.74 },
+	'hero-mobile': { padding: 8, shadowPad: 14, fitMargin: 1 },
 	compact: { padding: 8, shadowPad: 48, fitMargin: 1, maxScale: 0.44 },
 	feature: { padding: 0, shadowPad: 0, fitMargin: 1.13, maxScale: 0.46 }
 }

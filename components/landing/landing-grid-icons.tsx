@@ -9,6 +9,7 @@ import {
 	GlobeIcon,
 	HeartIcon,
 	LayersIcon,
+	LockClosedIcon,
 	MagnifyingGlassIcon,
 	MixerHorizontalIcon,
 	MobileIcon,
@@ -41,7 +42,8 @@ const GRID_ICONS: Record<LandingGridIconId, GridIcon> = {
 	scale: TokensIcon,
 	search: MagnifyingGlassIcon,
 	chart: BarChartIcon,
-	heart: HeartIcon
+	heart: HeartIcon,
+	lock: LockClosedIcon
 }
 
 export function getLandingGridIcon(iconId: LandingGridIconId): GridIcon {
