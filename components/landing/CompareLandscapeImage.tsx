@@ -52,17 +52,27 @@ export default function CompareLandscapeImage({
 	priority = false
 }: Props) {
 	const { viewportRef, frameAspect } = useCompareFrameAspect()
+	const [documentVisible, setDocumentVisible] = useState(
+		() => typeof document === 'undefined' || document.visibilityState === 'visible'
+	)
 	const meta = getCompareImageMeta(src)
 	const width = meta?.width ?? 1600
 	const height = meta?.height ?? 1200
 	const panEnd = meta != null ? panEndShift(meta, frameAspect) : '0'
+	const panRunning = isActive && documentVisible
+
+	useEffect(() => {
+		const onVisibility = () => setDocumentVisible(document.visibilityState === 'visible')
+		document.addEventListener('visibilitychange', onVisibility)
+		return () => document.removeEventListener('visibilitychange', onVisibility)
+	}, [])
 
 	return (
 		<div ref={viewportRef} className="landing-compare__pan-viewport">
 			<div
 				className={clsx(
 					'landing-compare__pan-track',
-					isActive && 'landing-compare__pan-track--active'
+					panRunning && 'landing-compare__pan-track--active'
 				)}
 				style={{ '--compare-pan-end': panEnd } as React.CSSProperties}
 			>

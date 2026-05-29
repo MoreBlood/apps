@@ -5,7 +5,9 @@ import { Box, Dialog, IconButton, Text } from '@radix-ui/themes'
 import NextLink from 'next/link'
 import { usePathname, useRouter } from 'next/navigation'
 import { useTheme } from 'next-themes'
-import { useEffect, useId, useMemo, useState } from 'react'
+import { useEffect, useId, useLayoutEffect, useMemo, useRef, useState, type CSSProperties } from 'react'
+import { createPortal } from 'react-dom'
+import { useScrollHeader } from '@/hooks/useScrollHeader'
 import AppIcon from '@/components/AppIcon'
 import { getAppBySlug, getApps, siteName } from '@/config'
 import { homeContent } from '@/config/home-content'
@@ -88,6 +90,7 @@ export default function AppNav() {
 	const pathname = usePathname()
 	const router = useRouter()
 	const [mounted, setMounted] = useState(false)
+	const [portalRoot, setPortalRoot] = useState<HTMLElement | null>(null)
 	const [mobileOpen, setMobileOpen] = useState(false)
 	const appsSectionId = useId()
 	const menuApps = useMemo(() => getApps(), [])
@@ -99,17 +102,45 @@ export default function AppNav() {
 	const { primary: primaryItems, app: appItems } = useMemo(() => splitSiteNavItems(items), [items])
 	const currentApp = useMemo(() => (appSlug ? getAppBySlug(appSlug) : undefined), [appSlug])
 	const pageTitle = useMemo(() => getSitePageTitle(pathname), [pathname])
-	useEffect(() => setMounted(true), [])
+	const barRef = useRef<HTMLDivElement>(null)
+	const { hideProgress } = useScrollHeader({ disabled: mobileOpen })
+
+	useEffect(() => {
+		setMounted(true)
+		setPortalRoot(document.querySelector<HTMLElement>('.radix-themes'))
+	}, [])
+
+	useLayoutEffect(() => {
+		const el = barRef.current
+		if (!el) return
+
+		const sync = () => {
+			document.documentElement.style.setProperty('--app-nav-bar-height', `${el.offsetHeight}px`)
+		}
+		sync()
+
+		const observer = new ResizeObserver(sync)
+		observer.observe(el)
+		return () => {
+			observer.disconnect()
+			document.documentElement.style.removeProperty('--app-nav-bar-height')
+		}
+	}, [pathname, mobileOpen])
 
 	const goTo = (href: string) => {
 		router.push(href)
 		setMobileOpen(false)
 	}
 
-	return (
-		<Box asChild mb="6" pb="3">
-			<nav aria-label="Main navigation" className="app-nav">
-				<div className="app-nav__bar">
+	const nav = (
+		<nav
+			aria-label="Main navigation"
+			className="app-nav"
+			style={{ '--nav-hide-progress': hideProgress } as CSSProperties}
+			aria-hidden={hideProgress >= 1}
+			inert={hideProgress >= 1 || undefined}
+		>
+			<div ref={barRef} className="app-nav__bar">
 					<Box className="app-nav__start" display={{ initial: 'block', lg: 'none' }}>
 						<Dialog.Root open={mobileOpen} onOpenChange={setMobileOpen}>
 							<Dialog.Trigger>
@@ -206,9 +237,13 @@ export default function AppNav() {
 						</Dialog.Root>
 					</Box>
 
-					<span className="app-nav__title" aria-current="page">
-						{pageTitle}
-					</span>
+					<div className="app-nav__title-wrap">
+						<div className="app-nav-pill__track">
+							<span className="app-nav__title" aria-current="page">
+								{pageTitle}
+							</span>
+						</div>
+					</div>
 
 					<Box display={{ initial: 'none', lg: 'block' }} className="app-nav-desktop">
 						<div className="app-nav-pill-row">
@@ -230,8 +265,14 @@ export default function AppNav() {
 					<Box className="app-nav__end" flexShrink="0">
 						<ThemeSwitcher mounted={mounted} />
 					</Box>
-				</div>
-			</nav>
-		</Box>
+			</div>
+		</nav>
+	)
+
+	return (
+		<>
+			<div className="app-nav-shell" />
+			{portalRoot ? createPortal(nav, portalRoot) : nav}
+		</>
 	)
 }

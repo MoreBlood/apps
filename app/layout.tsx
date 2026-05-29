@@ -74,6 +74,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
 					<a href="#main-content" className="skip-link">
 						Skip to main content
 					</a>
+					<AppNav />
 					<Flex
 						direction="column"
 						className="app-shell"
@@ -83,7 +84,6 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
 							margin: '0 auto'
 						}}
 					>
-						<AppNav />
 						<Flex asChild direction="column" flexGrow="1">
 							{/* biome-ignore lint: stable id required for skip-link target */}
 							<main id="main-content">{children}</main>

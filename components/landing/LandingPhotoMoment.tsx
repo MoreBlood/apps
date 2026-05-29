@@ -28,7 +28,13 @@ function PhotoFrame({
 }) {
 	if (src) {
 		return (
-			<figure className={clsx('landing-photo__figure', className)}>
+			<figure
+				className={clsx(
+					'landing-photo__figure',
+					compareLabel && 'landing-photo__figure--compare',
+					className
+				)}
+			>
 				<div className="landing-photo__frame">
 					<Image
 						src={assetPath(src)}

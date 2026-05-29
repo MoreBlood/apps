@@ -5,15 +5,11 @@ export const landingBySlug: Record<string, AppLandingConfig> = {
 		heroEyebrow: 'ProRAW · iPhone & iPad',
 		heroTitle: 'Your iPhone shoots great photos.\nMake them greater.',
 		heroLead:
-			'Develop ProRAW on iPhone or iPad — dial back crunchy Deep Fusion, keep your library private, and skip the laptop and the Lightroom subscription.',
+			'Develop ProRAW on iPhone or iPad. Ease off crunchy Deep Fusion and skip the laptop and Lightroom subscription.',
 		pillars: [
 			{ value: 'Free', label: 'No subscription' },
 			{ value: 'Private', label: 'On your device' }
 		],
-		showcase: {
-			quote:
-				'You can often finish ProRAW more naturally than Apple\'s embedded preview — easing sharpening, edge contrast, and the polish baked in along the way.'
-		},
 		photoMoments: [
 			{
 				id: 'raw-spotlight',
@@ -21,7 +17,7 @@ export const landingBySlug: Record<string, AppLandingConfig> = {
 				eyebrow: 'ProRAW in the wild',
 				title: 'Ever notice something off about your photos?',
 				caption:
-					'Phone cameras keep getting bigger and smarter, yet the images often feel no better — sometimes harsher. Processing tuned to please everyone doesn\'t always look right to you.',
+					'Bigger sensors and smarter pipelines do not always mean better files, often just heavier sharpening and contrast baked in for everyone.',
 				compareSet: 'rawclinic',
 				compareLabels: { primary: 'Embedded JPEG', secondary: 'RAW Clinic' },
 				compareIntervalMs: 5000
@@ -39,7 +35,7 @@ export const landingBySlug: Record<string, AppLandingConfig> = {
 				eyebrow: 'Queue',
 				title: 'Import, organize, and grade.',
 				description:
-					'Bring in ProRAW from Photos or Files. Sort your queue, copy grades between shots, and develop with baselines that ease Deep Fusion — plus film LUTs, exposure, color, and embedded preview compare.',
+					'Add ProRAW from Photos or Files, sort your queue, and apply your look shot to shot, or paste a grade from a reference frame.',
 				bullets: ['Built on Apple\'s on-device RAW pipeline.'],
 				visualOnLeft: true,
 				visual: 'editor'
@@ -48,13 +44,13 @@ export const landingBySlug: Record<string, AppLandingConfig> = {
 				eyebrow: 'Export',
 				title: 'Export when ready. Repeat.',
 				description:
-					'Save JPG, HEIC, or TIFF to Photos or Share, then move on. No desktop round trip and no paid editor required — your queue waits for the next session.',
+					'Save JPG, HEIC, or TIFF to Photos or Share. Your originals stay untouched; the queue is ready for the next session.',
 				visual: 'color'
 			}
 		],
 		grid: {
 			title: 'ProRAW editing, pocket size.',
-			lead: 'For photographers and anyone tired of over-processed iPhone shots — free, private, and on your device.',
+			lead: 'Six tools that stay with your library on iPhone and iPad.',
 			primary: [
 				{
 					icon: 'sun',
@@ -96,12 +92,12 @@ export const landingBySlug: Record<string, AppLandingConfig> = {
 		},
 		closingTitle: 'Better ProRAW. Still on your phone.',
 		closingLead:
-			'Free on the App Store — develop naturally, keep your photos private, and leave the subscription editor behind.',
+			'Open a roll from Photos and see how far you can push ProRAW before you export.',
 		platformsLine: 'Free on the App Store'
 	},
 	'aqi-sense': {
 		heroEyebrow: 'Air quality · iOS',
-		heroTitle: 'Know the air you breathe — near you and around the world.',
+		heroTitle: 'Know the air you breathe, near you and around the world.',
 		heroLead:
 			'Live AQI from WAQI, Sensor.Community, and OpenSenseMap. Favorites, map, and regional scales.',
 		pillars: [
@@ -113,7 +109,8 @@ export const landingBySlug: Record<string, AppLandingConfig> = {
 				id: 'aqi-spotlight',
 				layout: 'spotlight',
 				eyebrow: 'Live AQI',
-				caption: 'Photo placeholder — set src / srcSecondary when ready.'
+				caption:
+					'Live readings from open networks, with favorites, map, and regional scales in one calm app.'
 			}
 		],
 		features: [
@@ -135,7 +132,7 @@ export const landingBySlug: Record<string, AppLandingConfig> = {
 			{
 				eyebrow: 'Settings',
 				title: 'Your provider, your scale.',
-				description: 'WAQI, Sensor.Community, or OpenSenseMap — US EPA, China, or European CAQI.',
+				description: 'WAQI, Sensor.Community, or OpenSenseMap: US EPA, China, or European CAQI.',
 				visualOnLeft: true,
 				visual: 'settings'
 			}
@@ -146,22 +143,22 @@ export const landingBySlug: Record<string, AppLandingConfig> = {
 				{
 					icon: 'globe',
 					title: 'WAQI',
-					description: 'Global city coverage with dominant pollutant on each card.'
+					description: 'Global city coverage when you need context away from home.'
 				},
 				{
 					icon: 'sensor',
 					title: 'Sensor.Community',
-					description: 'Community sensors nearby — pull to refresh your feed.'
+					description: 'Community sensors for hyperlocal readings.'
 				},
 				{
 					icon: 'pin',
 					title: 'OpenSenseMap',
-					description: 'Citizen science stations on the map with search by place.'
+					description: 'Citizen science stations you can explore on the map.'
 				},
 				{
 					icon: 'scale',
 					title: 'Your AQI scale',
-					description: 'US EPA, China, or European CAQI — pick the scale you prefer.'
+					description: 'US EPA, China, or European CAQI. Pick the scale you prefer.'
 				},
 				{
 					icon: 'heart',
@@ -177,8 +174,8 @@ export const landingBySlug: Record<string, AppLandingConfig> = {
 			items: []
 		},
 		closingTitle: 'Get AQI Sense',
-		closingLead: 'Download AQI Sense for iPhone and iPad.',
-		platformsLine: 'Available on the App Store.'
+		closingLead: 'Pin the stations you check daily and open the map when you travel.',
+		platformsLine: 'Available on the App Store'
 	}
 }
 

@@ -171,13 +171,11 @@
 			box-shadow: none;
 		}
 
-		&--spotlight .landing-photo__compare-label {
-			color: var(--accent-11);
-		}
-
-		&--spotlight .landing-compare__page-control {
-			background: color-mix(in srgb, var(--gray-12) 5%, var(--gray-a3));
-			border: 1px solid var(--gray-a5);
+		&--spotlight .landing-photo__figure--compare .landing-photo__compare-label {
+			color: var(--gray-12);
+			background: color-mix(in srgb, var(--color-background) 82%, transparent);
+			border-color: color-mix(in srgb, var(--gray-12) 12%, var(--gray-a6));
+			text-shadow: 0 1px 0 color-mix(in srgb, var(--color-background) 90%, transparent);
 		}
 
 		&--spotlight .landing-compare__dot--active::after {

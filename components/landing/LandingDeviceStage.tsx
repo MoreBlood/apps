@@ -32,8 +32,7 @@ export default function LandingDeviceStage({
 	const stageId = landingStageId(appSlug, variant)
 	const { tuner, enabled: tunerEnabled, isActive } = useLandingStageTunerStage(appSlug, variant)
 	const { stageRef, debugReport } = useLandingStageScale(variant, { stageId })
-	const { phone: phoneScreenshot, phoneSecondary, tablet: tabletScreenshot } =
-		getLandingStageScreenshots(appSlug, variant)
+	const { phone: phoneScreenshot, tablet: tabletScreenshot } = getLandingStageScreenshots(appSlug, variant)
 
 	const handleStageClick = (e: MouseEvent | KeyboardEvent) => {
 		e.stopPropagation()
@@ -94,17 +93,6 @@ export default function LandingDeviceStage({
 						/>
 					</IPhoneMockup>
 				</div>
-				{variant === 'hero' && (
-					<div className="landing-stage__device landing-stage__device--iphone landing-stage__device--secondary">
-						<IPhoneMockup wrapperClassName="landing-stage__mockup">
-							<DeviceScreen
-								src={phoneSecondary ?? phoneScreenshot}
-								alt=""
-								className="landing-stage__screen landing-stage__screen--phone landing-stage__screen--alt"
-							/>
-						</IPhoneMockup>
-					</div>
-				)}
 			</div>
 			</div>
 			{debugReport ? <LandingStageDebugPanel text={debugReport} /> : null}

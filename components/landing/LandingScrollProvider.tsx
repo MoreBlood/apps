@@ -26,21 +26,14 @@ export default function LandingScrollProvider({ children }: Props) {
 			duration: 1.15,
 			easing: (t) => Math.min(1, 1.001 - 2 ** (-10 * t)),
 			smoothWheel: true,
-			touchMultiplier: 1.1
+			touchMultiplier: 1.1,
+			autoRaf: true
 		})
 
 		lenisRef.current = instance
 		setLenis(instance)
 
-		let frame = 0
-		const raf = (time: number) => {
-			instance.raf(time)
-			frame = requestAnimationFrame(raf)
-		}
-		frame = requestAnimationFrame(raf)
-
 		return () => {
-			cancelAnimationFrame(frame)
 			instance.destroy()
 			lenisRef.current = null
 			setLenis(null)

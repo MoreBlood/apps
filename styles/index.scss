@@ -12,13 +12,13 @@
 @use 'site-footer';
 
 html {
-	overflow-x: hidden;
+	overflow-x: clip;
 	-webkit-text-size-adjust: 100%;
 	text-size-adjust: 100%;
 }
 
 body {
-	overflow-x: hidden;
+	overflow-x: clip;
 }
 
 .app-icon {
@@ -45,6 +45,28 @@ body {
 	}
 }
 
+.app-nav-shell {
+	min-height: var(--app-nav-bar-height, 2.25rem);
+	margin-bottom: var(--space-6);
+	padding-bottom: var(--space-3);
+}
+
+.app-nav {
+	--app-nav-offset-top: max(var(--space-4), env(safe-area-inset-top, 0px));
+	--app-nav-backdrop-blur: 28px;
+	--app-nav-backdrop-bg: color-mix(in srgb, var(--color-background) 30%, transparent);
+	position: fixed;
+	z-index: 200;
+	top: var(--app-nav-offset-top);
+	left: max(var(--space-4), env(safe-area-inset-left, 0px));
+	right: max(var(--space-4), env(safe-area-inset-right, 0px));
+	width: auto;
+	background: transparent;
+	--nav-hide-progress: 0;
+	transform: translateY(calc((-100% - var(--app-nav-offset-top)) * var(--nav-hide-progress, 0)));
+	opacity: calc(1 - var(--nav-hide-progress, 0));
+}
+
 .app-nav__bar {
 	display: grid;
 	grid-template-columns: 1fr auto 1fr;
@@ -65,25 +87,29 @@ body {
 	min-width: 0;
 }
 
-.app-nav__title {
+.app-nav__title-wrap {
 	grid-column: 2;
 	justify-self: center;
 	min-width: 0;
 	max-width: 100%;
+
+	@media (min-width: 1024px) {
+		display: none;
+	}
+}
+
+.app-nav__title {
+	display: block;
 	overflow: hidden;
 	text-overflow: ellipsis;
 	white-space: nowrap;
-	padding-inline: var(--space-2);
-	font-size: var(--font-size-3);
+	padding: 0.4rem 0.9rem;
+	font-size: var(--font-size-2);
 	font-weight: 600;
 	letter-spacing: -0.02em;
 	line-height: 1.2;
 	text-align: center;
 	color: var(--gray-12);
-
-	@media (min-width: 1024px) {
-		display: none;
-	}
 }
 
 .app-nav-desktop {
@@ -91,14 +117,7 @@ body {
 	justify-self: center;
 	min-width: 0;
 	max-width: 100%;
-	overflow-x: auto;
-	-webkit-overflow-scrolling: touch;
-	overscroll-behavior-x: contain;
-	scrollbar-width: none;
-
-	&::-webkit-scrollbar {
-		display: none;
-	}
+	overflow: visible;
 }
 
 // Desktop pill nav — custom markup (no Radix SegmentedControl)
@@ -130,21 +149,21 @@ body {
 	align-items: stretch;
 	gap: 0.3rem;
 	width: max-content;
-	max-width: none;
+	max-width: 100%;
 	padding: 0.2rem;
 	border-radius: 999px;
-	background: linear-gradient(
-		180deg,
-		var(--pill-track-top) 0%,
-		var(--pill-track-mid) 42%,
-		var(--pill-track-bottom) 100%
-	);
 	border: 1px solid var(--pill-rim);
+	background: var(--app-nav-backdrop-bg);
+	-webkit-backdrop-filter: blur(var(--app-nav-backdrop-blur));
+	backdrop-filter: blur(var(--app-nav-backdrop-blur));
 	box-shadow:
 		inset 0 1px 0 var(--pill-highlight),
-		inset 0 -1px 0 var(--pill-shadow),
-		0 1px 2px color-mix(in srgb, black 7%, transparent),
-		0 6px 18px color-mix(in srgb, black 6%, transparent);
+		inset 0 -1px 0 var(--pill-shadow);
+}
+
+.dark .app-nav,
+html.dark .app-nav {
+	--app-nav-backdrop-bg: color-mix(in srgb, var(--color-background) 38%, transparent);
 }
 
 .app-nav-pill__item {
@@ -191,8 +210,7 @@ body {
 			);
 			box-shadow:
 				inset 0 1px 0 color-mix(in srgb, white 72%, transparent),
-				inset 0 -1px 0 color-mix(in srgb, black 10%, transparent),
-				0 2px 10px color-mix(in srgb, black 11%, transparent);
+				inset 0 -1px 0 color-mix(in srgb, black 10%, transparent);
 		}
 	}
 
@@ -210,6 +228,10 @@ body {
 		outline: 2px solid var(--accent-8);
 		outline-offset: 2px;
 	}
+}
+
+html:not(.dark) .app-nav-pill__item:not([data-active]) {
+	color: color-mix(in srgb, var(--gray-12) 78%, var(--gray-11));
 }
 
 .dark .app-nav-pill,
@@ -650,10 +672,8 @@ $app-nav-ease-out: cubic-bezier(0.4, 0, 0.2, 1);
 	}
 }
 
-// Metal icon buttons (menu, theme)
+// Metal icon buttons (menu, theme) — same frosted capsule as pill groups
 .app-nav-metal-btn.rt-IconButton {
-	--app-nav-metal-track-top: color-mix(in srgb, var(--gray-12) 7%, var(--gray-3));
-	--app-nav-metal-track-bottom: color-mix(in srgb, var(--gray-12) 16%, var(--gray-5));
 	--app-nav-metal-rim: color-mix(in srgb, var(--gray-12) 12%, var(--gray-a7));
 	--app-nav-metal-highlight: color-mix(in srgb, white 48%, transparent);
 	--app-nav-metal-shadow: color-mix(in srgb, black 12%, transparent);
@@ -661,27 +681,18 @@ $app-nav-ease-out: cubic-bezier(0.4, 0, 0.2, 1);
 	width: 2.25rem;
 	height: 2.25rem;
 	border-radius: 999px;
-	background: linear-gradient(
-		180deg,
-		var(--app-nav-metal-track-top) 0%,
-		var(--gray-4) 45%,
-		var(--app-nav-metal-track-bottom) 100%
-	) !important;
+	background: var(--app-nav-backdrop-bg) !important;
+	-webkit-backdrop-filter: blur(var(--app-nav-backdrop-blur));
+	backdrop-filter: blur(var(--app-nav-backdrop-blur));
 	border: 1px solid var(--app-nav-metal-rim);
 	box-shadow:
 		inset 0 1px 0 var(--app-nav-metal-highlight),
-		inset 0 -1px 0 var(--app-nav-metal-shadow),
-		0 1px 2px color-mix(in srgb, black 7%, transparent),
-		0 4px 12px color-mix(in srgb, black 6%, transparent);
+		inset 0 -1px 0 var(--app-nav-metal-shadow);
 	color: var(--gray-12);
+	transition: background 0.15s ease;
 
 	&:hover {
-		background: linear-gradient(
-			180deg,
-			color-mix(in srgb, white 58%, var(--gray-1)) 0%,
-			var(--gray-2) 45%,
-			color-mix(in srgb, var(--gray-12) 8%, var(--gray-4)) 100%
-		) !important;
+		background: color-mix(in srgb, var(--color-background) 52%, transparent) !important;
 	}
 
 	&:active {
@@ -693,8 +704,6 @@ $app-nav-ease-out: cubic-bezier(0.4, 0, 0.2, 1);
 
 .dark .app-nav-metal-btn.rt-IconButton,
 html.dark .app-nav-metal-btn.rt-IconButton {
-	--app-nav-metal-track-top: color-mix(in srgb, white 11%, var(--gray-3));
-	--app-nav-metal-track-bottom: color-mix(in srgb, black 28%, var(--gray-2));
 	--app-nav-metal-rim: color-mix(in srgb, white 14%, var(--gray-a6));
 	--app-nav-metal-highlight: color-mix(in srgb, white 16%, transparent);
 	--app-nav-metal-shadow: color-mix(in srgb, black 38%, transparent);

@@ -9,9 +9,9 @@ import {
 } from '@/lib/landing-stage-scale'
 
 describe('getLandingStageLayoutKey', () => {
-	it('uses hero-mobile below 520px', () => {
-		expect(getLandingStageLayoutKey('hero', 519)).toBe('hero-mobile')
-		expect(getLandingStageLayoutKey('hero', 521)).toBe('hero')
+	it('uses hero-mobile below 768px', () => {
+		expect(getLandingStageLayoutKey('hero', 767)).toBe('hero-mobile')
+		expect(getLandingStageLayoutKey('hero', 769)).toBe('hero')
 	})
 })
 
@@ -58,14 +58,14 @@ describe('computeLandingStageScale', () => {
 		const slots = getLandingStageDevices('hero')
 		const ipad = slots.find((s) => s.id === 'ipad')!
 		const iphone = slots.find((s) => s.id === 'iphone')!
-		const secondary = slots.find((s) => s.id === 'iphone-secondary')!
+		expect(slots).toHaveLength(2)
 		expect(ipad.left).toBe(0.77)
 		expect(ipad.top).toBe(-0.06)
 		expect(ipad.scaleMult).toBe(1.2)
 		expect(ipad.zIndex).toBe(2)
 		expect(iphone.left).toBe(0.615)
 		expect(iphone.top).toBe(0.5)
-		expect(secondary.zIndex).toBe(0)
+		expect(iphone.zIndex).toBe(2)
 	})
 
 	it('includes z-index in placed devices', () => {

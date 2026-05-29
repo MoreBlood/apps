@@ -28,22 +28,24 @@ function CompareFigure({
 	slide,
 	alt,
 	label,
-	priority
+	priority,
+	panActive = false
 }: {
 	slide: CompareSlide
 	alt: string
 	label: string
 	priority?: boolean
+	panActive?: boolean
 }) {
 	return (
-		<figure className="landing-photo__figure">
+		<figure className="landing-photo__figure landing-photo__figure--compare">
 			<div className="landing-photo__frame landing-compare__frame">
 				{slide.landscape ? (
 					<CompareLandscapeImage
 						src={slide.src}
 						blurDataURL={slide.blurDataURL}
 						alt={alt}
-						isActive
+						isActive={panActive}
 						priority={priority}
 					/>
 				) : (
@@ -85,8 +87,13 @@ export default function LandingCompareCarousel({
 }: Props) {
 	const reduceMotion = useReducedMotion()
 	const scrollerRef = useRef<HTMLElement>(null)
+	const compareRef = useRef<HTMLDivElement>(null)
 	const [index, setIndex] = useState(0)
 	const [autoplayPaused, setAutoplayPaused] = useState(false)
+	const [inView, setInView] = useState(false)
+	const [documentVisible, setDocumentVisible] = useState(
+		() => typeof document !== 'undefined' && document.visibilityState === 'visible'
+	)
 	const count = pairs.length
 
 	const pauseAutoplay = useCallback(() => {
@@ -102,8 +109,9 @@ export default function LandingCompareCarousel({
 			const el = scrollerRef.current
 			if (!el || count === 0) return
 			const i = ((next % count) + count) % count
+			const slide = el.children[i] as HTMLElement | undefined
 			el.scrollTo({
-				left: i * el.clientWidth,
+				left: slide?.offsetLeft ?? i * el.clientWidth,
 				behavior: reduceMotion ? 'auto' : 'smooth'
 			})
 			setIndex(i)
@@ -119,9 +127,18 @@ export default function LandingCompareCarousel({
 		const onScroll = () => {
 			cancelAnimationFrame(raf)
 			raf = requestAnimationFrame(() => {
-				const w = el.clientWidth
-				if (w <= 0) return
-				const next = Math.round(el.scrollLeft / w)
+				const slides = Array.from(el.children) as HTMLElement[]
+				if (slides.length === 0) return
+				const scrollLeft = el.scrollLeft
+				let next = 0
+				let best = Number.POSITIVE_INFINITY
+				for (let i = 0; i < slides.length; i++) {
+					const dist = Math.abs(slides[i].offsetLeft - scrollLeft)
+					if (dist < best) {
+						best = dist
+						next = i
+					}
+				}
 				setIndex((current) => (current === next ? current : next))
 			})
 		}
@@ -138,30 +155,64 @@ export default function LandingCompareCarousel({
 		if (!el || count <= 1) return
 
 		const observer = new ResizeObserver(() => {
-			const w = el.clientWidth
-			if (w <= 0) return
-			const i = Math.min(count - 1, Math.max(0, Math.round(el.scrollLeft / w)))
-			el.scrollLeft = i * w
-			setIndex(i)
+			const slides = Array.from(el.children) as HTMLElement[]
+			if (slides.length === 0) return
+
+			const scrollLeft = el.scrollLeft
+			let next = 0
+			let best = Number.POSITIVE_INFINITY
+			for (let i = 0; i < slides.length; i++) {
+				const dist = Math.abs(slides[i].offsetLeft - scrollLeft)
+				if (dist < best) {
+					best = dist
+					next = i
+				}
+			}
+
+			const slide = slides[next]
+			if (slide) el.scrollLeft = slide.offsetLeft
+			setIndex(next)
 		})
 		observer.observe(el)
 		return () => observer.disconnect()
 	}, [count])
 
 	useEffect(() => {
-		if (reduceMotion || count <= 1 || autoplayPaused) return
+		const root = compareRef.current
+		if (!root) return
+
+		const observer = new IntersectionObserver(
+			([entry]) => setInView(entry.isIntersecting),
+			{ threshold: 0.15 }
+		)
+		observer.observe(root)
+		return () => observer.disconnect()
+	}, [])
+
+	useEffect(() => {
+		const onVisibility = () => setDocumentVisible(document.visibilityState === 'visible')
+		document.addEventListener('visibilitychange', onVisibility)
+		return () => document.removeEventListener('visibilitychange', onVisibility)
+	}, [])
+
+	useEffect(() => {
+		if (reduceMotion || count <= 1 || autoplayPaused || !inView || !documentVisible) return
+
 		const id = window.setInterval(() => {
 			scrollToIndex(index + 1, { autoplay: true })
 		}, intervalMs)
 		return () => window.clearInterval(id)
-	}, [count, index, intervalMs, reduceMotion, scrollToIndex, autoplayPaused])
+	}, [count, index, intervalMs, reduceMotion, scrollToIndex, autoplayPaused, inView, documentVisible])
 
 	if (count === 0) return null
 
 	const active = pairs[index]
 
 	return (
-		<div className={clsx('landing-compare', reduceMotion && 'landing-compare--reduce-motion')}>
+		<div
+			ref={compareRef}
+			className={clsx('landing-compare', reduceMotion && 'landing-compare--reduce-motion')}
+		>
 			<section
 				ref={scrollerRef}
 				className="landing-compare__scroller"
@@ -188,12 +239,14 @@ export default function LandingCompareCarousel({
 									alt={pair.alt}
 									label={labels.primary}
 									priority={slideIndex === 0}
+									panActive={isActive}
 								/>
 								<CompareFigure
 									slide={raw}
 									alt={pair.alt}
 									label={labels.secondary}
 									priority={slideIndex === 0}
+									panActive={isActive}
 								/>
 							</div>
 						</section>

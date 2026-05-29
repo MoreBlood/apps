@@ -23,6 +23,14 @@
 	--landing-surface: var(--color-panel-solid, var(--gray-2));
 	--landing-surface-elevated: var(--gray-a2);
 	--landing-border: var(--gray-a6);
+	--landing-frosted-rim: color-mix(in srgb, var(--gray-12) 12%, var(--gray-a7));
+	--landing-frosted-highlight: color-mix(in srgb, white 48%, transparent);
+	--landing-frosted-shadow: color-mix(in srgb, black 12%, transparent);
+	--landing-frosted-bg: color-mix(in srgb, var(--color-background) 30%, transparent);
+	--landing-frosted-blur: 28px;
+	--landing-frosted-thumb-top: color-mix(in srgb, white 58%, var(--gray-1));
+	--landing-frosted-thumb-mid: var(--gray-2);
+	--landing-frosted-thumb-bottom: color-mix(in srgb, var(--gray-12) 8%, var(--gray-4));
 	--landing-on-accent: #fff;
 
 	width: 100%;
@@ -77,16 +85,16 @@
 		width: 100%;
 		max-width: 40rem;
 		margin: 0 auto clamp(1.25rem, 4vw, 2rem);
-		aspect-ratio: 1;
-		min-height: clamp(13rem, 52vw, 22rem);
-		--hero-stage-scale: 1.1;
-		--hero-cluster-y: 44%;
+		aspect-ratio: 6 / 5;
+		min-height: clamp(10.5rem, 40vw, 16rem);
+		--hero-stage-scale: 0.86;
+		--hero-cluster-y: 46%;
 		isolation: isolate;
 
 		@media (min-width: 768px) {
 			aspect-ratio: 16 / 9;
 			min-height: clamp(15rem, 28vw, 21rem);
-			--hero-stage-scale: 1.06;
+			--hero-stage-scale: 1.02;
 			--hero-cluster-y: 48%;
 		}
 
@@ -903,19 +911,19 @@ $mockup-iphone-h: 812px;
 	&__grid {
 		display: grid;
 		grid-template-columns: 1fr;
-		gap: 1rem;
+		gap: 0.75rem;
 		list-style: none;
 		padding: 0;
 		margin: 0;
 
 		@media (min-width: 640px) {
-			grid-template-columns: repeat(2, 1fr);
-			gap: 1.125rem;
+			grid-template-columns: repeat(2, minmax(0, 1fr));
+			gap: 1rem;
 		}
 
 		@media (min-width: 900px) {
-			grid-template-columns: repeat(3, 1fr);
-			gap: 1.5rem;
+			grid-template-columns: repeat(3, minmax(0, 1fr));
+			gap: 1.125rem;
 		}
 	}
 
@@ -925,8 +933,14 @@ $mockup-iphone-h: 812px;
 		align-items: center;
 		justify-content: flex-start;
 		text-align: center;
+		min-width: 0;
 		min-height: 100%;
-		padding: clamp(2.25rem, 4.5vw, 3rem) clamp(1.25rem, 2.5vw, 1.75rem);
+		padding: clamp(1.5rem, 3.5vw, 2rem) clamp(1rem, 2vw, 1.35rem);
+
+		@media (min-width: 900px) {
+			padding: 1.35rem 1.1rem;
+		}
+
 		border: none;
 		border-radius: var(--landing-feature-card-radius, 1.75rem);
 		background: var(--landing-feature-card-bg);
@@ -1567,6 +1581,13 @@ $mockup-iphone-h: 812px;
 :where(.dark, .dark-theme) .landing {
 	--landing-surface-elevated: var(--gray-2);
 	--landing-border: var(--gray-a4);
+	--landing-frosted-rim: color-mix(in srgb, white 14%, var(--gray-a6));
+	--landing-frosted-highlight: color-mix(in srgb, white 16%, transparent);
+	--landing-frosted-shadow: color-mix(in srgb, black 38%, transparent);
+	--landing-frosted-bg: color-mix(in srgb, var(--color-background) 38%, transparent);
+	--landing-frosted-thumb-top: color-mix(in srgb, white 24%, var(--gray-4));
+	--landing-frosted-thumb-mid: color-mix(in srgb, white 8%, var(--gray-3));
+	--landing-frosted-thumb-bottom: color-mix(in srgb, black 18%, var(--gray-3));
 }
 
 :where(.dark, .dark-theme) .landing {
