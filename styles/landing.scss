@@ -108,9 +108,12 @@
 			aspect-ratio: unset;
 			min-height: 0;
 
-			.landing-stage__cluster {
-				top: var(--hero-cluster-y, 50%);
-				transform: translate(-50%, -50%) scale(calc(var(--device-scale, 0.38) * var(--hero-stage-scale, 1)));
+			.landing-stage__device {
+				transform: translate(-50%, -50%)
+					rotate(var(--device-rotate, 0deg))
+					scale(
+						calc(var(--device-scale, 0.38) * var(--hero-stage-scale, 1) * var(--device-scale-mult, 1))
+					);
 			}
 		}
 	}
@@ -280,11 +283,11 @@
 }
 
 // —— Device stage ———————————————————————————————————————————————————————————
-// Native marvel-device sizes (marvel-devices.css) — scale via transform, not width alone.
-$mockup-ipad-w: 576px;
-$mockup-ipad-h: 768px;
-$mockup-iphone-w: 375px;
-$mockup-iphone-h: 812px;
+// Figma SVG viewBox — cluster scale shrinks these to the stage.
+$mockup-ipad-w: 1575px;
+$mockup-ipad-h: 2208px;
+$mockup-iphone-w: 769px;
+$mockup-iphone-h: 1603px;
 
 .landing-stage {
 	position: relative;
@@ -305,12 +308,8 @@ $mockup-iphone-h: 812px;
 
 	&__cluster {
 		position: absolute;
-		left: 50%;
-		top: 50%;
-		width: var(--composition-w, 600px);
-		height: var(--composition-h, 400px);
-		transform: translate(-50%, -50%) scale(var(--device-scale, 0.38));
-		transform-origin: center center;
+		inset: 0;
+		pointer-events: none;
 	}
 
 	&__device {
@@ -319,7 +318,9 @@ $mockup-iphone-h: 812px;
 		pointer-events: none;
 		--device-scale-mult: 1;
 		filter: drop-shadow(0 24px 48px -12px var(--gray-a8)) drop-shadow(0 8px 16px -8px var(--gray-a6));
-		transform: rotate(var(--device-rotate, 0deg)) scale(var(--device-scale-mult, 1));
+		transform: translate(-50%, -50%)
+			rotate(var(--device-rotate, 0deg))
+			scale(calc(var(--device-scale, 0.38) * var(--device-scale-mult, 1)));
 		transform-origin: center center;
 
 		.device-mockup {
@@ -329,8 +330,8 @@ $mockup-iphone-h: 812px;
 		}
 
 		&--ipad {
-			left: var(--device-ipad-x, 0);
-			top: var(--device-ipad-y, 0);
+			left: calc(50% + var(--device-ipad-x, 0%));
+			top: calc(50% + var(--device-ipad-y, 0%));
 			width: $mockup-ipad-w;
 			height: $mockup-ipad-h;
 			z-index: var(--device-ipad-z, 1);
@@ -339,8 +340,8 @@ $mockup-iphone-h: 812px;
 		}
 
 		&--iphone:not(.landing-stage__device--secondary) {
-			left: var(--device-iphone-x, 0);
-			top: var(--device-iphone-y, 0);
+			left: calc(50% + var(--device-iphone-x, 0%));
+			top: calc(50% + var(--device-iphone-y, 0%));
 			width: $mockup-iphone-w;
 			height: $mockup-iphone-h;
 			z-index: var(--device-iphone-z, 2);
@@ -349,8 +350,8 @@ $mockup-iphone-h: 812px;
 		}
 
 		&--secondary {
-			left: var(--device-iphone-secondary-x, 0);
-			top: var(--device-iphone-secondary-y, 0);
+			left: calc(50% + var(--device-iphone-secondary-x, 0%));
+			top: calc(50% + var(--device-iphone-secondary-y, 0%));
 			width: $mockup-iphone-w;
 			height: $mockup-iphone-h;
 			z-index: var(--device-iphone-secondary-z, 1);
@@ -1702,11 +1703,15 @@ html.lenis body {
 @keyframes landing-float {
 	0%,
 	100% {
-		transform: translateY(0) rotate(var(--device-rotate, 0deg)) scale(var(--device-scale-mult, 1));
+		transform: translate(-50%, -50%)
+			rotate(var(--device-rotate, 0deg))
+			scale(calc(var(--device-scale, 0.38) * var(--device-scale-mult, 1)));
 	}
 
 	50% {
-		transform: translateY(-6px) rotate(var(--device-rotate, 0deg)) scale(var(--device-scale-mult, 1));
+		transform: translate(-50%, calc(-50% - 6px))
+			rotate(var(--device-rotate, 0deg))
+			scale(calc(var(--device-scale, 0.38) * var(--device-scale-mult, 1)));
 	}
 }
 

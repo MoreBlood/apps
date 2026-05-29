@@ -65,7 +65,7 @@ export default function LandingDeviceStage({
 						? (e) => {
 								if (e.key === 'Enter' || e.key === ' ') {
 									e.preventDefault()
-									handleStageClick()
+									handleStageClick(e)
 								}
 							}
 						: undefined
@@ -76,7 +76,7 @@ export default function LandingDeviceStage({
 			<div className="landing-stage__glow" />
 			<div className="landing-stage__cluster">
 				<div className="landing-stage__device landing-stage__device--ipad">
-					<IPadMockup color="black" wrapperClassName="landing-stage__mockup">
+					<IPadMockup wrapperClassName="landing-stage__mockup">
 						<DeviceScreen
 							src={tabletScreenshot}
 							alt={`${appName} on iPad`}

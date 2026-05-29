@@ -233,10 +233,13 @@
 
 	&__visual {
 		// Layout box = scaled iPhone size (transform scale does not shrink flow)
-		--home-card-mockup-scale: 0.3;
+		// ~375×812 visual at 0.3 scale, using native viewBox dimensions
+		--home-card-mockup-scale: 0.146;
+		--home-card-mockup-w: 769px;
+		--home-card-mockup-h: 1603px;
 		position: relative;
-		width: calc(375px * var(--home-card-mockup-scale));
-		height: calc(812px * var(--home-card-mockup-scale));
+		width: calc(var(--home-card-mockup-w) * var(--home-card-mockup-scale));
+		height: calc(var(--home-card-mockup-h) * var(--home-card-mockup-scale));
 		flex-shrink: 0;
 		align-self: center;
 		justify-self: center;
@@ -250,7 +253,7 @@
 		position: absolute;
 		left: 50%;
 		top: 50%;
-		width: 375px;
+		width: var(--home-card-mockup-w);
 		margin: 0;
 		transform: translate(-50%, -50%) scale(var(--home-card-mockup-scale));
 		transform-origin: center center;

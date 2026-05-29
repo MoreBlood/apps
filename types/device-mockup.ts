@@ -1,19 +1,15 @@
-import type { DeviceFramesetProps } from 'react-device-frameset'
-import type { ReactNode } from 'react'
+import type { ReactNode, SVGProps } from 'react'
 
-/** Shared layout props for local device mockup wrappers. */
+/** Shared layout props for device mockup wrappers. */
 export type DeviceMockupShellProps = {
 	/** Applied to the outer `.device-mockup` wrapper. */
 	wrapperClassName?: string
 	className?: string
 	children?: ReactNode
+	width?: number
+	height?: number
 }
 
-export type IPhoneMockupProps = Omit<Extract<DeviceFramesetProps, { device: 'iPhone X' }>, 'device'> &
-	DeviceMockupShellProps
+export type IPhoneMockupProps = DeviceMockupShellProps & Omit<SVGProps<SVGSVGElement>, 'children'>
 
-export type IPadMockupProps = Omit<Extract<DeviceFramesetProps, { device: 'iPad Mini' }>, 'device'> &
-	DeviceMockupShellProps
-
-export type MacbookMockupProps = Omit<Extract<DeviceFramesetProps, { device: 'MacBook Pro' }>, 'device'> &
-	DeviceMockupShellProps
+export type IPadMockupProps = DeviceMockupShellProps & Omit<SVGProps<SVGSVGElement>, 'children'>

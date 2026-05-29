@@ -1,13 +1,17 @@
 'use client'
 
 import { useEffect, useRef, useState } from 'react'
-import { getStageDeviceZIndex, LANDING_STAGE_SCALE_OPTIONS } from '@/lib/landing-stage-scale'
-import { formatLandingStageLayoutSnippet } from '@/lib/landing-stage-tuner'
 import type { StageDeviceId, StageDeviceSlot } from '@/lib/landing-stage-scale'
 import {
+	getStageDeviceZIndex,
+	LANDING_STAGE_SCALE_OPTIONS,
+	stageOffsetXFraction
+} from '@/lib/landing-stage-scale'
+import { formatLandingStageLayoutSnippet } from '@/lib/landing-stage-tuner'
+import {
 	createInitialOverride,
-	useLandingStageTunerOptional,
-	type LandingStageTunerOverride
+	type LandingStageTunerOverride,
+	useLandingStageTunerOptional
 } from './LandingStageTunerContext'
 
 type DeviceBinding = {
@@ -29,7 +33,7 @@ function slotsToBindings(slots: StageDeviceSlot[]): Record<string, DeviceBinding
 	const bindings: Record<string, DeviceBinding> = {}
 	for (const slot of slots) {
 		bindings[slot.id] = {
-			leftPct: (slot.left ?? 0) * 100,
+			leftPct: stageOffsetXFraction(slot) * 100,
 			topPct: slot.top * 100,
 			rotate: slot.rotate,
 			scaleMult: slot.scaleMult ?? 1,
@@ -45,11 +49,11 @@ function bindingsToSlots(slots: StageDeviceSlot[], bindings: Record<string, Devi
 		if (!binding) return slot
 		return {
 			...slot,
-			left: binding.leftPct / 100,
-			top: binding.topPct / 100,
-			rotate: binding.rotate,
+			left: Math.round(binding.leftPct) / 100,
+			top: Math.round(binding.topPct) / 100,
+			rotate: Math.round(binding.rotate),
 			scaleMult: binding.scaleMult,
-			zIndex: binding.zIndex
+			zIndex: Math.round(binding.zIndex)
 		}
 	})
 }
@@ -111,9 +115,7 @@ export default function LandingStageTunerPane() {
 		let pane: import('tweakpane').Pane | undefined
 
 		const tunerNow = tunerRef.current
-		const override =
-			tunerNow?.getOverride(activeStageId) ??
-			createInitialOverride(activeLayoutKey)
+		const override = tunerNow?.getOverride(activeStageId) ?? createInitialOverride(activeLayoutKey)
 		slotsRef.current = override.slots
 		bindingsRef.current = slotsToBindings(override.slots)
 
@@ -122,9 +124,7 @@ export default function LandingStageTunerPane() {
 			clusterScale: override.scaleOverride ?? 0.38,
 			manualClusterScale: override.scaleOverride != null,
 			fitMargin: override.fitMargin ?? scaleOpts.fitMargin ?? 1.06,
-			padding:
-				override.padding ??
-				(scaleOpts.padding ?? 12) + (scaleOpts.filterBleed ?? 0)
+			padding: override.padding ?? (scaleOpts.padding ?? 12) + (scaleOpts.filterBleed ?? 0)
 		}
 
 		const importPane = async () => {
@@ -145,7 +145,7 @@ export default function LandingStageTunerPane() {
 				label: 'scale',
 				min: 0.15,
 				max: 0.7,
-				step: 0.005
+				step: 0.01
 			})
 			scaleFolder.addBinding(params, 'padding', {
 				label: 'stage padding',
@@ -171,25 +171,19 @@ export default function LandingStageTunerPane() {
 					label: 'left %',
 					min: -20,
 					max: 100,
-					step: 0.5
+					step: 1
 				})
 				folder.addBinding(binding, 'topPct', {
 					label: 'top %',
-					min: -20,
+					min: -100,
 					max: 100,
-					step: 0.5
+					step: 1
 				})
 				folder.addBinding(binding, 'rotate', {
 					label: 'rotate °',
 					min: -45,
 					max: 45,
-					step: 0.5
-				})
-				folder.addBinding(binding, 'scaleMult', {
-					label: 'scale',
-					min: 0.4,
-					max: 1.2,
-					step: 0.01
+					step: 1
 				})
 				folder.addBinding(binding, 'zIndex', {
 					label: 'z-index',
@@ -241,14 +235,16 @@ export default function LandingStageTunerPane() {
 	return (
 		<div className="landing-stage-tuner" data-nosnippet>
 			<div className="landing-stage-tuner__bar">
-				<span className="landing-stage-tuner__title">
-					Stage tuner · {active.variant}
-				</span>
+				<span className="landing-stage-tuner__title">Stage tuner · {active.variant}</span>
 				<div className="landing-stage-tuner__actions">
 					<button type="button" className="landing-stage-tuner__btn" onClick={handleReset}>
 						Reset
 					</button>
-					<button type="button" className="landing-stage-tuner__btn landing-stage-tuner__btn--primary" onClick={handleCopy}>
+					<button
+						type="button"
+						className="landing-stage-tuner__btn landing-stage-tuner__btn--primary"
+						onClick={handleCopy}
+					>
 						{copyLabel}
 					</button>
 					<button type="button" className="landing-stage-tuner__btn" onClick={() => tuner?.close()}>
@@ -257,8 +253,8 @@ export default function LandingStageTunerPane() {
 				</div>
 			</div>
 			<p className="landing-stage-tuner__hint">
-				Positions are % of the design canvas. Cluster fit: stage padding = inset from edges; fit
-				margin = scale divisor (above 1 shrinks). Shadow room is fixed per layout in code.
+				Positions are offsets from the viewport center: left % = share of stage width, top % = share of stage height.
+				Cluster fit: padding = inset from edges; fit margin = scale divisor (above 1 shrinks).
 			</p>
 			<div ref={containerRef} className="landing-stage-tuner__pane" />
 		</div>

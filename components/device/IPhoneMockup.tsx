@@ -1,33 +1,28 @@
 'use client'
 
-import DeviceMockup from './DeviceMockup'
+import clsx from 'clsx'
+import { IPhoneMockupFrame } from '@/components/mockups/IPhoneMockupFrame'
+import { MOCKUP_IPHONE, resolveMockupSize } from '@/lib/device-mockup-sizes'
 import type { IPhoneMockupProps } from '@/types/device-mockup'
 
 /**
- * iPhone mockup (notch frame). Omit `width`/`height` for native proportions; scale via CSS `transform`.
+ * iPhone mockup (Figma frame). Omit `width`/`height` to fill the parent; scale via CSS `transform`.
  */
 export default function IPhoneMockup({
-	landscape,
 	width,
 	height,
-	zoom,
 	className,
 	wrapperClassName,
 	children,
 	...rest
 }: IPhoneMockupProps) {
+	const size = resolveMockupSize(MOCKUP_IPHONE, width, height)
+
 	return (
-		<DeviceMockup
-			device="iPhone X"
-			landscape={landscape}
-			width={width}
-			height={height}
-			zoom={zoom}
-			className={className}
-			wrapperClassName={wrapperClassName}
-			{...rest}
-		>
-			{children}
-		</DeviceMockup>
+		<div className={clsx('device-mockup', 'device-mockup--iphone', wrapperClassName)}>
+			<IPhoneMockupFrame className={className} width="100%" height="100%" {...size} {...rest}>
+				{children}
+			</IPhoneMockupFrame>
+		</div>
 	)
 }

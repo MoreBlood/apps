@@ -6,7 +6,6 @@ import ThemeProvider from '@/components/ThemeProvider'
 import { siteName } from '@/config'
 import 'modern-normalize/modern-normalize.css'
 import '@radix-ui/themes/styles.css'
-import 'react-device-frameset/styles/marvel-devices.min.css'
 import '@/styles/index.scss'
 
 const siteUrl =

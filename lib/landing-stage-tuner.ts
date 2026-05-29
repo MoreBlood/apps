@@ -48,9 +48,13 @@ export function formatLandingStageLayoutSnippet(
 	const deviceLines = slots
 		.map((slot) => {
 			const left =
-				slot.left != null ? `left: ${round(slot.left, 4)}, ` : slot.right != null ? `right: ${round(slot.right, 4)}, ` : ''
-			const top = `top: ${round(slot.top, 4)}`
-			const rotate = `rotate: ${slot.rotate}`
+				slot.left != null
+					? `left: ${round(slot.left, 2)}, `
+					: slot.right != null
+						? `right: ${round(slot.right, 2)}, `
+						: 'left: 0, '
+			const top = `top: ${round(slot.top, 2)}`
+			const rotate = `rotate: ${Math.round(slot.rotate)}`
 			const mult =
 				slot.scaleMult != null && slot.scaleMult !== 1 ? `, scaleMult: ${round(slot.scaleMult, 3)}` : ''
 			const z = slot.zIndex != null ? `, zIndex: ${slot.zIndex}` : ''
