@@ -17,20 +17,22 @@ export default function LandingStoreButton({
 }: Props) {
 	if (!app.storeLink) return null
 	return (
-		<Link asChild>
-			<NextLink
-				href={app.storeLink}
-				className={clsx('landing-store-btn', size === 'large' && 'landing-store-btn--large')}
-				target="_blank"
-				rel="noopener noreferrer"
-				aria-label={label}
-			>
-				<span className="landing-store-btn__label">
-					<span className="landing-store-btn__label-full">{label}</span>
-					<span className="landing-store-btn__label-short">Download</span>
-				</span>
-				<AppleLogoIcon />
-			</NextLink>
-		</Link>
+		<div className="landing-store-btn-wrap">
+			<Link asChild>
+				<NextLink
+					href={app.storeLink}
+					className={clsx('landing-store-btn', size === 'large' && 'landing-store-btn--large')}
+					target="_blank"
+					rel="noopener noreferrer"
+					aria-label={label}
+				>
+					<span className="landing-store-btn__label">
+						<span className="landing-store-btn__label-full">{label}</span>
+						<span className="landing-store-btn__label-short">Download</span>
+					</span>
+					<AppleLogoIcon />
+				</NextLink>
+			</Link>
+		</div>
 	)
 }

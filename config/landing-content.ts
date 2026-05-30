@@ -6,6 +6,17 @@ export const landingBySlug: Record<string, AppLandingConfig> = {
 		heroTitle: 'Your iPhone shoots great photos.\nMake them greater.',
 		heroLead:
 			'Develop ProRAW on iPhone or iPad. Ease off crunchy Deep Fusion and skip the laptop and Lightroom subscription.',
+		screenshots: {
+			hero: {
+				iphone: '/screenshots/raw-clinic-1.PNG',
+				iphoneSecondary: '/screenshots/raw-clinic-2.PNG',
+				ipad: '/screenshots/raw-clinic-1-ipad.png'
+			},
+			closing: {
+				iphone: '/screenshots/raw-clinic-3.PNG',
+				ipad: '/screenshots/raw-clinic-1-ipad.png'
+			}
+		},
 		pillars: [
 			{ value: 'Free', label: 'No subscription' },
 			{ value: 'Private', label: 'On your device' }
@@ -29,23 +40,35 @@ export const landingBySlug: Record<string, AppLandingConfig> = {
 				title: 'Capture in Apple Camera or in-app.',
 				description:
 					'Use Apple Camera when you want the best hand-held ProRAW, or shoot inside RAW Clinic when capture and edit should stay in one app.',
-				visual: 'devices'
+				visual: 'devices',
+				screenshots: {
+					iphone: '/screenshots/raw-clinic-3.PNG',
+					ipad: '/screenshots/ipad-album.png'
+				}
 			},
 			{
 				eyebrow: 'Queue',
 				title: 'Import, organize, and grade.',
 				description:
 					'Add ProRAW from Photos or Files, sort your queue, and apply your look shot to shot, or paste a grade from a reference frame.',
-				bullets: ['Built on Apple\'s on-device RAW pipeline.'],
+				bullets: ["Built on Apple's on-device RAW pipeline."],
 				visualOnLeft: true,
-				visual: 'editor'
+				visual: 'editor',
+				screenshots: {
+					iphone: '/screenshots/iphone-queue-list.png',
+					ipad: '/screenshots/raw-clinic-1-ipad.png'
+				}
 			},
 			{
 				eyebrow: 'Export',
 				title: 'Export when ready. Repeat.',
 				description:
 					'Save JPG, HEIC, or TIFF to Photos or Share. Your originals stay untouched; the queue is ready for the next session.',
-				visual: 'color'
+				visual: 'color',
+				screenshots: {
+					iphone: '/screenshots/iphone-export.PNG',
+					ipad: '/screenshots/ipad-watermark.png'
+				}
 			}
 		],
 		grid: {
@@ -60,8 +83,7 @@ export const landingBySlug: Record<string, AppLandingConfig> = {
 				{
 					icon: 'device',
 					title: 'Built-in RAW camera',
-					description:
-						'Shoot DNG in-app on iPhone or iPad. Capture and grade without leaving RAW Clinic.'
+					description: 'Shoot DNG in-app on iPhone or iPad. Capture and grade without leaving RAW Clinic.'
 				},
 				{
 					icon: 'mixer',
@@ -91,15 +113,24 @@ export const landingBySlug: Record<string, AppLandingConfig> = {
 			roadmapTitle: 'See the roadmap'
 		},
 		closingTitle: 'Better ProRAW. Still on your phone.',
-		closingLead:
-			'Open a roll from Photos and see how far you can push ProRAW before you export.',
+		closingLead: 'Open a roll from Photos and see how far you can push ProRAW before you export.',
 		platformsLine: 'Free on the App Store'
 	},
 	'aqi-sense': {
 		heroEyebrow: 'Air quality · iOS',
 		heroTitle: 'Know the air you breathe, near you and around the world.',
-		heroLead:
-			'Live AQI from WAQI, Sensor.Community, and OpenSenseMap. Favorites, map, and regional scales.',
+		heroLead: 'Live AQI from WAQI, Sensor.Community, and OpenSenseMap. Favorites, map, and regional scales.',
+		screenshots: {
+			hero: {
+				iphone: '/screenshots/aqi-sense-1.PNG',
+				iphoneSecondary: '/screenshots/aqi-sense-2.PNG',
+				ipad: '/screenshots/aqi-sense-1-ipad.png'
+			},
+			closing: {
+				iphone: '/screenshots/aqi-sense-2.PNG',
+				ipad: '/screenshots/aqi-sense-2-ipad.png'
+			}
+		},
 		pillars: [
 			{ value: '3', label: 'Data sources' },
 			{ value: 'Live', label: 'Station readings' }
@@ -109,8 +140,7 @@ export const landingBySlug: Record<string, AppLandingConfig> = {
 				id: 'aqi-spotlight',
 				layout: 'spotlight',
 				eyebrow: 'Live AQI',
-				caption:
-					'Live readings from open networks, with favorites, map, and regional scales in one calm app.'
+				caption: 'Live readings from open networks, with favorites, map, and regional scales in one calm app.'
 			}
 		],
 		features: [
@@ -120,21 +150,33 @@ export const landingBySlug: Record<string, AppLandingConfig> = {
 				description: 'Saved and nearby stations in one list. Pull to refresh.',
 				bullets: ['Dominant pollutant on each card.'],
 				visualOnLeft: true,
-				visual: 'feed'
+				visual: 'feed',
+				screenshots: {
+					iphone: '/screenshots/aqi-sense-1.PNG',
+					ipad: '/screenshots/aqi-sense-1-ipad.png'
+				}
 			},
 			{
 				eyebrow: 'Map',
 				title: 'Explore stations on a map.',
 				description: 'Clustered markers, station details, and search by place.',
 				bullets: ['Forecasts and pollutant breakdown when available.'],
-				visual: 'map'
+				visual: 'map',
+				screenshots: {
+					iphone: '/screenshots/aqi-sense-2.PNG',
+					ipad: '/screenshots/aqi-sense-2-ipad.png'
+				}
 			},
 			{
 				eyebrow: 'Settings',
 				title: 'Your provider, your scale.',
 				description: 'WAQI, Sensor.Community, or OpenSenseMap: US EPA, China, or European CAQI.',
 				visualOnLeft: true,
-				visual: 'settings'
+				visual: 'settings',
+				screenshots: {
+					iphone: '/screenshots/aqi-sense-2.PNG',
+					ipad: '/screenshots/aqi-sense-2-ipad.png'
+				}
 			}
 		],
 		grid: {

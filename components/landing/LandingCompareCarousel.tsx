@@ -1,6 +1,6 @@
 'use client'
 
-import { useCallback, useEffect, useRef, useState } from 'react'
+import { useCallback, useEffect, useLayoutEffect, useRef, useState } from 'react'
 import Image from 'next/image'
 import clsx from 'clsx'
 import { useReducedMotion } from 'framer-motion'
@@ -88,13 +88,18 @@ export default function LandingCompareCarousel({
 	const reduceMotion = useReducedMotion()
 	const scrollerRef = useRef<HTMLElement>(null)
 	const compareRef = useRef<HTMLDivElement>(null)
+	const indexRef = useRef(0)
+	const scrollLockRef = useRef<number | null>(null)
 	const [index, setIndex] = useState(0)
+	indexRef.current = index
 	const [autoplayPaused, setAutoplayPaused] = useState(false)
 	const [inView, setInView] = useState(false)
 	const [documentVisible, setDocumentVisible] = useState(
 		() => typeof document !== 'undefined' && document.visibilityState === 'visible'
 	)
 	const count = pairs.length
+	const pageControlRef = useRef<HTMLDivElement>(null)
+	const [thumb, setThumb] = useState({ x: 0, w: 0 })
 
 	const pauseAutoplay = useCallback(() => {
 		setAutoplayPaused(true)
@@ -103,58 +108,25 @@ export default function LandingCompareCarousel({
 	const embeddedSlides = toSlides(pairs, (p) => p.embeddedSrc)
 	const rawSlides = toSlides(pairs, (p) => p.rawClinicSrc)
 
-	const scrollToIndex = useCallback(
-		(next: number, options?: { autoplay?: boolean }) => {
-			if (!options?.autoplay) pauseAutoplay()
-			const el = scrollerRef.current
-			if (!el || count === 0) return
-			const i = ((next % count) + count) % count
-			const slide = el.children[i] as HTMLElement | undefined
-			el.scrollTo({
-				left: slide?.offsetLeft ?? i * el.clientWidth,
-				behavior: reduceMotion ? 'auto' : 'smooth'
-			})
-			setIndex(i)
-		},
-		[count, reduceMotion, pauseAutoplay]
-	)
+	const updateThumb = useCallback(() => {
+		const control = pageControlRef.current
+		if (!control) return
+		const btn = control.querySelector<HTMLElement>(`[data-dot-index="${index}"]`)
+		if (!btn) return
+		setThumb({ x: btn.offsetLeft, w: btn.offsetWidth })
+	}, [index])
 
-	useEffect(() => {
-		const el = scrollerRef.current
-		if (!el || count <= 1) return
+	useLayoutEffect(() => {
+		updateThumb()
+		const control = pageControlRef.current
+		if (!control) return
+		const observer = new ResizeObserver(() => updateThumb())
+		observer.observe(control)
+		return () => observer.disconnect()
+	}, [updateThumb, count])
 
-		let raf = 0
-		const onScroll = () => {
-			cancelAnimationFrame(raf)
-			raf = requestAnimationFrame(() => {
-				const slides = Array.from(el.children) as HTMLElement[]
-				if (slides.length === 0) return
-				const scrollLeft = el.scrollLeft
-				let next = 0
-				let best = Number.POSITIVE_INFINITY
-				for (let i = 0; i < slides.length; i++) {
-					const dist = Math.abs(slides[i].offsetLeft - scrollLeft)
-					if (dist < best) {
-						best = dist
-						next = i
-					}
-				}
-				setIndex((current) => (current === next ? current : next))
-			})
-		}
-
-		el.addEventListener('scroll', onScroll, { passive: true })
-		return () => {
-			cancelAnimationFrame(raf)
-			el.removeEventListener('scroll', onScroll)
-		}
-	}, [count])
-
-	useEffect(() => {
-		const el = scrollerRef.current
-		if (!el || count <= 1) return
-
-		const observer = new ResizeObserver(() => {
+	const syncIndexFromScroll = useCallback(
+		(el: HTMLElement) => {
 			const slides = Array.from(el.children) as HTMLElement[]
 			if (slides.length === 0) return
 
@@ -168,10 +140,81 @@ export default function LandingCompareCarousel({
 					next = i
 				}
 			}
+			setIndex((current) => (current === next ? current : next))
+		},
+		[]
+	)
 
-			const slide = slides[next]
+	const scrollToIndex = useCallback(
+		(next: number, options?: { autoplay?: boolean }) => {
+			if (!options?.autoplay) pauseAutoplay()
+			const el = scrollerRef.current
+			if (!el || count === 0) return
+			const i = ((next % count) + count) % count
+			const slide = el.children[i] as HTMLElement | undefined
+			const targetLeft = slide?.offsetLeft ?? i * el.clientWidth
+
+			scrollLockRef.current = i
+			setIndex(i)
+
+			el.scrollTo({
+				left: targetLeft,
+				behavior: reduceMotion ? 'auto' : 'smooth'
+			})
+
+			if (reduceMotion || Math.abs(el.scrollLeft - targetLeft) < 2) {
+				scrollLockRef.current = null
+			}
+		},
+		[count, reduceMotion, pauseAutoplay]
+	)
+
+	useEffect(() => {
+		const el = scrollerRef.current
+		if (!el || count <= 1) return
+
+		let raf = 0
+		const onScroll = () => {
+			cancelAnimationFrame(raf)
+			raf = requestAnimationFrame(() => {
+				const locked = scrollLockRef.current
+				if (locked != null) {
+					const slide = el.children[locked] as HTMLElement | undefined
+					if (slide && Math.abs(slide.offsetLeft - el.scrollLeft) < 4) {
+						scrollLockRef.current = null
+					}
+					return
+				}
+				syncIndexFromScroll(el)
+			})
+		}
+
+		const onScrollEnd = () => {
+			scrollLockRef.current = null
+			syncIndexFromScroll(el)
+		}
+
+		el.addEventListener('scroll', onScroll, { passive: true })
+		el.addEventListener('scrollend', onScrollEnd)
+		return () => {
+			cancelAnimationFrame(raf)
+			el.removeEventListener('scroll', onScroll)
+			el.removeEventListener('scrollend', onScrollEnd)
+		}
+	}, [count, syncIndexFromScroll])
+
+	useEffect(() => {
+		const el = scrollerRef.current
+		if (!el || count <= 1) return
+
+		let width = el.clientWidth
+		const observer = new ResizeObserver(() => {
+			const nextWidth = el.clientWidth
+			if (Math.abs(nextWidth - width) < 1) return
+			width = nextWidth
+
+			const slide = el.children[indexRef.current] as HTMLElement | undefined
 			if (slide) el.scrollLeft = slide.offsetLeft
-			setIndex(next)
 		})
 		observer.observe(el)
 		return () => observer.disconnect()
@@ -256,16 +299,31 @@ export default function LandingCompareCarousel({
 
 			{count > 1 && (
 				<div
+					ref={pageControlRef}
 					className="landing-compare__page-control"
 					role="tablist"
 					aria-label="Comparison examples"
 					onPointerDown={pauseAutoplay}
 				>
+					<span
+						className={clsx(
+							'landing-compare__thumb',
+							reduceMotion && 'landing-compare__thumb--instant'
+						)}
+						aria-hidden
+						style={
+							{
+								'--compare-thumb-x': `${thumb.x}px`,
+								'--compare-thumb-w': `${thumb.w}px`
+							} as React.CSSProperties
+						}
+					/>
 					{pairs.map((pair, i) => (
 						<button
 							key={pair.id}
 							type="button"
 							role="tab"
+							data-dot-index={i}
 							className={clsx(
 								'landing-compare__dot',
 								i === index && 'landing-compare__dot--active'

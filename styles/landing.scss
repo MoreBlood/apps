@@ -116,15 +116,11 @@
 		margin: 0 auto clamp(1.25rem, 4vw, 2rem);
 		aspect-ratio: 6 / 5;
 		min-height: clamp(10.5rem, 40vw, 16rem);
-		--hero-stage-scale: 0.86;
-		--hero-cluster-y: 46%;
 		isolation: isolate;
 
 		@media (min-width: 768px) {
 			aspect-ratio: 16 / 9;
 			min-height: clamp(15rem, 28vw, 21rem);
-			--hero-stage-scale: 1.02;
-			--hero-cluster-y: 48%;
 		}
 
 		.landing-hero__stage {
@@ -136,14 +132,6 @@
 			margin: 0;
 			aspect-ratio: unset;
 			min-height: 0;
-
-			.landing-stage__device {
-				transform: translate(-50%, -50%)
-					rotate(var(--device-rotate, 0deg))
-					scale(
-						calc(var(--device-scale, 0.38) * var(--hero-stage-scale, 1) * var(--device-scale-mult, 1))
-					);
-			}
 		}
 	}
 
@@ -215,13 +203,8 @@
 		flex-direction: column;
 		align-items: center;
 		gap: 0.75rem;
-		width: min(100%, 22rem);
 		margin-inline: auto;
 		margin-bottom: 2.5rem;
-
-		.landing-store-btn {
-			width: 100%;
-		}
 	}
 
 	&__secondary-cta {
@@ -325,7 +308,9 @@ $mockup-iphone-h: 1603px;
 	min-height: 16rem;
 	overflow: hidden;
 	// Set by `useLandingStageScale` (fallback before hydration)
-	--device-scale: 0.38;
+	--cluster-scale: 0.28;
+	--composition-w: 2400px;
+	--composition-h: 2400px;
 
 	&__glow {
 		position: absolute;
@@ -337,8 +322,13 @@ $mockup-iphone-h: 1603px;
 
 	&__cluster {
 		position: absolute;
-		inset: 0;
+		left: 50%;
+		top: 50%;
+		width: var(--composition-w);
+		height: var(--composition-h);
 		pointer-events: none;
+		transform: translate(-50%, -50%) scale(var(--cluster-scale, 0.28));
+		transform-origin: center center;
 	}
 
 	&__device {
@@ -347,9 +337,8 @@ $mockup-iphone-h: 1603px;
 		pointer-events: none;
 		--device-scale-mult: 1;
 		filter: drop-shadow(0 24px 48px -12px var(--gray-a8)) drop-shadow(0 8px 16px -8px var(--gray-a6));
-		transform: translate(-50%, -50%)
-			rotate(var(--device-rotate, 0deg))
-			scale(calc(var(--device-scale, 0.38) * var(--device-scale-mult, 1)));
+		transform: translate(-50%, -50%) rotate(var(--device-rotate, 0deg))
+			scale(var(--device-scale-mult, 1));
 		transform-origin: center center;
 
 		.device-mockup {
@@ -359,8 +348,8 @@ $mockup-iphone-h: 1603px;
 		}
 
 		&--ipad {
-			left: calc(50% + var(--device-ipad-x, 0%));
-			top: calc(50% + var(--device-ipad-y, 0%));
+			left: var(--device-ipad-x, 50%);
+			top: var(--device-ipad-y, 50%);
 			width: $mockup-ipad-w;
 			height: $mockup-ipad-h;
 			z-index: var(--device-ipad-z, 1);
@@ -369,8 +358,8 @@ $mockup-iphone-h: 1603px;
 		}
 
 		&--iphone:not(.landing-stage__device--secondary) {
-			left: calc(50% + var(--device-iphone-x, 0%));
-			top: calc(50% + var(--device-iphone-y, 0%));
+			left: var(--device-iphone-x, 50%);
+			top: var(--device-iphone-y, 50%);
 			width: $mockup-iphone-w;
 			height: $mockup-iphone-h;
 			z-index: var(--device-iphone-z, 2);
@@ -379,8 +368,8 @@ $mockup-iphone-h: 1603px;
 		}
 
 		&--secondary {
-			left: calc(50% + var(--device-iphone-secondary-x, 0%));
-			top: calc(50% + var(--device-iphone-secondary-y, 0%));
+			left: var(--device-iphone-secondary-x, 50%);
+			top: var(--device-iphone-secondary-y, 50%);
 			width: $mockup-iphone-w;
 			height: $mockup-iphone-h;
 			z-index: var(--device-iphone-secondary-z, 1);
@@ -815,93 +804,11 @@ $mockup-iphone-h: 1603px;
 			color: var(--landing-final-muted, var(--gray-11));
 		}
 
-		.landing-store-btn {
-			position: relative;
-			overflow: hidden;
-			isolation: isolate;
-			font-size: clamp(1.0625rem, 2.2vw, 1.1875rem);
-			padding: clamp(0.95rem, 2.2vw, 1.1rem) clamp(2rem, 4.5vw, 2.65rem);
-			border: 1px solid rgb(255 255 255 / 0.14);
-			background: linear-gradient(180deg, var(--accent-9), var(--accent-10));
-			box-shadow:
-				0 1px 0 rgb(255 255 255 / 0.22) inset,
-				0 16px 40px -14px var(--accent-a9);
-
-			&::before {
-				content: '';
-				position: absolute;
-				inset: -40%;
-				border-radius: inherit;
-				background: radial-gradient(
-					circle at 30% 50%,
-					color-mix(in srgb, var(--accent-11) 90%, white),
-					transparent 55%
-				);
-				opacity: 0.52;
-				mix-blend-mode: soft-light;
-				pointer-events: none;
-				backface-visibility: hidden;
-				will-change: transform, opacity;
-				animation: landing-cta-btn-glow 5.5s ease-in-out infinite;
-			}
-
-			&::after {
-				content: '';
-				position: absolute;
-				top: 0;
-				left: 0;
-				width: 42%;
-				height: 100%;
-				border-radius: inherit;
-				background: linear-gradient(
-					90deg,
-					transparent,
-					rgb(255 255 255 / 0.38),
-					transparent
-				);
-				pointer-events: none;
-				backface-visibility: hidden;
-				will-change: transform;
-				transform: translate3d(-140%, 0, 0);
-				animation: landing-cta-btn-shine-gpu 3.2s ease-in-out infinite;
-			}
-
-			> * {
-				position: relative;
-				z-index: 1;
-			}
-
-			&:hover,
-			&:focus {
-				transform: translate3d(0, -1px, 0);
-				filter: brightness(1.06);
-				box-shadow:
-					0 1px 0 rgb(255 255 255 / 0.28) inset,
-					0 20px 48px -12px var(--accent-a9);
-			}
-
-			&:active {
-				transform: translateY(0);
-				filter: none;
-			}
-		}
-
 		@media (prefers-reduced-motion: reduce) {
 			&::before,
 			&::after {
 				animation: none;
 				opacity: 0.55;
-			}
-
-			.landing-store-btn {
-				&::before,
-				&::after {
-					animation: none;
-				}
-
-				&::after {
-					display: none;
-				}
 			}
 		}
 	}
@@ -1033,12 +940,6 @@ $mockup-iphone-h: 1603px;
 		@media (hover: hover) {
 			.landing-primary-grid__card:hover & {
 				border-color: var(--landing-metal-rim-light);
-				box-shadow:
-					inset 0 1px 0 color-mix(in srgb, white 62%, transparent),
-					inset 0 -1px 0 color-mix(in srgb, black 6%, transparent),
-					inset 0 1px 3px color-mix(in srgb, black 3%, transparent),
-					0 2px 0 color-mix(in srgb, white 40%, transparent),
-					0 0 0 1px var(--landing-metal-rim-light);
 
 				&::before {
 					opacity: 0.58;
@@ -1049,8 +950,6 @@ $mockup-iphone-h: 1603px;
 				}
 
 				svg {
-					filter: drop-shadow(0 1px 2px color-mix(in srgb, white 55%, transparent));
-
 					@media (prefers-reduced-motion: no-preference) {
 						transform: scale(1.06);
 					}
@@ -1220,10 +1119,6 @@ $mockup-iphone-h: 1603px;
 	padding-block: 0.5rem;
 
 	@media (max-width: 899px) {
-		.landing-feature__visual {
-			order: -1;
-		}
-
 		.landing-feature__content {
 			width: 100%;
 			max-width: 36rem;
@@ -1319,11 +1214,11 @@ $mockup-iphone-h: 1603px;
 	}
 
 	&__visual {
-		overflow: hidden;
+		overflow: visible;
 
 		.landing-stage {
 			aspect-ratio: 4 / 3;
-			min-height: clamp(17rem, 52vw, 24rem);
+			min-height: clamp(13rem, 40vw, 19rem);
 			overflow: hidden;
 		}
 	}
@@ -1603,6 +1498,19 @@ $mockup-iphone-h: 1603px;
 
 // —— Store button —————————————————————————————————————————————————————————————
 
+.landing-store-btn-wrap {
+	display: flex;
+	width: fit-content;
+	max-width: 100%;
+	margin-inline: auto;
+
+	.rt-Link {
+		display: inline-flex;
+		width: auto;
+		max-width: 100%;
+	}
+}
+
 .landing-store-btn {
 	display: inline-flex;
 	align-items: center;
@@ -1655,11 +1563,6 @@ $mockup-iphone-h: 1603px;
 	&--large {
 		padding: 0.95rem 2rem;
 		font-size: 1.0625rem;
-	}
-
-	@media (max-width: 480px) {
-		width: 100%;
-		max-width: 100%;
 	}
 
 	&__label {
@@ -1830,15 +1733,13 @@ html.lenis body {
 @keyframes landing-float {
 	0%,
 	100% {
-		transform: translate(-50%, -50%)
-			rotate(var(--device-rotate, 0deg))
-			scale(calc(var(--device-scale, 0.38) * var(--device-scale-mult, 1)));
+		transform: translate(-50%, -50%) rotate(var(--device-rotate, 0deg))
+			scale(var(--device-scale-mult, 1));
 	}
 
 	50% {
-		transform: translate(-50%, calc(-50% - 6px))
-			rotate(var(--device-rotate, 0deg))
-			scale(calc(var(--device-scale, 0.38) * var(--device-scale-mult, 1)));
+		transform: translate(-50%, calc(-50% - 6px)) rotate(var(--device-rotate, 0deg))
+			scale(var(--device-scale-mult, 1));
 	}
 }
 
@@ -1869,33 +1770,8 @@ html.lenis body {
 	}
 }
 
-@keyframes landing-cta-btn-glow {
-	0%,
-	100% {
-		transform: translate3d(-12%, 0, 0) scale3d(0.88, 0.88, 1);
-		opacity: 0.28;
-	}
-
-	50% {
-		transform: translate3d(16%, 0, 0) scale3d(1.22, 1.22, 1);
-		opacity: 0.62;
-	}
-}
-
-@keyframes landing-cta-btn-shine-gpu {
-	0%,
-	28% {
-		transform: translate3d(-140%, 0, 0);
-	}
-
-	48%,
-	100% {
-		transform: translate3d(320%, 0, 0);
-	}
-}
-
 // —— Responsive summary ———————————————————————————————————————————————————————
-// Mobile: single-column grids, visual above copy, full-width CTAs, short store label.
+// Mobile: single-column grids, stacked feature copy/visual, short store label.
 // Tablet (540–899px): 2-col highlights / feature grid.
 // Desktop (900px+): split features, 3–4 col grids, horizontal feature reveals.
 

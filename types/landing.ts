@@ -18,6 +18,20 @@ export type LandingFeatureVisual =
 	| 'chart'
 	| 'settings'
 
+/** Paths under `public/` for device stage mockups. */
+export type LandingSectionScreenshots = {
+	iphone: string
+	ipad: string
+	/** Second iPhone layer in hero stage only. */
+	iphoneSecondary?: string
+}
+
+export type LandingScreenshotsConfig = {
+	hero: LandingSectionScreenshots
+	/** Closing CTA stage (`variant="compact"`). */
+	closing?: LandingSectionScreenshots
+}
+
 export type LandingFeature = {
 	eyebrow?: string
 	title: string
@@ -25,6 +39,7 @@ export type LandingFeature = {
 	bullets?: string[]
 	visualOnLeft?: boolean
 	visual: LandingFeatureVisual
+	screenshots: LandingSectionScreenshots
 }
 
 export type LandingGridIconId =
@@ -101,6 +116,8 @@ export type AppLandingConfig = {
 	heroEyebrow: string
 	heroTitle: string
 	heroLead: string
+	/** Paths under `public/` for hero, features, and closing stages. */
+	screenshots: LandingScreenshotsConfig
 	pillars: LandingPillar[]
 	showcase?: LandingShowcase
 	/** Halide-style photo bands — placeholders until assets are added. */

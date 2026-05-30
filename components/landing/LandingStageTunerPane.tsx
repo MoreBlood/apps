@@ -5,7 +5,8 @@ import type { StageDeviceId, StageDeviceSlot } from '@/lib/landing-stage-scale'
 import {
 	getStageDeviceZIndex,
 	LANDING_STAGE_SCALE_OPTIONS,
-	stageOffsetXFraction
+	resolveSlotPosition,
+	STAGE_ARTBOARD
 } from '@/lib/landing-stage-scale'
 import { formatLandingStageLayoutSnippet } from '@/lib/landing-stage-tuner'
 import {
@@ -15,8 +16,8 @@ import {
 } from './LandingStageTunerContext'
 
 type DeviceBinding = {
-	leftPct: number
-	topPct: number
+	xPx: number
+	yPx: number
 	rotate: number
 	scaleMult: number
 	zIndex: number
@@ -32,9 +33,10 @@ type PaneParams = {
 function slotsToBindings(slots: StageDeviceSlot[]): Record<string, DeviceBinding> {
 	const bindings: Record<string, DeviceBinding> = {}
 	for (const slot of slots) {
+		const { x, y } = resolveSlotPosition(slot)
 		bindings[slot.id] = {
-			leftPct: stageOffsetXFraction(slot) * 100,
-			topPct: slot.top * 100,
+			xPx: Math.round(x),
+			yPx: Math.round(y),
 			rotate: slot.rotate,
 			scaleMult: slot.scaleMult ?? 1,
 			zIndex: getStageDeviceZIndex(slot)
@@ -49,8 +51,11 @@ function bindingsToSlots(slots: StageDeviceSlot[], bindings: Record<string, Devi
 		if (!binding) return slot
 		return {
 			...slot,
-			left: Math.round(binding.leftPct) / 100,
-			top: Math.round(binding.topPct) / 100,
+			x: binding.xPx,
+			y: binding.yPx,
+			left: undefined,
+			right: undefined,
+			top: undefined,
 			rotate: Math.round(binding.rotate),
 			scaleMult: binding.scaleMult,
 			zIndex: Math.round(binding.zIndex)
@@ -72,7 +77,7 @@ export default function LandingStageTunerPane() {
 	const containerRef = useRef<HTMLDivElement>(null)
 	const bindingsRef = useRef<Record<string, DeviceBinding>>({})
 	const paramsRef = useRef<PaneParams>({
-		clusterScale: 0.38,
+		clusterScale: 0.28,
 		manualClusterScale: false,
 		fitMargin: 1.06,
 		padding: 12
@@ -119,9 +124,9 @@ export default function LandingStageTunerPane() {
 		slotsRef.current = override.slots
 		bindingsRef.current = slotsToBindings(override.slots)
 
-		const scaleOpts = LANDING_STAGE_SCALE_OPTIONS[activeLayoutKey] ?? {}
+		const scaleOpts = LANDING_STAGE_SCALE_OPTIONS
 		paramsRef.current = {
-			clusterScale: override.scaleOverride ?? 0.38,
+			clusterScale: override.scaleOverride ?? 0.28,
 			manualClusterScale: override.scaleOverride != null,
 			fitMargin: override.fitMargin ?? scaleOpts.fitMargin ?? 1.06,
 			padding: override.padding ?? (scaleOpts.padding ?? 12) + (scaleOpts.filterBleed ?? 0)
@@ -143,8 +148,8 @@ export default function LandingStageTunerPane() {
 			scaleFolder.addBinding(params, 'manualClusterScale', { label: 'manual scale' })
 			scaleFolder.addBinding(params, 'clusterScale', {
 				label: 'scale',
-				min: 0.15,
-				max: 0.7,
+				min: 0.05,
+				max: 1,
 				step: 0.01
 			})
 			scaleFolder.addBinding(params, 'padding', {
@@ -167,16 +172,16 @@ export default function LandingStageTunerPane() {
 					title: DEVICE_LABELS[slot.id] ?? slot.id,
 					expanded: slot.id === 'ipad'
 				})
-				folder.addBinding(binding, 'leftPct', {
-					label: 'left %',
-					min: -20,
-					max: 100,
+				folder.addBinding(binding, 'xPx', {
+					label: 'x px',
+					min: -Math.round(STAGE_ARTBOARD.w * 0.35),
+					max: Math.round(STAGE_ARTBOARD.w * 0.35),
 					step: 1
 				})
-				folder.addBinding(binding, 'topPct', {
-					label: 'top %',
-					min: -100,
-					max: 100,
+				folder.addBinding(binding, 'yPx', {
+					label: 'y px',
+					min: -Math.round(STAGE_ARTBOARD.h * 0.35),
+					max: Math.round(STAGE_ARTBOARD.h * 0.35),
 					step: 1
 				})
 				folder.addBinding(binding, 'rotate', {
@@ -217,7 +222,7 @@ export default function LandingStageTunerPane() {
 			scaleOverride: params.manualClusterScale ? params.clusterScale : undefined,
 			padding: params.padding,
 			fitMargin: params.fitMargin,
-			maxScale: LANDING_STAGE_SCALE_OPTIONS[active.layoutKey]?.maxScale
+			maxScale: LANDING_STAGE_SCALE_OPTIONS.maxScale
 		})
 		try {
 			await navigator.clipboard.writeText(text)
@@ -253,8 +258,8 @@ export default function LandingStageTunerPane() {
 				</div>
 			</div>
 			<p className="landing-stage-tuner__hint">
-				Positions are offsets from the viewport center: left % = share of stage width, top % = share of stage height.
-				Cluster fit: padding = inset from edges; fit margin = scale divisor (above 1 shrinks).
+				Positions are px offsets from the artboard center ({STAGE_ARTBOARD.w}×{STAGE_ARTBOARD.h}). Cluster fit:
+				padding = inset from edges; fit margin = scale divisor (above 1 shrinks).
 			</p>
 			<div ref={containerRef} className="landing-stage-tuner__pane" />
 		</div>

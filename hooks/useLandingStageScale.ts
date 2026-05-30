@@ -9,20 +9,23 @@ import {
 	formatLandingStageScaleReport,
 	getLandingStageDevices,
 	getLandingStageLayoutKey,
-	LANDING_STAGE_SCALE_OPTIONS
+	LANDING_STAGE_FEATURE_SCALE_OPTIONS,
+	LANDING_STAGE_HERO_SCALE_OPTIONS
 } from '@/lib/landing-stage-scale'
 
 type Variant = 'hero' | 'compact' | string
 
 type Options = {
 	stageId?: string
+	/** Deep feature row index — enables alternating iphone-left / ipad-left layouts. */
+	featureIndex?: number
 }
 
 export function useLandingStageScale(variant: Variant = 'hero', options: Options = {}) {
 	const stageRef = useRef<HTMLDivElement>(null)
 	const [debugReport, setDebugReport] = useState<string | null>(null)
 	const tuner = useLandingStageTunerOptional()
-	const { stageId } = options
+	const { stageId, featureIndex } = options
 	const overrideRevision = tuner?.overrideRevision ?? 0
 	const tunerRef = useRef(tuner)
 	tunerRef.current = tuner
@@ -37,14 +40,15 @@ export function useLandingStageScale(variant: Variant = 'hero', options: Options
 		const update = () => {
 			const tunerNow = tunerRef.current
 			const { width, height } = el.getBoundingClientRect()
-			const layoutKey = getLandingStageLayoutKey(variant, width)
+			const layoutKey = getLandingStageLayoutKey(variant, { featureIndex })
 			const override = stageId ? tunerNow?.getOverride(stageId) : undefined
 			const resolvedSlots =
 				stageId && tunerNow
 					? tunerNow.resolveSlots(stageId, layoutKey)
 					: getLandingStageDevices(layoutKey)
 
-			const scaleOpts = LANDING_STAGE_SCALE_OPTIONS[layoutKey] ?? {}
+			const scaleOpts =
+				featureIndex != null ? LANDING_STAGE_FEATURE_SCALE_OPTIONS : LANDING_STAGE_HERO_SCALE_OPTIONS
 			const tunerOpts =
 				override?.layoutKey === layoutKey
 					? {
@@ -80,7 +84,7 @@ export function useLandingStageScale(variant: Variant = 'hero', options: Options
 			window.removeEventListener('orientationchange', scheduleUpdate)
 			if (debug) setDebugReport(null)
 		}
-	}, [variant, stageId, overrideRevision])
+	}, [variant, stageId, featureIndex, overrideRevision])
 
 	return { stageRef, debugReport }
 }

@@ -77,10 +77,12 @@ function CtaPanel({
 function FeatureSection({
 	app,
 	feature,
+	featureIndex,
 	verticalReveal
 }: {
 	app: LandingAppInfo
 	feature: LandingFeature
+	featureIndex: number
 	verticalReveal: boolean
 }) {
 	const reverse = feature.visualOnLeft === true
@@ -107,7 +109,12 @@ function FeatureSection({
 				delay={0.08}
 				duration={0.75}
 			>
-				<LandingDeviceStage appSlug={app.slug} appName={app.appName} variant={feature.visual} />
+				<LandingDeviceStage
+					appSlug={app.slug}
+					appName={app.appName}
+					variant={feature.visual}
+					featureIndex={featureIndex}
+				/>
 			</LandingReveal>
 		</section>
 	)
@@ -253,6 +260,7 @@ export default function AppLandingPage({ app }: Props) {
 							<FeatureSection
 								app={app}
 								feature={feature}
+								featureIndex={index}
 								verticalReveal={verticalReveal}
 							/>
 							{landing.photoMoments

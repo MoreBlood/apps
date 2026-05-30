@@ -1,4 +1,5 @@
 import type { LandingStageLayoutKey, StageDeviceSlot } from '@/lib/landing-stage-scale'
+import { resolveSlotPosition } from '@/lib/landing-stage-scale'
 
 /** Env flag; readable during SSR. */
 export function isLandingStageTunerFromEnv(): boolean {
@@ -47,23 +48,17 @@ export function formatLandingStageLayoutSnippet(
 ): string {
 	const deviceLines = slots
 		.map((slot) => {
-			const left =
-				slot.left != null
-					? `left: ${round(slot.left, 2)}, `
-					: slot.right != null
-						? `right: ${round(slot.right, 2)}, `
-						: 'left: 0, '
-			const top = `top: ${round(slot.top, 2)}`
+			const { x, y } = resolveSlotPosition(slot)
 			const rotate = `rotate: ${Math.round(slot.rotate)}`
 			const mult =
 				slot.scaleMult != null && slot.scaleMult !== 1 ? `, scaleMult: ${round(slot.scaleMult, 3)}` : ''
 			const z = slot.zIndex != null ? `, zIndex: ${slot.zIndex}` : ''
-			return `\t\t{ id: '${slot.id}', ${left}${top}, ${rotate}${mult}${z}, ${MOCKUP_SPREAD[slot.id]} }`
+			return `\t\t{ id: '${slot.id}', x: ${Math.round(x)}, y: ${Math.round(y)}, ${rotate}${mult}${z}, ${MOCKUP_SPREAD[slot.id]} }`
 		})
 		.join(',\n')
 
 	const lines = [
-		`// Paste into LAYOUTS['${layoutKey}'] in lib/landing-stage-scale.ts`,
+		`// Paste into LANDING_STAGE_LAYOUTS['${layoutKey}'] in lib/landing-stage-scale.config.ts`,
 		'[',
 		deviceLines,
 		']'
@@ -76,17 +71,13 @@ export function formatLandingStageLayoutSnippet(
 		if (opts.maxScale !== undefined) parts.push(`maxScale: ${opts.maxScale}`)
 
 		if (parts.length > 0) {
-			lines.push(
-				'',
-				`// LANDING_STAGE_SCALE_OPTIONS['${layoutKey}']`,
-				`{ ${parts.join(', ')} }`
-			)
+			lines.push('', '// LANDING_STAGE_SCALE_OPTIONS', `{ ${parts.join(', ')} }`)
 		}
 
 		if (opts.manualClusterScale && opts.scaleOverride != null) {
 			lines.push(
 				'',
-				`// Optional manual cluster scale (viewport-specific): scaleOverride: ${round(opts.scaleOverride, 6)}`
+				`// Optional manual cluster scale: scaleOverride: ${round(opts.scaleOverride, 6)}`
 			)
 		}
 	}

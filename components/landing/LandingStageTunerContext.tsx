@@ -80,6 +80,8 @@ function mergeSlotsForLayout(
 		if (!edited) return def
 		return {
 			...def,
+			x: edited.x,
+			y: edited.y,
 			left: edited.left,
 			right: edited.right,
 			top: edited.top,

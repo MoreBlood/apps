@@ -1,128 +1,108 @@
-import { MOCKUP_IPAD, MOCKUP_IPHONE } from '@/lib/device-mockup-sizes'
+import { DEFAULT_STAGE_DEVICE_Z, STAGE_ARTBOARD } from '@/lib/landing-stage-scale.config'
 
-export type LandingStageLayoutKey = 'hero-mobile' | 'feature'
+export type {
+	ComputeStageScaleOptions,
+	LandingStageLayoutKey,
+	LandingStageLayoutOptions,
+	LandingStageScaleResult,
+	PlacedStageDevice,
+	StageAnchoredDevice,
+	StageDeviceId,
+	StageDeviceSlot
+} from '@/lib/landing-stage-scale.types'
 
-export type StageDeviceId = 'ipad' | 'iphone' | 'iphone-secondary'
+export {
+	cloneLandingStageSlots,
+	DEFAULT_STAGE_DEVICE_Z,
+	getFeatureStageLayoutKey,
+	getLandingStageDevices,
+	getLandingStageLayoutKey,
+	LANDING_STAGE_FEATURE_SCALE_OPTIONS,
+	LANDING_STAGE_HERO_SCALE_OPTIONS,
+	LANDING_STAGE_SCALE_OPTIONS,
+	STAGE_ARTBOARD
+} from '@/lib/landing-stage-scale.config'
 
-export type StageAnchoredDevice = {
-	w: number
-	h: number
-	/** Fraction of container width offset from viewport center (+ = right). */
-	left?: number
-	/** Fraction of container height offset from viewport center (+ = down). */
-	top: number
-	/** @deprecated Use `left` as negative offset from center. */
-	right?: number
-	scaleMult?: number
-	zIndex?: number
-}
+export { LANDING_STAGE_LAYOUTS } from '@/lib/landing-stage-scale.config'
 
-export type StageDeviceSlot = StageAnchoredDevice & {
-	id: StageDeviceId
-	rotate: number
-}
-
-export const DEFAULT_STAGE_DEVICE_Z: Record<StageDeviceId, number> = {
-	ipad: 1,
-	iphone: 2,
-	'iphone-secondary': 1
-}
-
-export function getStageDeviceZIndex(slot: Pick<StageDeviceSlot, 'id' | 'zIndex'>) {
-	return slot.zIndex ?? DEFAULT_STAGE_DEVICE_Z[slot.id]
-}
-
-export type PlacedStageDevice = {
-	id: StageDeviceId
-	/** Fraction of container width from center. */
-	x: number
-	/** Fraction of container height from center. */
-	y: number
-	w: number
-	h: number
-	rotate: number
-	scaleMult: number
-	zIndex: number
-}
-
-const LAYOUTS: Record<LandingStageLayoutKey, StageDeviceSlot[]> = {
-	'hero-mobile': [
-		{ id: 'ipad', left: 0.05, top: 0, rotate: 0, zIndex: 1, ...MOCKUP_IPAD },
-		{ id: 'iphone', left: -0.1, top: 0.12, rotate: 0, zIndex: 2, ...MOCKUP_IPHONE }
-	],
-	feature: [
-		{ id: 'ipad', left: 0.05, top: 0, rotate: 0, zIndex: 1, ...MOCKUP_IPAD },
-		{ id: 'iphone', left: -0.1, top: 0.07, rotate: 0, zIndex: 2, ...MOCKUP_IPHONE }
-	]
-}
-
-export type LandingStageScaleResult = {
-	scale: number
-	layoutKey: LandingStageLayoutKey
-	label: string
-	container: { w: number; h: number }
-	raw: number
-	padding: number
-	minScale: number
-	maxScale: number
-	composition: { w: number; h: number }
-	placed: PlacedStageDevice[]
-	/** Scaled bbox of all devices in the container. */
-	bbox: { minX: number; minY: number; maxX: number; maxY: number } | null
-	constraints: { label: string; scale: number }[]
-}
-
-export type ComputeStageScaleOptions = {
-	/** Inset from stage edges when fitting the cluster (px per side). */
-	padding?: number
-	/** Extra px around each device when measuring composition size (shadows/rotation). */
-	shadowPad?: number
-	/**
-	 * @deprecated Merged into `padding` at runtime. Prefer a single `padding` value.
-	 */
-	filterBleed?: number
-	/** Scale divisor: &gt;1 shrinks the cluster (e.g. 1.06 ≈ 6% smaller). */
-	fitMargin?: number
-	minScale?: number
-	maxScale?: number
-	debugLabel?: string
-	layoutKey?: LandingStageLayoutKey
-	/** When set, skips auto-fit and uses this cluster scale (--device-scale). */
-	scaleOverride?: number
-}
-
-export const LANDING_STAGE_SCALE_OPTIONS: Partial<
-	Record<LandingStageLayoutKey, Omit<ComputeStageScaleOptions, 'debugLabel' | 'layoutKey'>>
-> = {
-	'hero-mobile': { scaleOverride: 0.21 },
-	feature: { padding: 0, fitMargin: 1, maxScale: 0.46 }
-}
+import type {
+	ComputeStageScaleOptions,
+	LandingStageLayoutKey,
+	LandingStageScaleResult,
+	PlacedStageDevice,
+	StageAnchoredDevice,
+	StageDeviceSlot
+} from '@/lib/landing-stage-scale.types'
 
 function nativeSize(device: StageAnchoredDevice) {
 	const mult = device.scaleMult ?? 1
 	return { w: device.w * mult, h: device.h * mult }
 }
 
-/** Horizontal fraction from center: +right uses `left`, +left uses `-right`. */
+/** Resolve slot anchor to artboard px (center-relative). */
+export function resolveSlotPosition(device: StageAnchoredDevice): { x: number; y: number } {
+	if (device.x != null || device.y != null) {
+		return {
+			x:
+				device.x ??
+				(device.left != null
+					? device.left * STAGE_ARTBOARD.w
+					: device.right != null
+						? -device.right * STAGE_ARTBOARD.w
+						: 0),
+			y: device.y ?? (device.top != null ? device.top * STAGE_ARTBOARD.h : 0)
+		}
+	}
+	const x =
+		device.left != null
+			? device.left * STAGE_ARTBOARD.w
+			: device.right != null
+				? -device.right * STAGE_ARTBOARD.w
+				: 0
+	const y = device.top != null ? device.top * STAGE_ARTBOARD.h : 0
+	return { x, y }
+}
+
+/** @deprecated Use `resolveSlotPosition`. Fraction of artboard width for tuner export compat. */
 export function stageOffsetXFraction(device: StageAnchoredDevice): number {
-	if (device.left != null) return device.left
-	if (device.right != null) return -device.right
-	return 0
+	return resolveSlotPosition(device).x / STAGE_ARTBOARD.w
 }
 
-/** Device top-left in container px; anchor is device center. */
-export function deviceRect(containerW: number, containerH: number, device: StageAnchoredDevice, layoutScale: number) {
+export function getStageDeviceZIndex(slot: Pick<StageDeviceSlot, 'id' | 'zIndex'>) {
+	return slot.zIndex ?? DEFAULT_STAGE_DEVICE_Z[slot.id]
+}
+
+/** Device bounds in artboard space; anchor is device center. */
+export function deviceRectArtboard(device: StageAnchoredDevice) {
+	const { x: ox, y: oy } = resolveSlotPosition(device)
 	const { w: nw, h: nh } = nativeSize(device)
-	const w = nw * layoutScale
-	const h = nh * layoutScale
-	const cx = containerW / 2 + stageOffsetXFraction(device) * containerW
-	const cy = containerH / 2 + device.top * containerH
-	const x = cx - w / 2
-	const y = cy - h / 2
-	return { x, y, w, h, cx, cy, x2: x + w, y2: y + h }
+	const cx = ox
+	const cy = oy
+	const x = cx - nw / 2
+	const y = cy - nh / 2
+	return { x, y, w: nw, h: nh, cx, cy, x2: x + nw, y2: y + nh }
 }
 
-/** Axis-aligned bounds of a rectangle rotated around its center (matches CSS transform-origin: center). */
+/** @deprecated Use `deviceRectArtboard`. */
+export function deviceRect(
+	_containerW: number,
+	_containerH: number,
+	device: StageAnchoredDevice,
+	_layoutScale = 1
+) {
+	const rect = deviceRectArtboard(device)
+	if (_layoutScale === 1) return rect
+	return {
+		...rect,
+		w: rect.w * _layoutScale,
+		h: rect.h * _layoutScale,
+		x: rect.cx - (rect.w * _layoutScale) / 2,
+		y: rect.cy - (rect.h * _layoutScale) / 2,
+		x2: rect.cx + (rect.w * _layoutScale) / 2,
+		y2: rect.cy + (rect.h * _layoutScale) / 2
+	}
+}
+
 function rotatedBoundsAroundCenter(w: number, h: number, rotateDeg: number) {
 	const rad = (Math.abs(rotateDeg) * Math.PI) / 180
 	return {
@@ -131,20 +111,14 @@ function rotatedBoundsAroundCenter(w: number, h: number, rotateDeg: number) {
 	}
 }
 
-function layoutCompositionBounds(
-	containerW: number,
-	containerH: number,
-	slots: StageDeviceSlot[],
-	deviceScale: number,
-	shadowPad: number
-) {
+function layoutCompositionBounds(slots: StageDeviceSlot[], shadowPad: number) {
 	let minX = Number.POSITIVE_INFINITY
 	let minY = Number.POSITIVE_INFINITY
 	let maxX = Number.NEGATIVE_INFINITY
 	let maxY = Number.NEGATIVE_INFINITY
 
 	for (const slot of slots) {
-		const rect = deviceRect(containerW, containerH, slot, deviceScale)
+		const rect = deviceRectArtboard(slot)
 		const bound = rotatedBoundsAroundCenter(rect.w, rect.h, slot.rotate)
 		const x0 = rect.cx - bound.w / 2 - shadowPad
 		const y0 = rect.cy - bound.h / 2 - shadowPad
@@ -170,13 +144,8 @@ function round4(n: number) {
 	return Number(n.toFixed(4))
 }
 
-function snapLayoutFraction(value: number) {
-	return Math.round(value * 100) / 100
-}
-
 const CLUSTER_SCALE_STEP = 0.01
 
-/** How far scaled cluster size / centering deviates from whole pixels (lower is crisper). */
 export function clusterPixelSnapScore(
 	scale: number,
 	compositionW: number,
@@ -194,39 +163,6 @@ export function clusterPixelSnapScore(
 		Math.abs(offsetX - Math.round(offsetX)) +
 		Math.abs(offsetY - Math.round(offsetY))
 	)
-}
-
-/**
- * Nudge cluster scale to the nearest 0.01 step that lands composition size and centering on whole pixels.
- */
-/** Largest scale where the rotated device bbox stays inside the stage (with padding). */
-export function findMaxScaleThatFitsBbox(
-	containerW: number,
-	containerH: number,
-	slots: StageDeviceSlot[],
-	shadowPad: number,
-	padding: number,
-	minScale: number,
-	maxScale: number
-): number {
-	if (slots.length === 0) return minScale
-
-	const fits = (scale: number) => {
-		const { minX, minY, maxX, maxY } = layoutCompositionBounds(containerW, containerH, slots, scale, shadowPad)
-		return minX >= padding && minY >= padding && maxX <= containerW - padding && maxY <= containerH - padding
-	}
-
-	if (fits(maxScale)) return maxScale
-	if (!fits(minScale)) return minScale
-
-	let lo = minScale
-	let hi = maxScale
-	for (let i = 0; i < 24; i++) {
-		const mid = (lo + hi) / 2
-		if (fits(mid)) lo = mid
-		else hi = mid
-	}
-	return Number(lo.toFixed(4))
 }
 
 export function snapClusterScale(
@@ -256,30 +192,9 @@ export function snapClusterScale(
 		}
 	}
 
-	return Number(best.toFixed(2))
+	return Number(best.toFixed(4))
 }
 
-export function getLandingStageLayoutKey(
-	variant: 'hero' | 'compact' | string,
-	containerWidth: number
-): LandingStageLayoutKey {
-	if (variant === 'hero') {
-		return 'hero-mobile'
-	}
-	return 'feature'
-}
-
-export function getLandingStageDevices(layoutKey: LandingStageLayoutKey): StageDeviceSlot[] {
-	return LAYOUTS[layoutKey]
-}
-
-export function cloneLandingStageSlots(slots: StageDeviceSlot[]): StageDeviceSlot[] {
-	return slots.map((slot) => ({ ...slot }))
-}
-
-/**
- * Fit mockups into the stage. Positions are % of container W/H from the viewport center.
- */
 export function computeLandingStageScaleResult(
 	containerW: number,
 	containerH: number,
@@ -289,10 +204,11 @@ export function computeLandingStageScaleResult(
 	const padding = (options.padding ?? 12) + (options.filterBleed ?? 0)
 	const shadowPad = options.shadowPad ?? 24
 	const fitMargin = options.fitMargin ?? 1.06
+	const clusterScaleMult = options.clusterScaleMult ?? 1
 	const inset = padding
 	const minScale = options.minScale ?? 0.05
-	const maxScale = options.maxScale ?? 0.56
-	const layoutKey = options.layoutKey ?? 'feature'
+	const maxScale = options.maxScale ?? 1
+	const layoutKey = options.layoutKey ?? 'default'
 	const label = options.debugLabel ?? `landing-stage:${layoutKey}`
 
 	if (containerW <= 0 || containerH <= 0 || slots.length === 0) {
@@ -312,8 +228,8 @@ export function computeLandingStageScaleResult(
 		}
 	}
 
-	const layoutBounds = layoutCompositionBounds(containerW, containerH, slots, 1, shadowPad)
-	const { compositionW, compositionH } = layoutBounds
+	const layoutBounds = layoutCompositionBounds(slots, shadowPad)
+	const { minX, minY, compositionW, compositionH } = layoutBounds
 
 	const scaleW = (containerW - inset * 2) / compositionW
 	const scaleH = (containerH - inset * 2) / compositionH
@@ -321,47 +237,41 @@ export function computeLandingStageScaleResult(
 		{ label: 'fit composition width', scale: scaleW },
 		{ label: 'fit composition height', scale: scaleH }
 	]
-	const raw = Math.min(scaleW, scaleH)
-	const bboxFitScale = findMaxScaleThatFitsBbox(
-		containerW,
-		containerH,
-		slots,
-		shadowPad,
-		inset,
-		minScale,
-		Math.min(maxScale, raw / fitMargin)
-	)
-	const autoScale = bboxFitScale
+	const raw = Math.min(scaleW, scaleH) / fitMargin
+	const autoScale = Math.min(maxScale, Math.max(minScale, raw))
 	const unclamped =
 		options.scaleOverride != null ? Math.min(maxScale, Math.max(minScale, options.scaleOverride)) : autoScale
-	const snapped = snapClusterScale(unclamped, compositionW, compositionH, containerW, containerH, minScale, maxScale)
-	const fitted =
-		options.scaleOverride != null
-			? snapped
-			: findMaxScaleThatFitsBbox(containerW, containerH, slots, shadowPad, inset, minScale, snapped)
-	let scale = Number(fitted.toFixed(2))
-	if (options.scaleOverride == null) {
-		const fitsAt = (candidate: number) => {
-			const { minX, minY, maxX, maxY } = layoutCompositionBounds(containerW, containerH, slots, candidate, shadowPad)
-			return minX >= inset && minY >= inset && maxX <= containerW - inset && maxY <= containerH - inset
-		}
-		while (scale > minScale && !fitsAt(scale)) {
-			scale = Number((scale - CLUSTER_SCALE_STEP).toFixed(2))
-		}
-	}
+	const snapped = snapClusterScale(
+		unclamped,
+		compositionW,
+		compositionH,
+		containerW,
+		containerH,
+		minScale,
+		maxScale
+	)
+	const maxFit = Math.min(scaleW, scaleH)
+	const baseFit = Math.min(snapped, maxFit)
+	const scale = Number(Math.min(baseFit * clusterScaleMult, maxFit).toFixed(4))
 
-	const placed: PlacedStageDevice[] = slots.map((slot) => ({
-		id: slot.id,
-		x: snapLayoutFraction(stageOffsetXFraction(slot)),
-		y: snapLayoutFraction(slot.top),
-		w: slot.w,
-		h: slot.h,
-		rotate: Math.round(slot.rotate),
-		scaleMult: slot.scaleMult ?? 1,
-		zIndex: getStageDeviceZIndex(slot)
-	}))
+	const placed: PlacedStageDevice[] = slots.map((slot) => {
+		const rect = deviceRectArtboard(slot)
+		return {
+			id: slot.id,
+			x: Math.round(rect.cx - minX),
+			y: Math.round(rect.cy - minY),
+			w: slot.w,
+			h: slot.h,
+			rotate: Math.round(slot.rotate),
+			scaleMult: slot.scaleMult ?? 1,
+			zIndex: getStageDeviceZIndex(slot)
+		}
+	})
 
-	const scaledBounds = layoutCompositionBounds(containerW, containerH, slots, scale, shadowPad)
+	const scaledW = compositionW * scale
+	const scaledH = compositionH * scale
+	const offsetX = (containerW - scaledW) / 2
+	const offsetY = (containerH - scaledH) / 2
 
 	return {
 		scale,
@@ -375,22 +285,24 @@ export function computeLandingStageScaleResult(
 		composition: { w: Math.round(compositionW), h: Math.round(compositionH) },
 		placed,
 		bbox: {
-			minX: Math.round(scaledBounds.minX),
-			minY: Math.round(scaledBounds.minY),
-			maxX: Math.round(scaledBounds.maxX),
-			maxY: Math.round(scaledBounds.maxY)
+			minX: Math.round(offsetX),
+			minY: Math.round(offsetY),
+			maxX: Math.round(offsetX + scaledW),
+			maxY: Math.round(offsetY + scaledH)
 		},
 		constraints: constraints.sort((a, b) => a.scale - b.scale).map((c) => ({ label: c.label, scale: round4(c.scale) }))
 	}
 }
 
 export function applyLandingStageLayout(el: HTMLElement, result: LandingStageScaleResult) {
-	el.style.setProperty('--device-scale', result.scale.toFixed(2))
+	el.style.setProperty('--cluster-scale', result.scale.toFixed(4))
+	el.style.setProperty('--composition-w', `${result.composition.w}px`)
+	el.style.setProperty('--composition-h', `${result.composition.h}px`)
 
 	for (const device of result.placed) {
 		const prefix = `--device-${device.id}`
-		el.style.setProperty(`${prefix}-x`, `${device.x * 100}%`)
-		el.style.setProperty(`${prefix}-y`, `${device.y * 100}%`)
+		el.style.setProperty(`${prefix}-x`, `${device.x}px`)
+		el.style.setProperty(`${prefix}-y`, `${device.y}px`)
 		el.style.setProperty(`${prefix}-rotate`, `${device.rotate}deg`)
 		el.style.setProperty(`${prefix}-mult`, String(device.scaleMult))
 		el.style.setProperty(`${prefix}-z`, String(device.zIndex))
@@ -411,18 +323,19 @@ export function formatLandingStageScaleReport(result: LandingStageScaleResult): 
 		'=== landing-stage scale debug ===',
 		`label: ${result.label}`,
 		`layout: ${result.layoutKey}`,
+		`artboard: ${STAGE_ARTBOARD.w} x ${STAGE_ARTBOARD.h} px`,
 		`container: ${result.container.w} x ${result.container.h} px`,
-		`composition (device bounds): ${result.composition.w} x ${result.composition.h} px`,
+		`composition: ${result.composition.w} x ${result.composition.h} px`,
 		`padding: ${result.padding} px`,
-		`scale: ${round4(result.scale)} (raw ${result.raw}, fit margin applied, clamp ${result.minScale}–${result.maxScale})`,
+		`cluster-scale: ${round4(result.scale)} (raw ${result.raw}, clamp ${result.minScale}–${result.maxScale})`,
 		''
 	]
 
 	if (result.placed.length > 0) {
-		lines.push('devices (offset from viewport center, % of container W/H):')
+		lines.push('devices (px from composition top-left to center):')
 		for (const d of result.placed) {
 			lines.push(
-				`  ${d.id}: left=${d.x * 100}% top=${d.y * 100}% ${d.w}x${d.h} rotate=${d.rotate} mult=${d.scaleMult} z=${d.zIndex}`
+				`  ${d.id}: x=${d.x}px y=${d.y}px ${d.w}x${d.h} rotate=${d.rotate} mult=${d.scaleMult} z=${d.zIndex}`
 			)
 		}
 		lines.push('')
@@ -430,7 +343,7 @@ export function formatLandingStageScaleReport(result: LandingStageScaleResult): 
 
 	if (result.bbox) {
 		lines.push(
-			'scaled bbox in container:',
+			'scaled cluster bbox in container:',
 			`  x: ${result.bbox.minX} … ${result.bbox.maxX} (span ${result.bbox.maxX - result.bbox.minX})`,
 			`  y: ${result.bbox.minY} … ${result.bbox.maxY} (span ${result.bbox.maxY - result.bbox.minY})`,
 			''

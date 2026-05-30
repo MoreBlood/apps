@@ -20,6 +20,8 @@ type Props = {
 	appSlug: string
 	appName: string
 	variant?: Variant
+	/** Deep feature section index (alternates mockup left/right). */
+	featureIndex?: number
 	className?: string
 }
 
@@ -27,18 +29,19 @@ export default function LandingDeviceStage({
 	appSlug,
 	appName,
 	variant = 'hero',
+	featureIndex,
 	className
 }: Props) {
 	const stageId = landingStageId(appSlug, variant)
 	const { tuner, enabled: tunerEnabled, isActive } = useLandingStageTunerStage(appSlug, variant)
-	const { stageRef, debugReport } = useLandingStageScale(variant, { stageId })
+	const { stageRef, debugReport } = useLandingStageScale(variant, { stageId, featureIndex })
 	const { phone: phoneScreenshot, tablet: tabletScreenshot } = getLandingStageScreenshots(appSlug, variant)
 
 	const handleStageClick = (e: MouseEvent | KeyboardEvent) => {
 		e.stopPropagation()
 		if (!tunerEnabled || !tuner?.enabled || !stageRef.current) return
 		const { width } = stageRef.current.getBoundingClientRect()
-		const layoutKey = getLandingStageLayoutKey(variant, width)
+		const layoutKey = getLandingStageLayoutKey(variant, { featureIndex })
 		const existing = tuner.getOverride(stageId)
 		tuner.open(
 			{ stageId, variant, layoutKey, appSlug },
