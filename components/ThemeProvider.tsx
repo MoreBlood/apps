@@ -1,18 +1,19 @@
 'use client'
 
-import { usePathname } from 'next/navigation'
 import { Theme } from '@radix-ui/themes'
+import { usePathname } from 'next/navigation'
 import { ThemeProvider as NextThemesProvider } from 'next-themes'
-import { getAppBySlug } from '@/config'
+import { getAppThemeMeta } from '@/config/app-theme'
+import { getAppSlugFromPathname } from '@/lib/site-paths'
 
 const DEFAULT_ACCENT = 'blue' as const
 
 export default function ThemeProvider({ children }: { children: React.ReactNode }) {
 	const pathname = usePathname()
-	const segment = pathname?.split('/').filter(Boolean)[0]
-	const app = segment ? getAppBySlug(segment) : null
+	const appSlug = getAppSlugFromPathname(pathname)
+	const app = appSlug ? getAppThemeMeta(appSlug) : null
 	const accentColor = app?.accentColor ?? DEFAULT_ACCENT
-	const appTheme = app ? app.slug : undefined
+	const appTheme = app?.slug
 
 	return (
 		<NextThemesProvider attribute="class" defaultTheme="system" enableSystem>

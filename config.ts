@@ -39,6 +39,25 @@ export type RadixAccentColor =
 	| 'mint'
 	| 'sky'
 
+/** Serializable app fields for client landing page components. */
+export type LandingAppInfo = {
+	slug: string
+	appName: string
+	tagline: string
+	contactEmail: string
+	storeLink?: string
+}
+
+export function toLandingAppInfo(app: AppConfig): LandingAppInfo {
+	return {
+		slug: app.slug,
+		appName: app.appName,
+		tagline: app.tagline,
+		contactEmail: app.contactEmail,
+		storeLink: app.storeLink
+	}
+}
+
 export type AppConfig = {
 	slug: string
 	appName: string
@@ -46,7 +65,8 @@ export type AppConfig = {
 	description: string
 	contactEmail: string
 	lastUpdated: string
-	feedbackFormUrl: string
+	/** Web3Forms access key (public client key). */
+	web3formsAccessKey?: string
 	/** Radix Theme accent color for this app's routes. */
 	accentColor: RadixAccentColor
 	/** App Store URL. Optional. */
@@ -63,13 +83,12 @@ const apps: AppConfig[] = [
 	{
 		slug: 'rawclinic',
 		appName: 'RAW Clinic',
-		tagline: 'Professional RAW photo editing for iOS',
+		tagline: 'Edit Apple ProRAW on iPhone',
 		description:
-			'RAW Clinic is a powerful mobile application for editing RAW photo files directly on your iOS device. All processing happens locally on your device, ensuring your photos remain private and secure.',
+			"Apple Pro RAW is not dead: develop ProRAW on device, dial back Deep Fusion's baked-in look, and finish photos without a PC. Shoot with Apple Camera, grade in a focused queue, and export when ready — free on iPhone and iPad.",
 		contactEmail: 'artihovich.it+rawclinic@gmail.com',
 		lastUpdated: 'May 17, 2026',
-		feedbackFormUrl:
-			'https://docs.google.com/forms/d/e/1FAIpQLSfddrmPd8al4Gnbs8gezfCQ-zna6U1ZIE2tpBH1WWLHwxoxqg/viewform?embedded=true',
+		web3formsAccessKey: '3bf5de50-6275-4597-adcc-41db5b91d56a',
 		storeLink: 'https://apps.apple.com/app/raw-clinic/id6755300857',
 		accentColor: 'red',
 		DescriptionContent: RawClinicDescriptionContent,
@@ -84,9 +103,8 @@ const apps: AppConfig[] = [
 			'AQI Sense shows live AQI and pollutant levels from WAQI, Sensor.Community, and OpenSenseMap. Feed with saved and nearby stations, map view with clustering, station details with forecast. Choose data provider and AQI scale (US EPA, China, European CAQI) in Settings.',
 		contactEmail: 'artihovich.it+aqisense@gmail.com',
 		lastUpdated: 'February 2026',
-		feedbackFormUrl:
-			'https://docs.google.com/forms/d/e/1FAIpQLSdU8Zo2oFgkXz8I3weouoeViQzUI-Sig2GgbTDVIjhiyV1U4Q/viewform?usp=publish-editor',
-  storeLink: 'https://apps.apple.com/us/app/aqi-sense/id6759257996',
+		web3formsAccessKey: '55fe780b-6bb5-4fb6-ba83-ed222a6199c9',
+		storeLink: 'https://apps.apple.com/us/app/aqi-sense/id6759257996',
 		accentColor: 'green',
 		DescriptionContent: AQISenseDescriptionContent,
 		PrivacyContent: AQISensePrivacyContent,

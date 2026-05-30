@@ -1,4 +1,5 @@
-import { Box, Container, Heading, Link, Strong, Text } from '@radix-ui/themes'
+import { Box, Container, Heading, Strong, Text } from '@radix-ui/themes'
+import ContactEmailLink from '@/components/ContactEmailLink'
 import type { PrivacyContentProps } from '@/config'
 
 export default function AQISensePrivacyContent({ app }: PrivacyContentProps) {
@@ -26,9 +27,9 @@ export default function AQISensePrivacyContent({ app }: PrivacyContentProps) {
 				Data Collection
 			</Heading>
 			<Text as="p" mb="4">
-				<Strong>{app.appName} does not collect, store, or transmit any personal data to our servers.</Strong>
-				{' '}The app fetches air quality data from third-party providers (WAQI, Sensor.Community, OpenSenseMap) to display
-				readings to you. Your use of those services may be subject to their respective privacy policies.
+				<Strong>{app.appName} does not collect, store, or transmit any personal data to our servers.</Strong> The app
+				fetches air quality data from third-party providers (WAQI, Sensor.Community, OpenSenseMap) to display readings
+				to you. Your use of those services may be subject to their respective privacy policies.
 			</Text>
 
 			<Heading size="5" mb="2" as="h2">
@@ -47,8 +48,12 @@ export default function AQISensePrivacyContent({ app }: PrivacyContentProps) {
 				The app may store locally on your device:
 			</Text>
 			<ul>
-				<li><Text>Your saved and favorite stations</Text></li>
-				<li><Text>Settings (data provider, AQI scale, preferences)</Text></li>
+				<li>
+					<Text>Your saved and favorite stations</Text>
+				</li>
+				<li>
+					<Text>Settings (data provider, AQI scale, preferences)</Text>
+				</li>
 			</ul>
 			<Text as="p" mb="4">
 				This data stays on your device and is not transmitted to us.
@@ -103,7 +108,7 @@ export default function AQISensePrivacyContent({ app }: PrivacyContentProps) {
 				</Text>
 				<Text as="p">
 					<Strong>Email: </Strong>
-					<Link href={`mailto:${app.contactEmail}`}>{app.contactEmail}</Link>
+					<ContactEmailLink email={app.contactEmail} />
 				</Text>
 			</Box>
 		</Container>

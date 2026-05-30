@@ -5,16 +5,23 @@ export default function RawClinicDescriptionContent({ app }: DescriptionContentP
 	return (
 		<>
 			<Text as="p" mb="2">
-				{app.appName} is a powerful mobile application for editing <Strong>RAW</Strong> photo files directly on your iOS device.
-				All processing happens locally on your device, ensuring your photos remain private and secure.
+				{app.appName} is a simpler way to edit <Strong>Apple ProRAW</Strong> on iPhone and iPad — without a laptop. Dial
+				back what Deep Fusion baked into the preview, grade in a focused queue, and export when the shot is ready. Free,
+				on-device, no account.
 			</Text>
 			<ul>
-				<li><Text>Edit RAW photos with professional tools</Text></li>
 				<li>
-					<Text><Strong>100% local processing</Strong> — no data collection</Text>
+					<Text>Recommended: shoot ProRAW in Apple Camera, edit here</Text>
 				</li>
-				<li><Text>Support for various RAW formats</Text></li>
-				<li><Text>Save edited photos to your library</Text></li>
+				<li>
+					<Text>Embedded, Balanced, or Neutral develop bases</Text>
+				</li>
+				<li>
+					<Text>Film LUTs, copy-paste grades, persistent queue</Text>
+				</li>
+				<li>
+					<Text>Any RAW format your library supports</Text>
+				</li>
 			</ul>
 		</>
 	)

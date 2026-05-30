@@ -41,6 +41,14 @@ jobs:
         run: pnpm build
         env:
           GITHUB_REPOSITORY: ${{ github.repository }}
+          # Feedback (set in repo Settings → Secrets and variables → Actions)
+          NEXT_PUBLIC_FEEDBACK_PROVIDER: ${{ vars.NEXT_PUBLIC_FEEDBACK_PROVIDER }}
+          NEXT_PUBLIC_WEB3FORMS_ACCESS_KEY: ${{ secrets.NEXT_PUBLIC_WEB3FORMS_ACCESS_KEY }}
+          NEXT_PUBLIC_FORMSPREE_FORM_ID: ${{ vars.NEXT_PUBLIC_FORMSPREE_FORM_ID }}
+          NEXT_PUBLIC_SUPABASE_URL: ${{ vars.NEXT_PUBLIC_SUPABASE_URL }}
+          NEXT_PUBLIC_SUPABASE_ANON_KEY: ${{ secrets.NEXT_PUBLIC_SUPABASE_ANON_KEY }}
+          NEXT_PUBLIC_SUPABASE_FEEDBACK_TABLE: ${{ vars.NEXT_PUBLIC_SUPABASE_FEEDBACK_TABLE }}
+          NEXT_PUBLIC_FEEDBACK_ENDPOINT: ${{ vars.NEXT_PUBLIC_FEEDBACK_ENDPOINT }}
 
       - name: Setup Pages
         uses: actions/configure-pages@v5

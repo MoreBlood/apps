@@ -1,77 +1,35 @@
-import NextImage from 'next/image'
-import NextLink from 'next/link'
 import { notFound } from 'next/navigation'
-import {
-	Box,
-	Container,
-	Heading,
-	Link,
-	Section,
-	Strong,
-	Text
-} from '@radix-ui/themes'
-import DescriptionText from '@/components/DescriptionText'
-import { assetPath } from '@/lib/basePath'
-import { getAppBySlug } from '@/config'
+import { preload } from 'react-dom'
+import AppLandingPage from '@/components/landing/AppLandingPage'
+import LandingHeroStatic from '@/components/landing/LandingHeroStatic'
+import LandingScrollProvider from '@/components/landing/LandingScrollProvider'
+import { LandingStageTunerProvider } from '@/components/landing/LandingStageTunerContext'
+import { getAppBySlug, toLandingAppInfo } from '@/config'
+import { getLandingBySlug } from '@/config/landing-content'
+import { getLandingLcpPreloads } from '@/lib/landing-performance'
 
 export default async function AppLanding({ params }: { params: Promise<{ appSlug: string }> }) {
 	const { appSlug } = await params
 	const app = getAppBySlug(appSlug)
 	if (!app) notFound()
 
+	const landing = getLandingBySlug(appSlug)
+	if (!landing) notFound()
+
+	for (const asset of getLandingLcpPreloads(landing)) {
+		preload(asset.href, { as: asset.as, fetchPriority: asset.fetchPriority })
+	}
+
+	const landingApp = toLandingAppInfo(app)
+
 	return (
-		<Container size="2">
-			<Heading size="8" mb="2" as="h1">
-				{app.appName}
-			</Heading>
-			<Text size="3" color="gray" mb="4" as="p">
-				{app.tagline}
-			</Text>
-			{app.storeLink && (
-				<Box mb="4">
-					<Link asChild>
-						<NextLink
-							href={app.storeLink}
-							target="_blank"
-							rel="noopener noreferrer"
-							aria-label="Download on the App Store"
-							style={{ display: 'inline-block', lineHeight: 0 }}
-						>
-							<NextImage
-								src={assetPath('/app-store.svg')}
-								alt="Download on the App Store"
-								width={135}
-								height={40}
-								style={{ height: 40, width: 'auto' }}
-							/>
-						</NextLink>
-					</Link>
-				</Box>
-			)}
-
-			<Section size="2">
-				<Heading size="6" mb="3" as="h2">
-					About
-				</Heading>
-				{app.DescriptionContent ? (
-					<app.DescriptionContent app={app} />
-				) : (
-					<DescriptionText text={app.description} />
-				)}
-
-				<Box mt="6" pt="6" style={{ borderTop: '1px solid var(--gray-a6)' }}>
-					<Heading size="6" mb="3" as="h2">
-						Contact Us
-					</Heading>
-					<Text as="p" mb="2">
-						If you have any questions, please contact us at:
-					</Text>
-					<Text as="p">
-						<Strong>Email: </Strong>
-						<Link href={`mailto:${app.contactEmail}`}>{app.contactEmail}</Link>
-					</Text>
-				</Box>
-			</Section>
-		</Container>
+		<LandingScrollProvider>
+			<LandingStageTunerProvider>
+				<article className={`landing landing--${appSlug}`} data-landing-app={appSlug}>
+					<LandingHeroStatic app={landingApp} landing={landing} />
+					<AppLandingPage app={landingApp} />
+				</article>
+			</LandingStageTunerProvider>
+		</LandingScrollProvider>
 	)
 }

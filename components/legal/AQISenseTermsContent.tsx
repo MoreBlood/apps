@@ -1,13 +1,6 @@
+import { Box, Callout, Container, Heading, Link, Strong, Text } from '@radix-ui/themes'
 import NextLink from 'next/link'
-import {
-	Box,
-	Callout,
-	Container,
-	Heading,
-	Link,
-	Strong,
-	Text
-} from '@radix-ui/themes'
+import ContactEmailLink from '@/components/ContactEmailLink'
 import type { TermsContentProps } from '@/config'
 
 export default function AQISenseTermsContent({ app, appSlug }: TermsContentProps) {
@@ -46,9 +39,15 @@ export default function AQISenseTermsContent({ app, appSlug }: TermsContentProps
 				You are responsible for:
 			</Text>
 			<ul>
-				<li><Text>Maintaining the security of your device and the App</Text></li>
-				<li><Text>Using the App and any air quality information for personal reference only</Text></li>
-				<li><Text>Complying with all applicable laws when using the App</Text></li>
+				<li>
+					<Text>Maintaining the security of your device and the App</Text>
+				</li>
+				<li>
+					<Text>Using the App and any air quality information for personal reference only</Text>
+				</li>
+				<li>
+					<Text>Complying with all applicable laws when using the App</Text>
+				</li>
 			</ul>
 
 			<Heading size="5" mb="2" as="h2">
@@ -75,10 +74,18 @@ export default function AQISenseTermsContent({ app, appSlug }: TermsContentProps
 				We are not liable for:
 			</Text>
 			<ul>
-				<li><Text>Accuracy, completeness, or timeliness of air quality data (which comes from third parties)</Text></li>
-				<li><Text>Decisions you make based on AQI or pollutant readings</Text></li>
-				<li><Text>Any damages arising from use or inability to use the App</Text></li>
-				<li><Text>Unavailability of third-party data sources</Text></li>
+				<li>
+					<Text>Accuracy, completeness, or timeliness of air quality data (which comes from third parties)</Text>
+				</li>
+				<li>
+					<Text>Decisions you make based on AQI or pollutant readings</Text>
+				</li>
+				<li>
+					<Text>Any damages arising from use or inability to use the App</Text>
+				</li>
+				<li>
+					<Text>Unavailability of third-party data sources</Text>
+				</li>
 			</ul>
 			<Text as="p" mb="4">
 				Air quality data is for informational purposes only. Do not rely on it as the sole basis for health or safety
@@ -98,7 +105,10 @@ export default function AQISenseTermsContent({ app, appSlug }: TermsContentProps
 			</Heading>
 			<Text as="p" mb="4">
 				Your use of the App is also governed by our{' '}
-				<Link asChild><NextLink href={`/${appSlug}/privacy`}>Privacy Policy</NextLink></Link>, which explains how we handle your information.
+				<Link asChild>
+					<NextLink href={`/${appSlug}/privacy`}>Privacy Policy</NextLink>
+				</Link>
+				, which explains how we handle your information.
 			</Text>
 
 			<Heading size="5" mb="2" as="h2">
@@ -158,7 +168,7 @@ export default function AQISenseTermsContent({ app, appSlug }: TermsContentProps
 				</Text>
 				<Text as="p">
 					<Strong>Email: </Strong>
-					<Link href={`mailto:${app.contactEmail}`}>{app.contactEmail}</Link>
+					<ContactEmailLink email={app.contactEmail} />
 				</Text>
 			</Box>
 		</Container>

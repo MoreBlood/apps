@@ -1,0 +1,68 @@
+// —— Device mockups (Figma SVG frames) ————————————————————————————————————
+
+.device-mockup {
+	display: flex;
+	flex-shrink: 0;
+	justify-content: center;
+	width: max-content;
+	max-width: none;
+	overflow: visible;
+
+	&--iphone,
+	&--ipad {
+		width: 100%;
+		height: 100%;
+		line-height: 0;
+	}
+
+	.device-mockup-frame {
+		display: block;
+		width: 100%;
+		height: 100%;
+		overflow: visible;
+	}
+
+	.device-mockup-frame__screen {
+		position: relative;
+		width: 100%;
+		height: 100%;
+		overflow: hidden;
+		background: var(--gray-3);
+
+		:where(.dark, .dark-theme) & {
+			background: var(--gray-4);
+		}
+	}
+}
+
+.device-screen {
+	display: block;
+	width: 100%;
+	height: 100%;
+	min-height: 100%;
+
+	&--image {
+		position: relative;
+		overflow: hidden;
+		background: var(--gray-3);
+
+		:where(.dark, .dark-theme) & {
+			background: var(--gray-4);
+		}
+	}
+}
+
+.device-screen__img,
+.optimized-image__img {
+	object-fit: cover;
+	object-position: top center;
+}
+
+.optimized-image {
+	position: relative;
+	display: block;
+	width: 100%;
+	height: 100%;
+	min-height: 100%;
+	overflow: hidden;
+}

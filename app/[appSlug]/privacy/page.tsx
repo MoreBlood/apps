@@ -1,13 +1,11 @@
+import { Container } from '@radix-ui/themes'
 import type { Metadata } from 'next'
 import { notFound } from 'next/navigation'
+import AppContactCta from '@/components/AppContactCta'
 import { DefaultPrivacyContent } from '@/components/legal'
 import { getAppBySlug } from '@/config'
 
-export async function generateMetadata({
-	params
-}: {
-	params: Promise<{ appSlug: string }>
-}): Promise<Metadata> {
+export async function generateMetadata({ params }: { params: Promise<{ appSlug: string }> }): Promise<Metadata> {
 	const { appSlug } = await params
 	const app = getAppBySlug(appSlug)
 	if (!app) return { title: 'App not found' }
@@ -23,5 +21,12 @@ export default async function Privacy({ params }: { params: Promise<{ appSlug: s
 	if (!app) notFound()
 
 	const Content = app.PrivacyContent ?? DefaultPrivacyContent
-	return <Content app={app} />
+	return (
+		<>
+			<Content app={app} />
+			<Container size="2">
+				<AppContactCta appSlug={appSlug} contactEmail={app.contactEmail} />
+			</Container>
+		</>
+	)
 }

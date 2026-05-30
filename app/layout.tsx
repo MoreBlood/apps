@@ -1,9 +1,11 @@
-import type { Metadata, Viewport } from 'next'
 import { Flex } from '@radix-ui/themes'
+import type { Metadata, Viewport } from 'next'
 import AppFooter from '@/components/AppFooter'
 import AppNav from '@/components/AppNav'
+import LandingCriticalStyles from '@/components/landing/LandingCriticalStyles'
 import ThemeProvider from '@/components/ThemeProvider'
 import { siteName } from '@/config'
+import { assetPath } from '@/lib/basePath'
 import 'modern-normalize/modern-normalize.css'
 import '@radix-ui/themes/styles.css'
 import '@/styles/index.scss'
@@ -17,6 +19,10 @@ const canonicalBase = `${siteUrl.replace(/\/$/, '')}${basePath ? `/${basePath.re
 
 export const metadata: Metadata = {
 	metadataBase: new URL(siteUrl),
+	icons: {
+		icon: assetPath('/icons/opt/raw-clinic.webp'),
+		apple: assetPath('/icons/opt/raw-clinic.webp')
+	},
 	verification: {
 		google: '9OhCZhfOt3p9_KR27LiHqmUcz0QLXssaHC9NKnjjMWY'
 	},
@@ -36,6 +42,9 @@ export const metadata: Metadata = {
 }
 
 export const viewport: Viewport = {
+	width: 'device-width',
+	initialScale: 1,
+	viewportFit: 'cover',
 	colorScheme: 'light dark'
 }
 
@@ -67,16 +76,20 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
 					dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
 				/>
 				<ThemeProvider>
+					<LandingCriticalStyles blocks={['navShell']} />
 					<a href="#main-content" className="skip-link">
 						Skip to main content
 					</a>
+					<AppNav />
 					<Flex
 						direction="column"
-						px="4"
-						py="4"
-						style={{ minHeight: '100vh', maxWidth: '100%', margin: '0 auto' }}
+						className="app-shell"
+						style={{
+							minHeight: '100vh',
+							maxWidth: '100%',
+							margin: '0 auto'
+						}}
 					>
-						<AppNav />
 						<Flex asChild direction="column" flexGrow="1">
 							{/* biome-ignore lint: stable id required for skip-link target */}
 							<main id="main-content">{children}</main>

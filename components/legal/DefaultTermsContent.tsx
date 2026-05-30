@@ -1,13 +1,6 @@
+import { Box, Callout, Container, Heading, Link, Strong, Text } from '@radix-ui/themes'
 import NextLink from 'next/link'
-import {
-	Box,
-	Callout,
-	Container,
-	Heading,
-	Link,
-	Strong,
-	Text
-} from '@radix-ui/themes'
+import ContactEmailLink from '@/components/ContactEmailLink'
 import type { TermsContentProps } from '@/config'
 
 export default function DefaultTermsContent({ app, appSlug }: TermsContentProps) {
@@ -46,10 +39,18 @@ export default function DefaultTermsContent({ app, appSlug }: TermsContentProps)
 				You are responsible for:
 			</Text>
 			<ul>
-				<li><Text>Maintaining the security of your device and the App</Text></li>
-				<li><Text>All photos and content you process through the App</Text></li>
-				<li><Text>Backing up your photos before editing</Text></li>
-				<li><Text>Complying with all applicable laws when using the App</Text></li>
+				<li>
+					<Text>Maintaining the security of your device and the App</Text>
+				</li>
+				<li>
+					<Text>All photos and content you process through the App</Text>
+				</li>
+				<li>
+					<Text>Backing up your photos before editing</Text>
+				</li>
+				<li>
+					<Text>Complying with all applicable laws when using the App</Text>
+				</li>
 			</ul>
 
 			<Heading size="5" mb="2" as="h2">
@@ -77,10 +78,18 @@ export default function DefaultTermsContent({ app, appSlug }: TermsContentProps)
 				We are not liable for:
 			</Text>
 			<ul>
-				<li><Text>Loss or corruption of photos or data</Text></li>
-				<li><Text>Device performance issues</Text></li>
-				<li><Text>Any damages arising from use or inability to use the App</Text></li>
-				<li><Text>Results of photo editing operations</Text></li>
+				<li>
+					<Text>Loss or corruption of photos or data</Text>
+				</li>
+				<li>
+					<Text>Device performance issues</Text>
+				</li>
+				<li>
+					<Text>Any damages arising from use or inability to use the App</Text>
+				</li>
+				<li>
+					<Text>Results of photo editing operations</Text>
+				</li>
 			</ul>
 			<Text as="p" mb="4">
 				<Strong>We strongly recommend backing up your photos before editing them.</Strong>
@@ -93,9 +102,15 @@ export default function DefaultTermsContent({ app, appSlug }: TermsContentProps)
 				The App provides tools for editing RAW photos. The quality and results of edits depend on:
 			</Text>
 			<ul>
-				<li><Text>The quality and format of the original photo</Text></li>
-				<li><Text>Your device's capabilities</Text></li>
-				<li><Text>The settings and adjustments you apply</Text></li>
+				<li>
+					<Text>The quality and format of the original photo</Text>
+				</li>
+				<li>
+					<Text>Your device's capabilities</Text>
+				</li>
+				<li>
+					<Text>The settings and adjustments you apply</Text>
+				</li>
 			</ul>
 			<Text as="p" mb="4">
 				We do not guarantee any specific results from photo editing operations.
@@ -106,8 +121,10 @@ export default function DefaultTermsContent({ app, appSlug }: TermsContentProps)
 			</Heading>
 			<Text as="p" mb="4">
 				Your use of the App is also governed by our{' '}
-				<Link asChild><NextLink href={`/${appSlug}/privacy`}>Privacy Policy</NextLink></Link>, which explains how we handle your information
-				(spoiler: we don't collect any personal data).
+				<Link asChild>
+					<NextLink href={`/${appSlug}/privacy`}>Privacy Policy</NextLink>
+				</Link>
+				, which explains how we handle your information (spoiler: we don't collect any personal data).
 			</Text>
 
 			<Heading size="5" mb="2" as="h2">
@@ -175,7 +192,7 @@ export default function DefaultTermsContent({ app, appSlug }: TermsContentProps)
 				</Text>
 				<Text as="p">
 					<Strong>Email: </Strong>
-					<Link href={`mailto:${app.contactEmail}`}>{app.contactEmail}</Link>
+					<ContactEmailLink email={app.contactEmail} />
 				</Text>
 			</Box>
 		</Container>

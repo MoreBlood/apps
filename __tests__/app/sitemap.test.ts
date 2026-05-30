@@ -1,13 +1,13 @@
-import { describe, it, expect, vi, beforeEach } from 'vitest'
+import { beforeEach, describe, expect, it, vi } from 'vitest'
 
 vi.mock('@/lib/siteUrl', () => ({ getBaseUrl: vi.fn() }))
 vi.mock('@/config', () => ({
 	getApps: vi.fn()
 }))
 
-import { getBaseUrl } from '@/lib/siteUrl'
-import { getApps } from '@/config'
 import sitemap from '@/app/sitemap'
+import { getApps } from '@/config'
+import { getBaseUrl } from '@/lib/siteUrl'
 
 const mockGetBaseUrl = vi.mocked(getBaseUrl)
 const mockGetApps = vi.mocked(getApps)
@@ -23,7 +23,7 @@ describe('sitemap', () => {
 				description: 'desc',
 				contactEmail: 'test@test.com',
 				lastUpdated: '2025-01-01',
-				feedbackFormUrl: 'https://forms.example.com'
+				accentColor: 'blue' as const
 			}
 		])
 	})
@@ -35,16 +35,18 @@ describe('sitemap', () => {
 		expect(root?.priority).toBe(1)
 	})
 
-	it('generates four entries per app', () => {
+	it('generates six entries per app', () => {
 		const entries = sitemap()
 		const appEntries = entries.filter((e) => e.url.includes('/my-app/'))
-		expect(appEntries).toHaveLength(4)
+		expect(appEntries).toHaveLength(6)
 	})
 
 	it('includes correct app sub-routes', () => {
 		const entries = sitemap()
 		const urls = entries.map((e) => e.url)
 		expect(urls).toContain('https://mysite.com/my-app/')
+		expect(urls).toContain('https://mysite.com/my-app/roadmap/')
+		expect(urls).toContain('https://mysite.com/my-app/faq/')
 		expect(urls).toContain('https://mysite.com/my-app/privacy/')
 		expect(urls).toContain('https://mysite.com/my-app/terms/')
 		expect(urls).toContain('https://mysite.com/my-app/feedback/')

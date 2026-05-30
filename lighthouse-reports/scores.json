@@ -1,0 +1,106 @@
+{
+	"version": 2,
+	"updatedAt": "2026-05-30T17:14:27.693Z",
+	"baseUrl": "http://localhost:3456",
+	"pages": {
+		"home": {
+			"path": "/",
+			"scores": {
+				"performance": 83,
+				"accessibility": 100,
+				"best-practices": 100,
+				"seo": 100
+			},
+			"metrics": {
+				"largest-contentful-paint": 4606,
+				"first-contentful-paint": 1658,
+				"speed-index": 1658,
+				"total-blocking-time": 6,
+				"cumulative-layout-shift": 0.029,
+				"interactive": 4703
+			}
+		},
+		"rawclinic": {
+			"path": "/rawclinic/",
+			"scores": {
+				"performance": 89
+			},
+			"metrics": {
+				"largest-contentful-paint": 3747,
+				"first-contentful-paint": 1665,
+				"speed-index": 1665,
+				"total-blocking-time": 7,
+				"cumulative-layout-shift": 0.029,
+				"interactive": 3833
+			}
+		},
+		"aqi-sense": {
+			"path": "/aqi-sense/",
+			"scores": {
+				"performance": 81,
+				"accessibility": 100,
+				"best-practices": 100,
+				"seo": 100
+			},
+			"metrics": {
+				"largest-contentful-paint": 4841,
+				"first-contentful-paint": 1814,
+				"speed-index": 1814,
+				"total-blocking-time": 29,
+				"cumulative-layout-shift": 0.029,
+				"interactive": 5074
+			}
+		},
+		"faq": {
+			"path": "/faq/",
+			"scores": {
+				"performance": 92,
+				"accessibility": 100,
+				"best-practices": 100,
+				"seo": 100
+			},
+			"metrics": {
+				"largest-contentful-paint": 3315,
+				"first-contentful-paint": 1512,
+				"speed-index": 1512,
+				"total-blocking-time": 11,
+				"cumulative-layout-shift": 0.028,
+				"interactive": 3368
+			}
+		},
+		"rawclinic-faq": {
+			"path": "/rawclinic/faq/",
+			"scores": {
+				"performance": 92,
+				"accessibility": 100,
+				"best-practices": 100,
+				"seo": 100
+			},
+			"metrics": {
+				"largest-contentful-paint": 3245,
+				"first-contentful-paint": 1513,
+				"speed-index": 1513,
+				"total-blocking-time": 1,
+				"cumulative-layout-shift": 0.028,
+				"interactive": 3326
+			}
+		},
+		"privacy": {
+			"path": "/privacy/",
+			"scores": {
+				"performance": 93,
+				"accessibility": 100,
+				"best-practices": 100,
+				"seo": 100
+			},
+			"metrics": {
+				"largest-contentful-paint": 3225,
+				"first-contentful-paint": 1514,
+				"speed-index": 1514,
+				"total-blocking-time": 2,
+				"cumulative-layout-shift": 0.028,
+				"interactive": 3353
+			}
+		}
+	}
+}

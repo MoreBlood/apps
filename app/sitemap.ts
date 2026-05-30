@@ -12,6 +12,12 @@ export default function sitemap(): MetadataRoute.Sitemap {
 			lastModified: new Date(),
 			changeFrequency: 'monthly',
 			priority: 1
+		},
+		{
+			url: `${base}/blog/`,
+			lastModified: new Date(),
+			changeFrequency: 'monthly',
+			priority: 0.7
 		}
 	]
 	for (const app of getApps()) {
@@ -21,6 +27,18 @@ export default function sitemap(): MetadataRoute.Sitemap {
 				lastModified: new Date(),
 				changeFrequency: 'monthly',
 				priority: 0.9
+			},
+			{
+				url: `${base}/${app.slug}/roadmap/`,
+				lastModified: new Date(),
+				changeFrequency: 'monthly',
+				priority: 0.6
+			},
+			{
+				url: `${base}/${app.slug}/faq/`,
+				lastModified: new Date(),
+				changeFrequency: 'monthly',
+				priority: 0.6
 			},
 			{
 				url: `${base}/${app.slug}/privacy/`,
