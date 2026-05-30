@@ -1,16 +1,15 @@
 'use client'
 
 import clsx from 'clsx'
-import type { ReactNode, SVGProps } from 'react'
+import type { SVGProps } from 'react'
 import { stableDomId } from '@/lib/stable-dom-id'
 
 export type IPhoneMockupFrameProps = SVGProps<SVGSVGElement> & {
-	children?: ReactNode
 	instanceId: string
 }
 
-/** Figma device frame — screen content in `children` (replaces screen slot). Gradients/filters stripped at build. */
-export function IPhoneMockupFrame({ children, className, instanceId, ...props }: IPhoneMockupFrameProps) {
+/** Figma device bezel (SVG only). Screen content sits in `.device-mockup__screen` under this layer. */
+export function IPhoneMockupFrame({ className, instanceId, ...props }: IPhoneMockupFrameProps) {
 	const uid = stableDomId(instanceId, 'iphone-frame')
 	return (
 		<svg
@@ -22,14 +21,6 @@ export function IPhoneMockupFrame({ children, className, instanceId, ...props }:
 			role="presentation"
 			{...props}
 		>
-			<clipPath id={`${uid}-screen-clip`}>
-				<rect x="30.2393" y="33.7373" width="709.271" height="1535" rx="99.7175" />
-			</clipPath>
-			<g clipPath={`url(#${uid}-screen-clip)`}>
-				<foreignObject x="30.2393" y="33.7373" width="709.271" height="1535">
-					<div className="device-mockup-frame__screen">{children}</div>
-				</foreignObject>
-			</g>
 			<mask
 				id={`${uid}-mask1_4344_12124`}
 				style={{ maskType: 'luminance' }}

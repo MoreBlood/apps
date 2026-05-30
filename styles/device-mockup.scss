@@ -1,11 +1,10 @@
-// —— Device mockups (Figma SVG frames) ————————————————————————————————————
+// —— Device mockups (Figma SVG frame + HTML screen underlay) ———————————————
 
-// MOCKUP_SCREEN_* .rx as % of slot w/h (nominal slot, without SCREEN_BLEED)
+// MOCKUP_SCREEN_* .rx as % of slot w/h (nominal slot, without MOCKUP_SCREEN_EDGE_BLEED)
 $iphone-screen-radius-x: 14.178%;
 $iphone-screen-radius-y: 6.522%;
 $ipad-screen-radius-x: 2.946%;
 $ipad-screen-radius-y: 1.935%;
-// Matches scripts/svg-mockup-to-tsx.mjs SCREEN_BLEED
 $mockup-screen-edge-bleed: 3px;
 
 .device-mockup {
@@ -23,10 +22,17 @@ $mockup-screen-edge-bleed: 3px;
 		line-height: 0;
 	}
 
-	&--iphone .device-mockup-frame__screen,
-	&--ipad .device-mockup-frame__screen {
-		isolation: isolate;
-		transform: translateZ(0);
+	&__canvas {
+		position: relative;
+		width: 100%;
+		height: 100%;
+	}
+
+	&__screen {
+		position: absolute;
+		z-index: 0;
+		overflow: hidden;
+		background: #000;
 
 		> * {
 			position: absolute;
@@ -47,14 +53,23 @@ $mockup-screen-edge-bleed: 3px;
 		}
 	}
 
-	&--iphone .device-mockup-frame__screen {
+	&--iphone &__screen {
 		border-radius: #{$iphone-screen-radius-x} / #{$iphone-screen-radius-y};
 		clip-path: inset(0 round #{$iphone-screen-radius-x} / #{$iphone-screen-radius-y});
 	}
 
-	&--ipad .device-mockup-frame__screen {
+	&--ipad &__screen {
 		border-radius: #{$ipad-screen-radius-x} / #{$ipad-screen-radius-y};
 		clip-path: inset(0 round #{$ipad-screen-radius-x} / #{$ipad-screen-radius-y});
+	}
+
+	&__frame {
+		position: absolute;
+		inset: 0;
+		z-index: 1;
+		width: 100%;
+		height: 100%;
+		pointer-events: none;
 	}
 
 	.device-mockup-frame {
@@ -62,14 +77,6 @@ $mockup-screen-edge-bleed: 3px;
 		width: 100%;
 		height: 100%;
 		overflow: visible;
-	}
-
-	.device-mockup-frame__screen {
-		position: relative;
-		width: 100%;
-		height: 100%;
-		overflow: hidden;
-		background: #000;
 	}
 }
 

@@ -1,6 +1,6 @@
 /**
- * Converts Figma mockup SVGs into React frame components with a screen slot.
- * Replaces screen placeholder rects (#000000 / legacy #FF0090) with foreignObject + {children}.
+ * Converts Figma mockup SVGs into React frame components (bezel only).
+ * Removes screen placeholder rects (#000000 / legacy #FF0090); screen content is HTML under the SVG.
  * Strips filters, blend modes, and linear gradients (replaced with solid fills).
  */
 import { spawnSync } from 'node:child_process'
@@ -12,26 +12,6 @@ const ROOT = path.resolve(import.meta.dirname, '..')
 /** Figma screen-slot marker — black so it never flashes during CSS transforms. */
 const SCREEN_PLACEHOLDER = '#000000'
 
-/** Extra px on screen slot — hides subpixel gaps under the bezel during transforms. */
-const SCREEN_BLEED = 3
-
-function screenSlotMarkup({ uid, x, y, w, h, rx }) {
-	const bx = x - SCREEN_BLEED
-	const by = y - SCREEN_BLEED
-	const bw = w + SCREEN_BLEED * 2
-	const bh = h + SCREEN_BLEED * 2
-	return `<clipPath id={\`\${${uid}}-screen-clip\`}>
-<rect x="${bx}" y="${by}" width="${bw}" height="${bh}" rx="${rx}" />
-</clipPath>
-<g clipPath={\`url(#\${${uid}}-screen-clip)\`}>
-<foreignObject x="${bx}" y="${by}" width="${bw}" height="${bh}">
-<div className="device-mockup-frame__screen">
-{children}
-</div>
-</foreignObject>
-</g>`
-}
-
 const TARGETS = [
 	{
 		input: 'components/mockups/iphone.svg',
@@ -41,17 +21,17 @@ const TARGETS = [
 		viewBox: { w: 769, h: 1603 },
 		screenPattern:
 			/<g>\s*<mask id="mask0_4344_12124"[\s\S]*?<\/mask>\s*<g mask="url\(#mask0_4344_12124\)">\s*<rect x="33\.2393" y="36\.7373" width="703\.271" height="1529" fill="(?:#000000|#FF0090)"\/>\s*<\/g>\s*<\/g>/,
-		screenSlot: ({ uid }) => screenSlotMarkup({ uid, x: 33.2393, y: 36.7373, w: 703.271, h: 1529, rx: 99.7175 })
+		screenSlot: () => ''
 	},
 	{
 		input: 'components/mockups/ipad.svg',
 		output: 'components/mockups/IPadMockupFrame.tsx',
 		exportName: 'IPadMockupFrame',
 		uidKey: 'ipad-frame',
-		viewBox: { w: 1575, h: 2208 },
+		viewBox: { w: 1415, h: 2048 },
 		screenPattern:
-			/<g clip-path="url\(#clip0_4344_12073\)">\s*<rect x="180\.095" y="148\.281" width="1210" height="1842" fill="(?:#000000|#FF0090)"\/>\s*<\/g>/,
-		screenSlot: ({ uid }) => screenSlotMarkup({ uid, x: 180.095, y: 148.281, w: 1210, h: 1842, rx: 35.6418 })
+			/<g clip-path="url\(#clip0_[^"]+\)">\s*<rect x="100\.389" y="100" width="1210" height="1842" fill="(?:#000000|#FF0090)"\s*\/?>\s*<\/g>/,
+		screenSlot: () => ''
 	}
 ]
 
@@ -156,24 +136,42 @@ function prepareSvgMarkup(svg) {
 	return normalizeScreenPlaceholder(stripGradients(stripBlendStyles(stripSvgFilters(svg))))
 }
 
+function chassisCutoutMaskMarkup(screen, viewBox) {
+	return `<mask id={\`\${uid}-chassis-cutout\`} style={{ maskType: 'alpha' }} maskUnits="userSpaceOnUse" x="0" y="0" width="${viewBox.w}" height="${viewBox.h}">
+<rect width="${viewBox.w}" height="${viewBox.h}" fill="white"/>
+<rect x="${screen.x}" y="${screen.y}" width="${screen.w}" height="${screen.h}" rx="${screen.rx}" fill="black"/>
+</mask>
+<g mask={\`url(#\${uid}-chassis-cutout)\`}>`
+}
+
+function wrapChassisWithScreenCutout(inner, target) {
+	const { chassisCutout, chassisFillsPattern, viewBox } = target
+	if (!chassisCutout || !chassisFillsPattern) return inner
+	const open = chassisCutoutMaskMarkup(chassisCutout, viewBox)
+	const next = inner.replace(chassisFillsPattern, `${open}$&</g>`)
+	if (next === inner) {
+		throw new Error(`Chassis fills not found for screen cutout in ${target.input}`)
+	}
+	return next
+}
+
 function convertSvgToInner(svg, target) {
 	let inner = svg.replace(/^[\s\S]*?<svg[^>]*>/, '').replace(/<\/svg>\s*$/, '')
 	inner = inner.replace(/<defs>[\s\S]*<\/defs>/, '')
 	if (!target.screenPattern.test(inner)) {
 		throw new Error(`Screen placeholder not found in ${target.input}`)
 	}
-	inner = inner.replace(target.screenPattern, '__SCREEN_SLOT__')
+	inner = inner.replace(target.screenPattern, target.screenSlot())
+	inner = wrapChassisWithScreenCutout(inner, target)
 	inner = renameAttrs(inner)
 	inner = fixStyles(inner)
-	inner = prefixIds(inner, 'uid')
-	inner = inner.replace('__SCREEN_SLOT__', target.screenSlot({ uid: 'uid' }))
-	return inner
+	return prefixIds(inner, 'uid')
 }
 
 function convertDefs(defs) {
 	let d = prepareSvgMarkup(defs)
-	// Screen uses inline `screen-clip` — drop legacy Figma clip0 placeholder path.
-	d = d.replace(/<clipPath id="clip0_4344_12073">[\s\S]*?<\/clipPath>\s*/i, '')
+	// Screen slot is HTML — drop Figma clip0 placeholder defs.
+	d = d.replace(/<clipPath id="clip0_[^"]+">[\s\S]*?<\/clipPath>\s*/gi, '')
 	d = renameAttrs(d)
 	d = fixStyles(d)
 	d = prefixIds(d, 'uid')
@@ -202,16 +200,15 @@ for (const target of TARGETS) {
 	const component = `'use client'
 
 import clsx from 'clsx'
-import type { ReactNode, SVGProps } from 'react'
+import type { SVGProps } from 'react'
 import { stableDomId } from '@/lib/stable-dom-id'
 
 export type ${target.exportName}Props = SVGProps<SVGSVGElement> & {
-\tchildren?: ReactNode
 \tinstanceId: string
 }
 
-/** Figma device frame — screen content in \`children\` (replaces screen slot). Gradients/filters stripped at build. */
-export function ${target.exportName}({ children, className, instanceId, ...props }: ${target.exportName}Props) {
+/** Figma device bezel (SVG only). Screen content sits in \`.device-mockup__screen\` under this layer. */
+export function ${target.exportName}({ className, instanceId, ...props }: ${target.exportName}Props) {
 \tconst uid = stableDomId(instanceId, '${target.uidKey}')
 \treturn (
 \t\t<svg

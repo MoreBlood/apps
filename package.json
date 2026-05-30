@@ -15,7 +15,7 @@
 		"test:watch": "vitest",
 		"lint": "next lint",
 		"lint:staged": "lint-staged",
-		"lint:staged:fix": "lint-staged --config .lintstagedrc.fix.json",
+		"lint:staged:fix": "lint-staged",
 		"lighthouse:audit": "node scripts/lighthouse-audit.mjs",
 		"lighthouse:baseline": "node scripts/lighthouse-baseline.mjs",
 		"lighthouse:compare": "node scripts/lighthouse-compare.mjs",
@@ -58,6 +58,6 @@
 		"vitest": "^4.0.18"
 	},
 	"lint-staged": {
-		"*.{js,mjs,cjs,ts,tsx,json,jsonc}": "biome check --no-errors-on-unmatched --files-ignore-unknown=true"
+		"*.{js,mjs,cjs,ts,tsx,json,jsonc}": "biome check --write --no-errors-on-unmatched --files-ignore-unknown=true"
 	}
 }

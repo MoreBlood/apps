@@ -13,7 +13,7 @@ type Props = {
 	imgClassName?: string
 	/** Above-the-fold LCP — loads immediately, no defer. */
 	priority?: boolean
-	/** Wait for viewport (recommended for below-fold / foreignObject slots). */
+	/** Wait for viewport (recommended for below-fold device screens). */
 	deferUntilVisible?: boolean
 	fill?: boolean
 	width?: number
