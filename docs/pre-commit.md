@@ -7,7 +7,7 @@
 | Step | Command | Notes |
 |------|---------|--------|
 | TypeScript | `tsc --noEmit` | Whole project |
-| Biome | `npm run lint:staged` | Only staged files |
+| Biome | `lint-staged` (via Husky) | Only staged `*.{js,mjs,ts,tsx,json}` |
 | Lighthouse | `lighthouse-compare.mjs` | `scores.json` vs `scores.baseline.json` |
 
 ## Lighthouse workflow
@@ -37,8 +37,8 @@ LIGHTHOUSE_METRIC_RATIO=1.08 git commit … # allow 8% metric regression
 
 ```bash
 npm run precommit
-npm run lint:staged       # biome on staged files (same as pre-commit)
-npm run lint:staged:fix   # auto-fix staged files before commit
+npm run lint:staged       # lint-staged → biome check (same as pre-commit)
+npm run lint:staged:fix   # lint-staged → biome check --write
 npm run check             # tsc + biome on entire repo
 npm run typecheck
 ```

@@ -13,8 +13,8 @@
 		"test": "vitest run",
 		"test:watch": "vitest",
 		"lint": "next lint",
-		"lint:staged": "biome check --staged --no-errors-on-unmatched",
-		"lint:staged:fix": "biome check --write --staged --no-errors-on-unmatched",
+		"lint:staged": "lint-staged",
+		"lint:staged:fix": "lint-staged --config .lintstagedrc.fix.json",
 		"lighthouse:audit": "node scripts/lighthouse-audit.mjs",
 		"lighthouse:baseline": "node scripts/lighthouse-baseline.mjs",
 		"lighthouse:compare": "node scripts/lighthouse-compare.mjs",
@@ -50,9 +50,13 @@
 		"@vitest/coverage-v8": "^4.0.18",
 		"gh-pages": "^6.3.0",
 		"husky": "^9.1.7",
+		"lint-staged": "^17.0.6",
 		"sass": "^1.94.2",
 		"sharp": "^0.34.5",
 		"typescript": "^5.9.3",
 		"vitest": "^4.0.18"
+	},
+	"lint-staged": {
+		"*.{js,mjs,cjs,ts,tsx,json,jsonc}": "biome check --no-errors-on-unmatched --files-ignore-unknown=true"
 	}
 }
