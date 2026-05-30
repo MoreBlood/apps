@@ -1,7 +1,10 @@
-import { redirect } from 'next/navigation'
+import { defaultAppParams } from '@/lib/default-app-slug'
+import Page, { generateMetadata as generateAppPrivacyMetadata } from '../[appSlug]/privacy/page'
 
-const defaultAppSlug = 'rawclinic'
+export async function generateMetadata() {
+	return generateAppPrivacyMetadata({ params: defaultAppParams() })
+}
 
-export default function PrivacyRedirect() {
-	redirect(`/${defaultAppSlug}/privacy`)
+export default function PrivacyPage() {
+	return <Page params={defaultAppParams()} />
 }

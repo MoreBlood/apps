@@ -1,15 +1,11 @@
 'use client'
 
-import { useId } from 'react'
+import { LANDING_SURFACE_GRID, landingSurfaceClassName, landingSurfacePointerHandlers } from '@/lib/landing-surface'
+import { stableDomId } from '@/lib/stable-dom-id'
 import type { LandingGridItem } from '@/types/landing'
-import {
-	LANDING_SURFACE_GRID,
-	landingSurfaceClassName,
-	landingSurfacePointerHandlers
-} from '@/lib/landing-surface'
-import { getLandingGridIcon } from './landing-grid-icons'
-import LandingSurfaceLayers from './LandingSurfaceLayers'
 import { LandingReveal, LandingRevealItem, LandingRevealStagger } from './LandingReveal'
+import LandingSurfaceLayers from './LandingSurfaceLayers'
+import { getLandingGridIcon } from './landing-grid-icons'
 
 type Props = {
 	id?: string
@@ -21,7 +17,7 @@ type Props = {
 const gridSurface = LANDING_SURFACE_GRID
 
 export default function LandingPrimaryGrid({ id, title, lead, items }: Props) {
-	const titleId = useId()
+	const titleId = id ? stableDomId(id, 'title') : undefined
 
 	if (items.length === 0) return null
 
@@ -30,7 +26,7 @@ export default function LandingPrimaryGrid({ id, title, lead, items }: Props) {
 			as="section"
 			id={id}
 			className="landing-primary-grid"
-			aria-labelledby={title ? titleId : undefined}
+			aria-labelledby={title && titleId ? titleId : undefined}
 			duration={0.75}
 		>
 			{(title || lead) && (

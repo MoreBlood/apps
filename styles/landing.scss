@@ -1,4 +1,5 @@
 // Premium app landing — Photomator-inspired, theme-aware
+@use 'landing-title-gradient' as *;
 
 .landing {
 	--landing-max: 76rem;
@@ -44,6 +45,11 @@
 	--landing-grid-panel-bg: color-mix(in srgb, var(--landing-surface-elevated) 55%, transparent);
 	--landing-showcase-quote-font: inherit;
 	--landing-hero-title-gradient: linear-gradient(180deg, var(--gray-12) 20%, var(--gray-11) 100%);
+	--landing-final-title-gradient: linear-gradient(
+		180deg,
+		var(--landing-final-fg, var(--gray-1)) 0%,
+		color-mix(in srgb, var(--landing-final-fg, var(--gray-1)) 72%, var(--accent-10)) 100%
+	);
 	overflow-x: visible;
 	// Contrast-safe text tokens (Radix scales adapt in light/dark)
 	--landing-text: var(--gray-12);
@@ -110,28 +116,21 @@
 	}
 
 	&__showcase {
-		position: relative;
+		// Fixed frame: size from width only; mockups clip inside, never resize this box
+		display: grid;
 		width: 100%;
 		max-width: 40rem;
 		margin: 0 auto clamp(1.25rem, 4vw, 2rem);
-		aspect-ratio: 6 / 5;
-		min-height: clamp(10.5rem, 40vw, 16rem);
+		aspect-ratio: 1;
+		overflow: hidden;
 		isolation: isolate;
 
-		@media (min-width: 768px) {
-			aspect-ratio: 16 / 9;
-			min-height: clamp(15rem, 28vw, 21rem);
-		}
-
-		.landing-hero__stage {
-			position: absolute;
-			inset: 0;
-			z-index: 1;
+		> * {
+			grid-area: 1 / 1;
 			width: 100%;
 			height: 100%;
-			margin: 0;
-			aspect-ratio: unset;
 			min-height: 0;
+			overflow: hidden;
 		}
 	}
 
@@ -161,17 +160,7 @@
 		padding-inline: 0.25rem;
 		padding-block: 0.04em 0.08em;
 		text-wrap: balance;
-		color: var(--landing-text);
-
-		@supports ((-webkit-background-clip: text) or (background-clip: text)) {
-			background-image: var(--landing-hero-title-gradient);
-			background-size: 100% 100%;
-			background-repeat: no-repeat;
-			background-color: transparent;
-			-webkit-background-clip: text;
-			background-clip: text;
-			-webkit-text-fill-color: transparent;
-		}
+		@include landing-title-gradient;
 
 		@media (min-width: 768px) {
 			max-width: 18ch;
@@ -187,6 +176,11 @@
 
 	&__title-line {
 		display: block;
+
+		@supports ((-webkit-background-clip: text) or (background-clip: text)) {
+			-webkit-text-fill-color: inherit;
+			color: inherit;
+		}
 	}
 
 	&__lead {
@@ -268,29 +262,15 @@
 	}
 }
 
-// Hero showcase — stage fills the box
-.landing-hero__showcase .landing-hero__stage.landing-stage {
-	overflow: visible;
-	position: absolute;
-	inset: 0;
+.landing-hero__showcase .landing-stage {
 	width: 100%;
 	height: 100%;
-	aspect-ratio: unset;
 	min-height: 0;
-}
-
-.landing-hero__showcase .landing-stage--hero {
 	aspect-ratio: unset;
-	min-height: 0;
-	height: 100%;
-	width: 100%;
+	overflow: hidden;
 
 	.landing-stage__glow {
 		inset: 0 2% 6%;
-	}
-
-	@media (max-width: 520px) {
-		min-height: 0;
 	}
 }
 
@@ -304,8 +284,6 @@ $mockup-iphone-h: 1603px;
 .landing-stage {
 	position: relative;
 	width: 100%;
-	aspect-ratio: 16 / 10;
-	min-height: 16rem;
 	overflow: hidden;
 	// Set by `useLandingStageScale` (fallback before hydration)
 	--cluster-scale: 0.28;
@@ -317,7 +295,7 @@ $mockup-iphone-h: 1603px;
 		inset: 15% 10% 5%;
 		background: radial-gradient(ellipse at center, var(--accent-a5), transparent 70%);
 		filter: blur(40px);
-		opacity: 0.7;
+		opacity: 0;
 	}
 
 	&__cluster {
@@ -327,8 +305,33 @@ $mockup-iphone-h: 1603px;
 		width: var(--composition-w);
 		height: var(--composition-h);
 		pointer-events: none;
+		visibility: hidden;
+		opacity: 0;
 		transform: translate(-50%, -50%) scale(var(--cluster-scale, 0.28));
 		transform-origin: center center;
+	}
+
+	&--ready {
+		.landing-stage__glow {
+			animation: landing-stage-glow-in 0.85s cubic-bezier(0.22, 1, 0.36, 1) both;
+		}
+
+		.landing-stage__cluster {
+			visibility: visible;
+			animation: landing-stage-enter 0.65s cubic-bezier(0.22, 1, 0.36, 1) both;
+		}
+
+		@media (prefers-reduced-motion: reduce) {
+			.landing-stage__glow {
+				animation: none;
+				opacity: 0.7;
+			}
+
+			.landing-stage__cluster {
+				animation: none;
+				opacity: 1;
+			}
+		}
 	}
 
 	&__device {
@@ -365,6 +368,24 @@ $mockup-iphone-h: 1603px;
 			z-index: var(--device-iphone-z, 2);
 			--device-rotate: var(--device-iphone-rotate, 6deg);
 			--device-scale-mult: var(--device-iphone-mult, 1);
+		}
+
+		&__lcp-screen {
+			position: absolute;
+			left: 50%;
+			top: 50%;
+			z-index: 0;
+			width: 703px;
+			height: 1529px;
+			overflow: hidden;
+			border-radius: 99px;
+			transform: translate(-50%, -50%);
+			pointer-events: none;
+		}
+
+		&__lcp-img {
+			object-fit: cover;
+			object-position: top center;
 		}
 
 		&--secondary {
@@ -411,9 +432,16 @@ $mockup-iphone-h: 1603px;
 	}
 
 	&--hero {
-		@media (max-width: 520px) {
-			min-height: 12rem;
+		.landing-stage__device--iphone .device-mockup {
+			position: relative;
+			z-index: 1;
+		}
 
+		.landing-stage__screen--phone.device-screen--image {
+			background: transparent;
+		}
+
+		@media (max-width: 520px) {
 			.landing-stage__device--secondary {
 				display: none;
 			}
@@ -675,6 +703,7 @@ $mockup-iphone-h: 1603px;
 		font-weight: 700;
 		letter-spacing: -0.03em;
 		margin: 1.25rem 0 0.5rem;
+		@include landing-title-gradient;
 	}
 
 	&__sub {
@@ -771,6 +800,7 @@ $mockup-iphone-h: 1603px;
 		}
 
 		.landing-icon {
+			position: relative;
 			width: clamp(5.75rem, 15vw, 8rem);
 			height: clamp(5.75rem, 15vw, 8rem);
 			border-radius: clamp(1.35rem, 3.2vw, 1.85rem);
@@ -784,7 +814,7 @@ $mockup-iphone-h: 1603px;
 			letter-spacing: -0.045em;
 			margin-top: clamp(1.75rem, 4.5vw, 2.5rem);
 			text-wrap: balance;
-			color: inherit;
+			@include landing-title-gradient(var(--landing-final-title-gradient));
 		}
 
 		.landing-cta-panel__sub {
@@ -835,6 +865,7 @@ $mockup-iphone-h: 1603px;
 		line-height: 1.1;
 		margin: 0 0 0.85rem;
 		text-wrap: balance;
+		@include landing-title-gradient;
 	}
 
 	&__section-lead {
@@ -1113,6 +1144,8 @@ $mockup-iphone-h: 1603px;
 }
 
 .landing-feature {
+	content-visibility: auto;
+	contain-intrinsic-size: auto 520px;
 	display: grid;
 	gap: 2rem;
 	align-items: center;
@@ -1153,6 +1186,19 @@ $mockup-iphone-h: 1603px;
 		max-width: 100%;
 	}
 
+	&__visual {
+		aspect-ratio: 16 / 10;
+		width: 100%;
+		overflow: hidden;
+
+		.landing-stage {
+			width: 100%;
+			height: 100%;
+			min-height: 0;
+			aspect-ratio: unset;
+		}
+	}
+
 	&__content {
 		overflow: visible;
 	}
@@ -1173,6 +1219,7 @@ $mockup-iphone-h: 1603px;
 		letter-spacing: -0.03em;
 		margin: 0 0 1rem;
 		text-wrap: balance;
+		@include landing-title-gradient;
 	}
 
 	&__lead {
@@ -1249,6 +1296,7 @@ $mockup-iphone-h: 1603px;
 		font-weight: 700;
 		letter-spacing: -0.03em;
 		margin: 0 0 0.75rem;
+		@include landing-title-gradient;
 	}
 
 	&__lead {
@@ -1412,6 +1460,7 @@ $mockup-iphone-h: 1603px;
 		font-weight: 700;
 		letter-spacing: -0.025em;
 		margin: 0 0 0.65rem;
+		@include landing-title-gradient;
 	}
 
 	&__lead {
@@ -1472,6 +1521,7 @@ $mockup-iphone-h: 1603px;
 		max-width: 22ch;
 		margin-inline: auto;
 		text-wrap: balance;
+		@include landing-title-gradient;
 	}
 
 	&__lead {
@@ -1486,6 +1536,7 @@ $mockup-iphone-h: 1603px;
 // —— App icon —————————————————————————————————————————————————————————————————
 
 .landing-icon {
+	position: relative;
 	width: 5.75rem;
 	height: 5.75rem;
 	margin-inline: auto;
@@ -1494,6 +1545,11 @@ $mockup-iphone-h: 1603px;
 	box-shadow:
 		0 12px 28px -8px var(--accent-a8),
 		0 4px 12px var(--gray-a6);
+
+	.optimized-image {
+		position: absolute;
+		inset: 0;
+	}
 }
 
 // —— Store button —————————————————————————————————————————————————————————————
@@ -1629,6 +1685,11 @@ $mockup-iphone-h: 1603px;
 		var(--gray-12) 45%,
 		var(--gray-11) 100%
 	);
+	--landing-final-title-gradient: linear-gradient(
+		180deg,
+		#fff 0%,
+		color-mix(in srgb, var(--accent-10) 55%, var(--gray-12)) 100%
+	);
 }
 
 :where(.dark, .dark-theme) .landing-hero__eyebrow {
@@ -1727,6 +1788,26 @@ html.lenis body {
 
 	.landing-stage__device--secondary {
 		animation: landing-float 6s ease-in-out -4s infinite;
+	}
+}
+
+@keyframes landing-stage-enter {
+	from {
+		opacity: 0;
+	}
+
+	to {
+		opacity: 1;
+	}
+}
+
+@keyframes landing-stage-glow-in {
+	from {
+		opacity: 0;
+	}
+
+	to {
+		opacity: 0.7;
 	}
 }
 

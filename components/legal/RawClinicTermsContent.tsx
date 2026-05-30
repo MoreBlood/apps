@@ -1,13 +1,6 @@
+import { Box, Callout, Container, Heading, Link, Strong, Text } from '@radix-ui/themes'
 import NextLink from 'next/link'
-import {
-	Box,
-	Callout,
-	Container,
-	Heading,
-	Link,
-	Strong,
-	Text
-} from '@radix-ui/themes'
+import ContactEmailLink from '@/components/ContactEmailLink'
 import type { TermsContentProps } from '@/config'
 
 export default function RawClinicTermsContent({ app, appSlug }: TermsContentProps) {
@@ -46,10 +39,20 @@ export default function RawClinicTermsContent({ app, appSlug }: TermsContentProp
 				You are responsible for:
 			</Text>
 			<ul>
-				<li><Text>Maintaining the security of your device and the App</Text></li>
-				<li><Text>All photos and content you process or capture through the App</Text></li>
-				<li><Text>Backing up your photos before editing</Text></li>
-				<li><Text>Complying with all applicable laws when using the App, including when photographing people or places</Text></li>
+				<li>
+					<Text>Maintaining the security of your device and the App</Text>
+				</li>
+				<li>
+					<Text>All photos and content you process or capture through the App</Text>
+				</li>
+				<li>
+					<Text>Backing up your photos before editing</Text>
+				</li>
+				<li>
+					<Text>
+						Complying with all applicable laws when using the App, including when photographing people or places
+					</Text>
+				</li>
 				<li>
 					<Text>
 						Granting or withholding optional permissions (such as camera and location) according to your preferences;
@@ -84,11 +87,21 @@ export default function RawClinicTermsContent({ app, appSlug }: TermsContentProp
 				We are not liable for:
 			</Text>
 			<ul>
-				<li><Text>Loss or corruption of photos or data</Text></li>
-				<li><Text>Device performance issues</Text></li>
-				<li><Text>Any damages arising from use or inability to use the App</Text></li>
-				<li><Text>Results of photo editing or in-app capture operations</Text></li>
-				<li><Text>Accuracy, presence, or absence of location metadata in your saved files</Text></li>
+				<li>
+					<Text>Loss or corruption of photos or data</Text>
+				</li>
+				<li>
+					<Text>Device performance issues</Text>
+				</li>
+				<li>
+					<Text>Any damages arising from use or inability to use the App</Text>
+				</li>
+				<li>
+					<Text>Results of photo editing or in-app capture operations</Text>
+				</li>
+				<li>
+					<Text>Accuracy, presence, or absence of location metadata in your saved files</Text>
+				</li>
 			</ul>
 			<Text as="p" mb="4">
 				<Strong>We strongly recommend backing up your photos before editing them.</Strong>
@@ -102,10 +115,18 @@ export default function RawClinicTermsContent({ app, appSlug }: TermsContentProp
 				camera. The quality and results depend on:
 			</Text>
 			<ul>
-				<li><Text>The quality and format of the original photo or capture</Text></li>
-				<li><Text>Your device's capabilities and sensor</Text></li>
-				<li><Text>The settings and adjustments you apply</Text></li>
-				<li><Text>Whether you allow location access solely for embedding geographic metadata in saved captures</Text></li>
+				<li>
+					<Text>The quality and format of the original photo or capture</Text>
+				</li>
+				<li>
+					<Text>Your device's capabilities and sensor</Text>
+				</li>
+				<li>
+					<Text>The settings and adjustments you apply</Text>
+				</li>
+				<li>
+					<Text>Whether you allow location access solely for embedding geographic metadata in saved captures</Text>
+				</li>
 			</ul>
 			<Text as="p" mb="4">
 				We do not guarantee any specific results from photo editing or capture operations.
@@ -116,8 +137,11 @@ export default function RawClinicTermsContent({ app, appSlug }: TermsContentProp
 			</Heading>
 			<Text as="p" mb="4">
 				Your use of the App is also governed by our{' '}
-				<Link asChild><NextLink href={`/${appSlug}/privacy`}>Privacy Policy</NextLink></Link>, which explains how we handle your information
-				(including camera and location use for RAW capture and optional geotagging).
+				<Link asChild>
+					<NextLink href={`/${appSlug}/privacy`}>Privacy Policy</NextLink>
+				</Link>
+				, which explains how we handle your information (including camera and location use for RAW capture and optional
+				geotagging).
 			</Text>
 
 			<Heading size="5" mb="2" as="h2">
@@ -185,7 +209,7 @@ export default function RawClinicTermsContent({ app, appSlug }: TermsContentProp
 				</Text>
 				<Text as="p">
 					<Strong>Email: </Strong>
-					<Link href={`mailto:${app.contactEmail}`}>{app.contactEmail}</Link>
+					<ContactEmailLink email={app.contactEmail} />
 				</Text>
 			</Box>
 		</Container>

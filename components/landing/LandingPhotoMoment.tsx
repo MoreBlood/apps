@@ -1,13 +1,16 @@
 'use client'
 
-import Image from 'next/image'
 import clsx from 'clsx'
-import { assetPath } from '@/lib/basePath'
-import { getCompareImageBlur } from '@/lib/compare-image-blur'
+import dynamic from 'next/dynamic'
+import OptimizedImage from '@/components/shared/OptimizedImage'
 import { getComparePairs } from '@/config/compare-content'
 import type { LandingPhotoMoment as LandingPhotoMomentConfig } from '@/types/landing'
-import LandingCompareCarousel from './LandingCompareCarousel'
 import { LandingReveal } from './LandingReveal'
+
+const LandingCompareCarousel = dynamic(() => import('./LandingCompareCarousel'), {
+	ssr: true,
+	loading: () => <div className="landing-compare landing-compare--loading" aria-hidden />
+})
 
 type Props = {
 	moment: LandingPhotoMomentConfig
@@ -28,27 +31,19 @@ function PhotoFrame({
 }) {
 	if (src) {
 		return (
-			<figure
-				className={clsx(
-					'landing-photo__figure',
-					compareLabel && 'landing-photo__figure--compare',
-					className
-				)}
-			>
+			<figure className={clsx('landing-photo__figure', compareLabel && 'landing-photo__figure--compare', className)}>
 				<div className="landing-photo__frame">
-					<Image
-						src={assetPath(src)}
+					<OptimizedImage
+						src={src}
 						alt={alt}
 						fill
+						className="landing-photo__frame-image"
+						imgClassName="landing-photo__img"
 						sizes="(max-width: 900px) 100vw, 50vw"
-						className="landing-photo__img"
-						placeholder="blur"
-						blurDataURL={getCompareImageBlur(src)}
+						deferUntilVisible
 					/>
 				</div>
-				{compareLabel && (
-					<figcaption className="landing-photo__compare-label">{compareLabel}</figcaption>
-				)}
+				{compareLabel && <figcaption className="landing-photo__compare-label">{compareLabel}</figcaption>}
 			</figure>
 		)
 	}
@@ -123,12 +118,7 @@ export default function LandingPhotoMoment({ moment }: Props) {
 			<LandingReveal as="section" className="landing-photo landing-photo--cinema" duration={0.75}>
 				<div className="landing-photo__cinema-inner">
 					{moment.eyebrow && <p className="landing-photo__eyebrow">{moment.eyebrow}</p>}
-					<PhotoFrame
-						src={primarySrc}
-						alt={alt}
-						label={moment.id}
-						className="landing-photo__frame--cinema"
-					/>
+					<PhotoFrame src={primarySrc} alt={alt} label={moment.id} className="landing-photo__frame--cinema" />
 					<div className="landing-photo__caption-block">
 						{moment.title && <h2 className="landing-photo__title">{moment.title}</h2>}
 						<p className="landing-photo__caption">{moment.caption}</p>

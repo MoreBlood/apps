@@ -27,7 +27,7 @@ export default function FAQAccordionItem({ item }: Props) {
 				</Text>
 				<ChevronDownIcon className="faq-item__chevron" aria-hidden />
 			</button>
-			<div className="faq-item__answer-wrap" aria-hidden={!open}>
+			<div className="faq-item__answer-wrap" inert={!open}>
 				<div id={answerId} className="faq-item__answer-inner">
 					<div className="faq-item__answer">{item.answer}</div>
 				</div>

@@ -1,7 +1,7 @@
 'use client'
 
 import clsx from 'clsx'
-import { motion, useReducedMotion, type HTMLMotionProps } from 'framer-motion'
+import { type HTMLMotionProps, motion, useReducedMotion } from 'framer-motion'
 import { landingEase, landingViewport } from '@/lib/landing-motion'
 
 type Direction = 'up' | 'down' | 'left' | 'right' | 'none'
@@ -53,51 +53,38 @@ type HeroRevealProps = {
 	className?: string
 }
 
-/** Staggered entrance for hero block (on mount, not scroll). */
+/** Hero block — no enter animation so LCP (image + title) paints immediately. */
 export function LandingHeroReveal({ children, className }: HeroRevealProps) {
-	const reduceMotion = useReducedMotion()
-
-	return (
-		<motion.div
-			className={className}
-			initial={reduceMotion ? false : 'hidden'}
-			animate={reduceMotion ? undefined : 'visible'}
-			variants={{
-				hidden: {},
-				visible: {
-					transition: { staggerChildren: 0.1, delayChildren: 0.05 }
-				}
-			}}
-		>
-			{children}
-		</motion.div>
-	)
+	return <div className={className}>{children}</div>
 }
 
 export function LandingHeroItem({
 	children,
-	className
+	className,
+	priority = false
 }: {
 	children: React.ReactNode
 	className?: string
+	/** Skip enter animation so LCP text paints immediately. */
+	priority?: boolean
 }) {
 	const reduceMotion = useReducedMotion()
+
+	if (priority || reduceMotion) {
+		return <div className={className}>{children}</div>
+	}
 
 	return (
 		<motion.div
 			className={className}
-			variants={
-				reduceMotion
-					? undefined
-					: {
-							hidden: { opacity: 0, y: 24 },
-							visible: {
-								opacity: 1,
-								y: 0,
-								transition: { duration: 0.7, ease: landingEase }
-							}
-						}
-			}
+			variants={{
+				hidden: { opacity: 0, y: 24 },
+				visible: {
+					opacity: 1,
+					y: 0,
+					transition: { duration: 0.7, ease: landingEase }
+				}
+			}}
 		>
 			{children}
 		</motion.div>
@@ -111,12 +98,7 @@ type StaggerProps = {
 	stagger?: number
 }
 
-export function LandingRevealStagger({
-	children,
-	className,
-	as = 'div',
-	stagger = 0.08
-}: StaggerProps) {
+export function LandingRevealStagger({ children, className, as = 'div', stagger = 0.08 }: StaggerProps) {
 	const reduceMotion = useReducedMotion()
 	const Component = motion[as]
 
@@ -147,9 +129,9 @@ export function LandingRevealItem({
 	children: React.ReactNode
 	className?: string
 	as?: 'li' | 'div'
-	onMouseEnter?: HTMLMotionProps<'li'>['onMouseEnter']
-	onMouseMove?: HTMLMotionProps<'li'>['onMouseMove']
-	onMouseLeave?: HTMLMotionProps<'li'>['onMouseLeave']
+	onMouseEnter?: React.MouseEventHandler<HTMLElement>
+	onMouseMove?: React.MouseEventHandler<HTMLElement>
+	onMouseLeave?: React.MouseEventHandler<HTMLElement>
 }) {
 	const reduceMotion = useReducedMotion()
 	const Component = motion[as]

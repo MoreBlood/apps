@@ -117,7 +117,7 @@ export default function LandingStageTunerPane() {
 		container.replaceChildren()
 
 		let disposed = false
-		let pane: import('tweakpane').Pane | undefined
+		let pane: import('tweakpane').FolderApi | undefined
 
 		const tunerNow = tunerRef.current
 		const override = tunerNow?.getOverride(activeStageId) ?? createInitialOverride(activeLayoutKey)
@@ -139,7 +139,7 @@ export default function LandingStageTunerPane() {
 			pane = new Pane({
 				container,
 				title: `${activeRef.current?.variant ?? ''} · ${activeLayoutKey}`
-			})
+			}) as import('tweakpane').FolderApi
 
 			const params = paramsRef.current
 			const bindings = bindingsRef.current
@@ -258,8 +258,8 @@ export default function LandingStageTunerPane() {
 				</div>
 			</div>
 			<p className="landing-stage-tuner__hint">
-				Positions are px offsets from the artboard center ({STAGE_ARTBOARD.w}×{STAGE_ARTBOARD.h}). Cluster fit:
-				padding = inset from edges; fit margin = scale divisor (above 1 shrinks).
+				Positions are px offsets from the artboard center ({STAGE_ARTBOARD.w}×{STAGE_ARTBOARD.h}). Cluster fit: padding
+				= inset from edges; fit margin = scale divisor (above 1 shrinks).
 			</p>
 			<div ref={containerRef} className="landing-stage-tuner__pane" />
 		</div>

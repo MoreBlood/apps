@@ -5,30 +5,24 @@ import { Box, Dialog, IconButton, Text } from '@radix-ui/themes'
 import NextLink from 'next/link'
 import { usePathname, useRouter } from 'next/navigation'
 import { useTheme } from 'next-themes'
-import { useEffect, useId, useLayoutEffect, useMemo, useRef, useState, type CSSProperties } from 'react'
+import { type CSSProperties, useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react'
 import { createPortal } from 'react-dom'
-import { useScrollHeader } from '@/hooks/useScrollHeader'
 import AppIcon from '@/components/AppIcon'
 import { getAppBySlug, getApps, siteName } from '@/config'
 import { homeContent } from '@/config/home-content'
+import { useScrollHeader } from '@/hooks/useScrollHeader'
 import {
 	dedupeSiteNavItems,
 	getSiteNavItems,
 	getSitePageTitle,
-	splitSiteNavItems,
-	type SiteNavItem
+	type SiteNavItem,
+	splitSiteNavItems
 } from '@/lib/site-nav'
 import { getAppSlugFromPathname, normalizeSitePath } from '@/lib/site-paths'
 
 type ThemeValue = 'light' | 'dark' | 'system'
 
-function PillNavLinks({
-	items,
-	normalizedPath
-}: {
-	items: SiteNavItem[]
-	normalizedPath: string
-}) {
+function PillNavLinks({ items, normalizedPath }: { items: SiteNavItem[]; normalizedPath: string }) {
 	return items.map(({ href, label }) => {
 		const isActive = normalizedPath === normalizeSitePath(href)
 		return (
@@ -62,22 +56,20 @@ function ThemeSwitcher({ mounted }: { mounted: boolean }) {
 	const { theme, setTheme } = useTheme()
 	const current = ((theme as ThemeValue | undefined) ?? 'system') as ThemeValue
 	const next = nextTheme(current)
-	const ThemeIcon = current === 'light' ? SunIcon : current === 'dark' ? MoonIcon : DesktopIcon
-
-	if (!mounted) {
-		return (
-			<Box data-theme-switcher className="app-nav-theme" aria-hidden style={{ width: '2.25rem', height: '2.25rem' }} />
-		)
-	}
+	// Stable icon until mounted — useTheme() differs between SSR and client
+	const ThemeIcon = !mounted ? DesktopIcon : current === 'light' ? SunIcon : current === 'dark' ? MoonIcon : DesktopIcon
+	const label = `${THEME_LABELS[current]}. Switch to ${THEME_LABELS[next].toLowerCase()}.`
 
 	return (
-		<Box data-theme-switcher className="app-nav-theme">
+		<Box data-theme-switcher className="app-nav-theme" data-ready={mounted || undefined}>
 			<IconButton
 				className="app-nav-metal-btn"
 				variant="soft"
 				size="2"
-				aria-label={`${THEME_LABELS[current]}. Switch to ${THEME_LABELS[next].toLowerCase()}.`}
-				title={`${THEME_LABELS[current]} — click for ${THEME_LABELS[next].toLowerCase()}`}
+				disabled={!mounted}
+				aria-hidden={!mounted || undefined}
+				aria-label={mounted ? label : undefined}
+				title={mounted ? `${THEME_LABELS[current]} — click for ${THEME_LABELS[next].toLowerCase()}` : undefined}
 				onClick={() => setTheme(next)}
 			>
 				<ThemeIcon width={18} height={18} aria-hidden />
@@ -92,7 +84,7 @@ export default function AppNav() {
 	const [mounted, setMounted] = useState(false)
 	const [portalRoot, setPortalRoot] = useState<HTMLElement | null>(null)
 	const [mobileOpen, setMobileOpen] = useState(false)
-	const appsSectionId = useId()
+	const appsSectionId = 'app-nav-apps-menu'
 	const menuApps = useMemo(() => getApps(), [])
 	const copyrightYear = new Date().getFullYear()
 
@@ -121,11 +113,8 @@ export default function AppNav() {
 
 		const observer = new ResizeObserver(sync)
 		observer.observe(el)
-		return () => {
-			observer.disconnect()
-			document.documentElement.style.removeProperty('--app-nav-bar-height')
-		}
-	}, [pathname, mobileOpen])
+		return () => observer.disconnect()
+	}, [pathname])
 
 	const goTo = (href: string) => {
 		router.push(href)
@@ -136,19 +125,21 @@ export default function AppNav() {
 		<nav
 			aria-label="Main navigation"
 			className="app-nav"
+			data-menu-open={mobileOpen || undefined}
 			style={{ '--nav-hide-progress': hideProgress } as CSSProperties}
-			aria-hidden={hideProgress >= 1}
-			inert={hideProgress >= 1 || undefined}
+			aria-hidden={mobileOpen || hideProgress >= 1}
+			inert={mobileOpen || hideProgress >= 1 || undefined}
 		>
 			<div ref={barRef} className="app-nav__bar">
-					<Box className="app-nav__start" display={{ initial: 'block', lg: 'none' }}>
+				<Box className="app-nav__start" display={{ initial: 'block', lg: 'none' }}>
+					{mounted ? (
 						<Dialog.Root open={mobileOpen} onOpenChange={setMobileOpen}>
 							<Dialog.Trigger>
 								<IconButton className="app-nav-metal-btn" variant="soft" size="2" aria-label="Open menu">
 									<HamburgerMenuIcon width={18} height={18} aria-hidden />
 								</IconButton>
 							</Dialog.Trigger>
-							<Dialog.Content className="app-nav-dialog" aria-describedby={undefined}>
+							<Dialog.Content className="app-nav-dialog" data-lenis-prevent aria-describedby={undefined}>
 								<Dialog.Title className="visually-hidden">Menu</Dialog.Title>
 								<div className="app-nav-dialog__inner">
 									<header className="app-nav-dialog__header">
@@ -235,36 +226,41 @@ export default function AppNav() {
 								</div>
 							</Dialog.Content>
 						</Dialog.Root>
-					</Box>
+					) : (
+						<IconButton className="app-nav-metal-btn" variant="soft" size="2" aria-label="Open menu">
+							<HamburgerMenuIcon width={18} height={18} aria-hidden />
+						</IconButton>
+					)}
+				</Box>
 
-					<div className="app-nav__title-wrap">
-						<div className="app-nav-pill__track">
-							<span className="app-nav__title" aria-current="page">
-								{pageTitle}
-							</span>
-						</div>
+				<div className="app-nav__title-wrap">
+					<div className="app-nav-pill__track">
+						<span className="app-nav__title" aria-current="page">
+							{pageTitle}
+						</span>
 					</div>
+				</div>
 
-					<Box display={{ initial: 'none', lg: 'block' }} className="app-nav-desktop">
-						<div className="app-nav-pill-row">
-							<nav className="app-nav-pill" aria-label="Site">
+				<Box display={{ initial: 'none', lg: 'block' }} className="app-nav-desktop">
+					<div className="app-nav-pill-row">
+						<nav className="app-nav-pill" aria-label="Site">
+							<div className="app-nav-pill__track">
+								<PillNavLinks items={primaryItems} normalizedPath={normalizedPath} />
+							</div>
+						</nav>
+						{appItems.length > 0 && (
+							<nav className="app-nav-pill" aria-label={currentApp?.appName ?? 'App'}>
 								<div className="app-nav-pill__track">
-									<PillNavLinks items={primaryItems} normalizedPath={normalizedPath} />
+									<PillNavLinks items={appItems} normalizedPath={normalizedPath} />
 								</div>
 							</nav>
-							{appItems.length > 0 && (
-								<nav className="app-nav-pill" aria-label={currentApp?.appName ?? 'App'}>
-									<div className="app-nav-pill__track">
-										<PillNavLinks items={appItems} normalizedPath={normalizedPath} />
-									</div>
-								</nav>
-							)}
-						</div>
-					</Box>
+						)}
+					</div>
+				</Box>
 
-					<Box className="app-nav__end" flexShrink="0">
-						<ThemeSwitcher mounted={mounted} />
-					</Box>
+				<Box className="app-nav__end" flexShrink="0">
+					<ThemeSwitcher mounted={mounted} />
+				</Box>
 			</div>
 		</nav>
 	)

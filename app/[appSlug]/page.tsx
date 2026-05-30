@@ -1,8 +1,12 @@
 import { notFound } from 'next/navigation'
+import { preload } from 'react-dom'
 import AppLandingPage from '@/components/landing/AppLandingPage'
+import LandingHeroStatic from '@/components/landing/LandingHeroStatic'
 import LandingScrollProvider from '@/components/landing/LandingScrollProvider'
-import { getLandingBySlug } from '@/config/landing-content'
+import { LandingStageTunerProvider } from '@/components/landing/LandingStageTunerContext'
 import { getAppBySlug, toLandingAppInfo } from '@/config'
+import { getLandingBySlug } from '@/config/landing-content'
+import { getLandingLcpPreloads } from '@/lib/landing-performance'
 
 export default async function AppLanding({ params }: { params: Promise<{ appSlug: string }> }) {
 	const { appSlug } = await params
@@ -12,9 +16,20 @@ export default async function AppLanding({ params }: { params: Promise<{ appSlug
 	const landing = getLandingBySlug(appSlug)
 	if (!landing) notFound()
 
+	for (const asset of getLandingLcpPreloads(landing)) {
+		preload(asset.href, { as: asset.as, fetchPriority: asset.fetchPriority })
+	}
+
+	const landingApp = toLandingAppInfo(app)
+
 	return (
 		<LandingScrollProvider>
-			<AppLandingPage app={toLandingAppInfo(app)} />
+			<LandingStageTunerProvider>
+				<article className={`landing landing--${appSlug}`} data-landing-app={appSlug}>
+					<LandingHeroStatic app={landingApp} landing={landing} />
+					<AppLandingPage app={landingApp} />
+				</article>
+			</LandingStageTunerProvider>
 		</LandingScrollProvider>
 	)
 }

@@ -1,7 +1,8 @@
-import NextLink from 'next/link'
-import clsx from 'clsx'
 import { ChatBubbleIcon, EnvelopeClosedIcon } from '@radix-ui/react-icons'
 import { Heading, Text } from '@radix-ui/themes'
+import clsx from 'clsx'
+import NextLink from 'next/link'
+import { formatContactEmailDisplay } from '@/lib/contact-email'
 
 type Props = {
 	appSlug: string
@@ -22,6 +23,7 @@ export default function AppContactCta({
 	className
 }: Props) {
 	const titleId = `${appSlug}-contact-cta-title`
+	const emailDisplay = formatContactEmailDisplay(contactEmail)
 
 	return (
 		<aside className={clsx('contact-cta', 'contact-cta--section', className)} aria-labelledby={titleId}>
@@ -32,16 +34,18 @@ export default function AppContactCta({
 				<Text as="p" size="3" color="gray" className="contact-cta__lead">
 					{lead}
 				</Text>
-				<div
-					className={clsx('contact-cta__actions', !showFeedback && 'contact-cta__actions--single')}
-				>
-					<a className="contact-cta__action" href={`mailto:${contactEmail}`}>
+				<div className={clsx('contact-cta__actions', !showFeedback && 'contact-cta__actions--single')}>
+					<a
+						className="contact-cta__action"
+						href={`mailto:${contactEmail}`}
+						aria-label={emailDisplay !== contactEmail ? contactEmail : undefined}
+					>
 						<span className="contact-cta__action-icon contact-cta__action-icon--email" aria-hidden>
 							<EnvelopeClosedIcon />
 						</span>
 						<span className="contact-cta__action-body">
 							<span className="contact-cta__action-label">Email</span>
-							<span className="contact-cta__action-value">{contactEmail}</span>
+							<span className="contact-cta__action-value">{emailDisplay}</span>
 						</span>
 					</a>
 					{showFeedback && (

@@ -1,6 +1,6 @@
 'use client'
 
-import clsx from 'clsx'
+import NextLink from 'next/link'
 import { useLenis } from './LandingScrollProvider'
 
 type Props = {
@@ -14,7 +14,8 @@ export default function LandingAnchorLink({ href, className, children }: Props) 
 
 	const onClick = (e: React.MouseEvent<HTMLAnchorElement>) => {
 		if (!href.startsWith('#')) return
-		const target = document.querySelector<HTMLElement>(href)
+		const id = href.slice(1)
+		const target = document.getElementById(id)
 		if (!target) return
 		e.preventDefault()
 		if (lenis) {
@@ -25,8 +26,8 @@ export default function LandingAnchorLink({ href, className, children }: Props) 
 	}
 
 	return (
-		<a href={href} className={clsx(className)} onClick={onClick}>
+		<NextLink href={href} className={className} onClick={onClick}>
 			{children}
-		</a>
+		</NextLink>
 	)
 }

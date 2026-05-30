@@ -1,17 +1,17 @@
 'use client'
 
-import { useCallback, useEffect, useLayoutEffect, useRef, useState } from 'react'
-import Image from 'next/image'
 import clsx from 'clsx'
 import { useReducedMotion } from 'framer-motion'
+import Image from 'next/image'
+import { useCallback, useEffect, useLayoutEffect, useRef, useState } from 'react'
 import type { ComparePair } from '@/config/compare-content'
-import { assetPath } from '@/lib/basePath'
-import { getCompareImageBlur } from '@/lib/compare-image-blur'
-import CompareLandscapeImage from './CompareLandscapeImage'
 import { isCompareImageLandscape } from '@/lib/compare-image-meta'
+import { resolveOptimizedImage } from '@/lib/optimized-image'
+import CompareLandscapeImage from './CompareLandscapeImage'
 
 type CompareSlide = {
-	src: string
+	/** Original config path for aspect / landscape checks. */
+	sourceKey: string
 	blurDataURL: string
 	landscape: boolean
 }
@@ -28,36 +28,50 @@ function CompareFigure({
 	slide,
 	alt,
 	label,
-	priority,
+	shouldLoad,
 	panActive = false
 }: {
 	slide: CompareSlide
 	alt: string
 	label: string
-	priority?: boolean
+	shouldLoad: boolean
 	panActive?: boolean
 }) {
+	const image = resolveOptimizedImage(slide.sourceKey)
+
 	return (
 		<figure className="landing-photo__figure landing-photo__figure--compare">
 			<div className="landing-photo__frame landing-compare__frame">
-				{slide.landscape ? (
-					<CompareLandscapeImage
-						src={slide.src}
-						blurDataURL={slide.blurDataURL}
-						alt={alt}
-						isActive={panActive}
-						priority={priority}
-					/>
+				{shouldLoad ? (
+					slide.landscape ? (
+						<CompareLandscapeImage
+							src={slide.sourceKey}
+							blurDataURL={slide.blurDataURL}
+							alt={alt}
+							isActive={panActive}
+							priority={false}
+						/>
+					) : (
+						<Image
+							src={image.src}
+							alt={alt}
+							fill
+							sizes="(max-width: 900px) 100vw, 50vw"
+							className="landing-photo__img"
+							placeholder="blur"
+							blurDataURL={slide.blurDataURL}
+							loading="lazy"
+						/>
+					)
 				) : (
-					<Image
-						src={assetPath(slide.src)}
-						alt={alt}
-						fill
-						sizes="(max-width: 900px) 100vw, 50vw"
-						className="landing-photo__img"
-						placeholder="blur"
-						blurDataURL={slide.blurDataURL}
-						priority={priority}
+					<div
+						className="landing-photo__img landing-photo__img--placeholder"
+						aria-hidden
+						style={{
+							backgroundImage: `url(${slide.blurDataURL})`,
+							backgroundSize: 'cover',
+							backgroundPosition: 'center'
+						}}
 					/>
 				)}
 			</div>
@@ -72,19 +86,16 @@ function toSlides(pairs: ComparePair[], getSrc: (pair: ComparePair) => string): 
 		const src = getSrc(pair)
 		const isLandscape = isCompareImageLandscape(src)
 		const usePan = isLandscape && index !== lastIndex
+		const { blurDataURL } = resolveOptimizedImage(src)
 		return {
-			src,
-			blurDataURL: getCompareImageBlur(src),
+			sourceKey: src,
+			blurDataURL,
 			landscape: usePan
 		}
 	})
 }
 
-export default function LandingCompareCarousel({
-	pairs,
-	labels,
-	intervalMs = DEFAULT_INTERVAL_MS
-}: Props) {
+export default function LandingCompareCarousel({ pairs, labels, intervalMs = DEFAULT_INTERVAL_MS }: Props) {
 	const reduceMotion = useReducedMotion()
 	const scrollerRef = useRef<HTMLElement>(null)
 	const compareRef = useRef<HTMLDivElement>(null)
@@ -125,25 +136,22 @@ export default function LandingCompareCarousel({
 		return () => observer.disconnect()
 	}, [updateThumb, count])
 
-	const syncIndexFromScroll = useCallback(
-		(el: HTMLElement) => {
-			const slides = Array.from(el.children) as HTMLElement[]
-			if (slides.length === 0) return
+	const syncIndexFromScroll = useCallback((el: HTMLElement) => {
+		const slides = Array.from(el.children) as HTMLElement[]
+		if (slides.length === 0) return
 
-			const scrollLeft = el.scrollLeft
-			let next = 0
-			let best = Number.POSITIVE_INFINITY
-			for (let i = 0; i < slides.length; i++) {
-				const dist = Math.abs(slides[i].offsetLeft - scrollLeft)
-				if (dist < best) {
-					best = dist
-					next = i
-				}
+		const scrollLeft = el.scrollLeft
+		let next = 0
+		let best = Number.POSITIVE_INFINITY
+		for (let i = 0; i < slides.length; i++) {
+			const dist = Math.abs(slides[i].offsetLeft - scrollLeft)
+			if (dist < best) {
+				best = dist
+				next = i
 			}
-			setIndex((current) => (current === next ? current : next))
-		},
-		[]
-	)
+		}
+		setIndex((current) => (current === next ? current : next))
+	}, [])
 
 	const scrollToIndex = useCallback(
 		(next: number, options?: { autoplay?: boolean }) => {
@@ -224,10 +232,7 @@ export default function LandingCompareCarousel({
 		const root = compareRef.current
 		if (!root) return
 
-		const observer = new IntersectionObserver(
-			([entry]) => setInView(entry.isIntersecting),
-			{ threshold: 0.15 }
-		)
+		const observer = new IntersectionObserver(([entry]) => setInView(entry.isIntersecting), { threshold: 0.15 })
 		observer.observe(root)
 		return () => observer.disconnect()
 	}, [])
@@ -252,10 +257,7 @@ export default function LandingCompareCarousel({
 	const active = pairs[index]
 
 	return (
-		<div
-			ref={compareRef}
-			className={clsx('landing-compare', reduceMotion && 'landing-compare--reduce-motion')}
-		>
+		<div ref={compareRef} className={clsx('landing-compare', reduceMotion && 'landing-compare--reduce-motion')}>
 			<section
 				ref={scrollerRef}
 				className="landing-compare__scroller"
@@ -268,6 +270,7 @@ export default function LandingCompareCarousel({
 					const embedded = embeddedSlides[slideIndex]
 					const raw = rawSlides[slideIndex]
 					const isActive = slideIndex === index
+					const shouldLoad = inView && slideIndex === index
 
 					return (
 						<section
@@ -281,14 +284,14 @@ export default function LandingCompareCarousel({
 									slide={embedded}
 									alt={pair.alt}
 									label={labels.primary}
-									priority={slideIndex === 0}
+									shouldLoad={shouldLoad}
 									panActive={isActive}
 								/>
 								<CompareFigure
 									slide={raw}
 									alt={pair.alt}
 									label={labels.secondary}
-									priority={slideIndex === 0}
+									shouldLoad={shouldLoad}
 									panActive={isActive}
 								/>
 							</div>
@@ -306,10 +309,7 @@ export default function LandingCompareCarousel({
 					onPointerDown={pauseAutoplay}
 				>
 					<span
-						className={clsx(
-							'landing-compare__thumb',
-							reduceMotion && 'landing-compare__thumb--instant'
-						)}
+						className={clsx('landing-compare__thumb', reduceMotion && 'landing-compare__thumb--instant')}
 						aria-hidden
 						style={
 							{
@@ -324,10 +324,7 @@ export default function LandingCompareCarousel({
 							type="button"
 							role="tab"
 							data-dot-index={i}
-							className={clsx(
-								'landing-compare__dot',
-								i === index && 'landing-compare__dot--active'
-							)}
+							className={clsx('landing-compare__dot', i === index && 'landing-compare__dot--active')}
 							aria-selected={i === index}
 							aria-label={`Example ${i + 1}: ${pair.id}`}
 							onClick={() => scrollToIndex(i)}

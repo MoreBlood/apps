@@ -17,6 +17,10 @@ const getBasePath = () => {
 const basePath = getBasePath()
 
 const nextConfig = {
+	experimental: {
+		optimizePackageImports: ['@radix-ui/themes', '@radix-ui/react-icons'],
+		optimizeCss: true
+	},
 	output: 'export',
 	...(basePath && { basePath }),
 	...(basePath && { assetPrefix: basePath }),
@@ -24,10 +28,12 @@ const nextConfig = {
 		NEXT_PUBLIC_BASE_PATH: basePath
 	},
 	trailingSlash: true,
+	// WebP + blur are generated at build time (scripts/generate-image-assets.mjs).
+	// Static export cannot use the default Image Optimization API.
 	images: {
-		unoptimized: true
+		unoptimized: true,
+		formats: ['image/webp']
 	}
 }
 
 export default nextConfig
-

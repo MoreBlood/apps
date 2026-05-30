@@ -7,6 +7,7 @@ import type { IPadMockupProps } from '@/types/device-mockup'
 
 /** iPad mockup (Figma frame). */
 export default function IPadMockup({
+	instanceId,
 	width,
 	height,
 	className,
@@ -18,7 +19,7 @@ export default function IPadMockup({
 
 	return (
 		<div className={clsx('device-mockup', 'device-mockup--ipad', wrapperClassName)}>
-			<IPadMockupFrame className={className} width="100%" height="100%" {...size} {...rest}>
+			<IPadMockupFrame instanceId={instanceId} className={className} width="100%" height="100%" {...size} {...rest}>
 				{children}
 			</IPadMockupFrame>
 		</div>

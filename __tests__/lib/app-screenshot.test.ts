@@ -1,9 +1,5 @@
-import { describe, expect, it, beforeEach, vi } from 'vitest'
-import {
-	getAppPhoneScreenshotPath,
-	getAppTabletScreenshotPath,
-	getLandingStageScreenshots
-} from '@/lib/app-screenshot'
+import { beforeEach, describe, expect, it, vi } from 'vitest'
+import { getAppPhoneScreenshotPath, getAppTabletScreenshotPath, getLandingStageScreenshots } from '@/lib/app-screenshot'
 
 describe('getAppPhoneScreenshotPath', () => {
 	beforeEach(() => {
@@ -55,12 +51,8 @@ describe('getLandingStageScreenshots', () => {
 	})
 
 	it('resolves per-feature screenshots', () => {
-		expect(getLandingStageScreenshots('rawclinic', 'color').phone).toBe(
-			'/screenshots/raw-clinic-2.PNG'
-		)
+		expect(getLandingStageScreenshots('rawclinic', 'color').phone).toBe('/screenshots/iphone-export.PNG')
 		expect(getLandingStageScreenshots('aqi-sense', 'map').phone).toBe('/screenshots/aqi-sense-2.PNG')
-		expect(getLandingStageScreenshots('aqi-sense', 'map').tablet).toBe(
-			'/screenshots/aqi-sense-2-ipad.png'
-		)
+		expect(getLandingStageScreenshots('aqi-sense', 'map').tablet).toBe('/screenshots/aqi-sense-2-ipad.png')
 	})
 })

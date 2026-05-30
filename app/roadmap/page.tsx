@@ -1,7 +1,10 @@
-import { redirect } from 'next/navigation'
+import { defaultAppParams } from '@/lib/default-app-slug'
+import Page, { generateMetadata as generateAppRoadmapMetadata } from '../[appSlug]/roadmap/page'
 
-const defaultAppSlug = 'rawclinic'
+export async function generateMetadata() {
+	return generateAppRoadmapMetadata({ params: defaultAppParams() })
+}
 
-export default function RoadmapRedirect() {
-	redirect(`/${defaultAppSlug}/roadmap`)
+export default function RoadmapPage() {
+	return <Page params={defaultAppParams()} />
 }

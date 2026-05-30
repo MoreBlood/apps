@@ -1,4 +1,5 @@
-import { Box, Container, Heading, Link, Strong, Text } from '@radix-ui/themes'
+import { Box, Container, Heading, Strong, Text } from '@radix-ui/themes'
+import ContactEmailLink from '@/components/ContactEmailLink'
 import type { PrivacyContentProps } from '@/config'
 
 export default function RawClinicPrivacyContent({ app }: PrivacyContentProps) {
@@ -26,9 +27,8 @@ export default function RawClinicPrivacyContent({ app }: PrivacyContentProps) {
 				Data Collection
 			</Heading>
 			<Text as="p" mb="4">
-				<Strong>{app.appName} does not collect, store, or transmit any personal data to us or our servers.</Strong>
-				{' '}The app operates on your device and does not send your photos, edits, or location to external servers we
-				control.
+				<Strong>{app.appName} does not collect, store, or transmit any personal data to us or our servers.</Strong> The
+				app operates on your device and does not send your photos, edits, or location to external servers we control.
 			</Text>
 
 			<Heading size="5" mb="2" as="h2">
@@ -64,11 +64,12 @@ export default function RawClinicPrivacyContent({ app }: PrivacyContentProps) {
 			</Heading>
 			<Text as="p" mb="4">
 				{app.appName} may request access to your device location{' '}
-				<Strong>only to write geographic coordinates into the metadata of photos you capture with the built-in in-app
-					camera</Strong>
-				{' '}when you save those photos (for example, EXIF or equivalent embedded location fields). Location is not used
-				for advertising, analytics, background tracking, or any purpose other than optional geotagging of photos you take
-				in the App. Coordinates remain in the saved image file on your device unless you later share that file yourself
+				<Strong>
+					only to write geographic coordinates into the metadata of photos you capture with the built-in in-app camera
+				</Strong>{' '}
+				when you save those photos (for example, EXIF or equivalent embedded location fields). Location is not used for
+				advertising, analytics, background tracking, or any purpose other than optional geotagging of photos you take in
+				the App. Coordinates remain in the saved image file on your device unless you later share that file yourself
 				through other means outside the App.
 			</Text>
 
@@ -111,8 +112,8 @@ export default function RawClinicPrivacyContent({ app }: PrivacyContentProps) {
 				Children's Privacy
 			</Heading>
 			<Text as="p" mb="4">
-				{app.appName} is suitable for all ages. Since we do not collect any personal information on our servers, there are
-				no additional considerations regarding children's use of the app beyond your device's and Apple's policies.
+				{app.appName} is suitable for all ages. Since we do not collect any personal information on our servers, there
+				are no additional considerations regarding children's use of the app beyond your device's and Apple's policies.
 			</Text>
 
 			<Heading size="5" mb="2" as="h2">
@@ -141,7 +142,7 @@ export default function RawClinicPrivacyContent({ app }: PrivacyContentProps) {
 				</Text>
 				<Text as="p">
 					<Strong>Email: </Strong>
-					<Link href={`mailto:${app.contactEmail}`}>{app.contactEmail}</Link>
+					<ContactEmailLink email={app.contactEmail} />
 				</Text>
 			</Box>
 		</Container>

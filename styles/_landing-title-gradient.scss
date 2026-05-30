@@ -1,0 +1,14 @@
+@mixin landing-title-gradient($gradient: var(--landing-hero-title-gradient)) {
+	color: var(--landing-text);
+
+	@supports ((-webkit-background-clip: text) or (background-clip: text)) {
+		background-image: $gradient;
+		background-size: 100% 1lh;
+		background-repeat: repeat-y;
+		background-color: transparent;
+		-webkit-background-clip: text;
+		background-clip: text;
+		-webkit-text-fill-color: transparent;
+		color: transparent;
+	}
+}

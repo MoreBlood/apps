@@ -10,12 +10,7 @@ type Options = {
 	disabled?: boolean
 }
 
-function hideProgressForY(
-	y: number,
-	topThreshold: number,
-	hideAfter: number,
-	snap: boolean
-): number {
+function hideProgressForY(y: number, topThreshold: number, hideAfter: number, snap: boolean): number {
 	if (y <= topThreshold) return 0
 
 	const range = hideAfter - topThreshold
@@ -25,17 +20,14 @@ function hideProgressForY(
 	return snap ? (linear >= 1 ? 1 : 0) : linear
 }
 
-export function useScrollHeader({
-	topThreshold = 8,
-	hideAfter = 80,
-	disabled = false
-}: Options = {}) {
+export function useScrollHeader({ topThreshold = 8, hideAfter = 80, disabled = false }: Options = {}) {
 	const [hideProgress, setHideProgress] = useState(0)
 	const rafId = useRef(0)
 
 	useEffect(() => {
+		// Freeze hide progress while disabled (e.g. mobile menu open). Resetting to 0
+		// would slide the fixed bar back in and shift the page behind the overlay.
 		if (disabled) {
-			setHideProgress(0)
 			return
 		}
 

@@ -1,7 +1,10 @@
-import { redirect } from 'next/navigation'
+import { defaultAppParams } from '@/lib/default-app-slug'
+import Page, { generateMetadata as generateAppFeedbackMetadata } from '../[appSlug]/feedback/page'
 
-const defaultAppSlug = 'rawclinic'
+export async function generateMetadata() {
+	return generateAppFeedbackMetadata({ params: defaultAppParams() })
+}
 
-export default function FeedbackRedirect() {
-	redirect(`/${defaultAppSlug}/feedback`)
+export default function FeedbackPage() {
+	return <Page params={defaultAppParams()} />
 }

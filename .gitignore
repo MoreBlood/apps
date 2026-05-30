@@ -17,6 +17,12 @@ dist-ssr
 out
 next-env.d.ts
 
+# Lighthouse full JSON (aggregated scores.json is committed)
+lighthouse-reports/.cache/
+lighthouse-reports/*.json
+!lighthouse-reports/scores.json
+!lighthouse-reports/scores.baseline.json
+
 # Editor directories and files
 .vscode/*
 !.vscode/extensions.json

@@ -1,15 +1,17 @@
 'use client'
 
-import { useId, type ReactNode, type SVGProps } from 'react'
 import clsx from 'clsx'
+import type { ReactNode, SVGProps } from 'react'
+import { stableDomId } from '@/lib/stable-dom-id'
 
 export type IPadMockupFrameProps = SVGProps<SVGSVGElement> & {
 	children?: ReactNode
+	instanceId: string
 }
 
 /** Figma device frame — screen content goes in `children` (replaces #FF0090 slot). */
-export function IPadMockupFrame({ children, className, ...props }: IPadMockupFrameProps) {
-	const uid = useId().replace(/:/g, '')
+export function IPadMockupFrame({ children, className, instanceId, ...props }: IPadMockupFrameProps) {
+	const uid = stableDomId(instanceId, 'ipad-frame')
 	return (
 		<svg
 			viewBox="0 0 1575 2208"
@@ -17,128 +19,146 @@ export function IPadMockupFrame({ children, className, ...props }: IPadMockupFra
 			xmlns="http://www.w3.org/2000/svg"
 			preserveAspectRatio="xMidYMid meet"
 			className={clsx('device-mockup-frame', className)}
+			role="presentation"
 			{...props}
 		>
 			<g>
-<g>
-<rect x="79.7061" y="48.709" width="1414.78" height="2043.57" rx="132.843" fill="#8C8A94"/>
-</g>
-<rect x="92.9902" y="61.9932" width="1388.21" height="2017" rx="123.987" fill="#000002"/>
-<g clipPath={`url(#${uid}-clip0_4344_12073)`}>
-<foreignObject x="180.095" y="148.281" width="1210" height="1842">
-<div className="device-mockup-frame__screen">
-{children}
-</div>
-</foreignObject>
-</g>
-<circle cx="788.204" cy="95.2046" r="17.7124" fill="#10130F"/>
-<g>
-<ellipse cx="788.203" cy="95.2044" rx="11.0703" ry="15.4984" fill="#0C0D16"/>
-</g>
-<g>
-<ellipse cx="788.203" cy="95.2047" rx="4.42811" ry="6.64216" fill="#515266"/>
-</g>
-<g>
-<ellipse cx="788.204" cy="88.5629" rx="6.64216" ry="4.42811" fill="#101012"/>
-</g>
-<g>
-<ellipse cx="788.204" cy="104.061" rx="6.64216" ry="2.21405" fill="#101012"/>
-</g>
-<g>
-<circle cx="785.989" cy="95.2043" r="2.21405" fill="#515266"/>
-</g>
-<g>
-<ellipse cx="791.524" cy="95.2043" rx="1.10703" ry="2.21405" fill="#5C5F73"/>
-</g>
-<mask id={`${uid}-mask0_4344_12073`} style={{ maskType: "alpha" }} maskUnits="userSpaceOnUse" x="219" y="44" width="100" height="7">
-<path d="M219.19 48.7094C219.19 46.2638 221.173 44.2812 223.619 44.2812H314.395C316.84 44.2812 318.823 46.2638 318.823 48.7094V50.9234H219.19V48.7094Z" fill="#F1EDE5"/>
-</mask>
-<g mask={`url(#${uid}-mask0_4344_12073)`}>
-<g>
-<path d="M219.19 48.7094C219.19 46.2638 221.173 44.2812 223.619 44.2812H314.395C316.84 44.2812 318.823 46.2638 318.823 48.7094V50.9234H219.19V48.7094Z" fill="#B1B4B7"/>
-</g>
-<g>
-<rect x="219.19" y="44.2812" width="13.2843" height="6.64216" fill="black" fillOpacity="0.4"/>
-</g>
-<g>
-<rect x="219.19" y="44.2812" width="4.42811" height="6.64216" fill="black" fillOpacity="0.4"/>
-</g>
-<g>
-<rect x="305.539" y="44.2812" width="13.2843" height="6.64216" fill="black" fillOpacity="0.4"/>
-</g>
-<g>
-<rect x="314.396" y="44.2812" width="4.42811" height="6.64216" fill="black" fillOpacity="0.4"/>
-</g>
-</g>
-<mask id={`${uid}-mask1_4344_12073`} style={{ maskType: "alpha" }} maskUnits="userSpaceOnUse" x="340" y="44" width="101" height="7">
-<path d="M340.965 48.7094C340.965 46.2638 342.947 44.2812 345.393 44.2812H436.169C438.615 44.2812 440.597 46.2638 440.597 48.7094V50.9234H340.965V48.7094Z" fill="#F1EDE5"/>
-</mask>
-<g mask={`url(#${uid}-mask1_4344_12073)`}>
-<g>
-<path d="M340.965 48.7094C340.965 46.2638 342.947 44.2812 345.393 44.2812H436.169C438.615 44.2812 440.597 46.2638 440.597 48.7094V50.9234H340.965V48.7094Z" fill="#B1B4B7"/>
-</g>
-<g>
-<rect x="340.965" y="44.2812" width="13.2843" height="6.64216" fill="black" fillOpacity="0.4"/>
-</g>
-<g>
-<rect x="340.965" y="44.2812" width="4.42811" height="6.64216" fill="black" fillOpacity="0.4"/>
-</g>
-<g>
-<rect x="427.312" y="44.2812" width="13.2843" height="6.64216" fill="black" fillOpacity="0.4"/>
-</g>
-<g>
-<rect x="436.169" y="44.2812" width="4.42811" height="6.64216" fill="black" fillOpacity="0.4"/>
-</g>
-</g>
-<mask id={`${uid}-mask2_4344_12073`} style={{ maskType: "alpha" }} maskUnits="userSpaceOnUse" x="1177" y="44" width="170" height="7">
-<path d="M1177.88 48.7094C1177.88 46.2638 1179.86 44.2812 1182.31 44.2812H1341.72C1344.16 44.2812 1346.15 46.2638 1346.15 48.7094V50.9234H1177.88V48.7094Z" fill="#F1EDE5"/>
-</mask>
-<g mask={`url(#${uid}-mask2_4344_12073)`}>
-<g>
-<path d="M1177.88 48.7094C1177.88 46.2638 1179.86 44.2812 1182.31 44.2812H1341.72C1344.16 44.2812 1346.15 46.2638 1346.15 48.7094V50.9234H1177.88V48.7094Z" fill="#B1B4B7"/>
-</g>
-<g>
-<rect x="1177.88" y="44.2812" width="17.7124" height="6.64216" fill="black" fillOpacity="0.4"/>
-</g>
-<g>
-<rect x="1177.88" y="44.2812" width="6.64216" height="6.64216" fill="black" fillOpacity="0.4"/>
-</g>
-<g>
-<rect x="1328.43" y="44.2812" width="17.7124" height="6.64216" fill="black" fillOpacity="0.4"/>
-</g>
-<g>
-<rect x="1339.5" y="44.2812" width="6.64216" height="6.64216" fill="black" fillOpacity="0.4"/>
-</g>
-</g>
-</g>
+				<g>
+					<rect x="79.7061" y="48.709" width="1414.78" height="2043.57" rx="132.843" fill="#8C8A94" />
+				</g>
+				<rect x="92.9902" y="61.9932" width="1388.21" height="2017" rx="123.987" fill="#000002" />
+				<g clipPath={`url(#${uid}-clip0_4344_12073)`}>
+					<foreignObject x="180.095" y="148.281" width="1210" height="1842">
+						<div className="device-mockup-frame__screen">{children}</div>
+					</foreignObject>
+				</g>
+				<circle cx="788.204" cy="95.2046" r="17.7124" fill="#10130F" />
+				<g>
+					<ellipse cx="788.203" cy="95.2044" rx="11.0703" ry="15.4984" fill="#0C0D16" />
+				</g>
+				<g>
+					<ellipse cx="788.203" cy="95.2047" rx="4.42811" ry="6.64216" fill="#515266" />
+				</g>
+				<g>
+					<ellipse cx="788.204" cy="88.5629" rx="6.64216" ry="4.42811" fill="#101012" />
+				</g>
+				<g>
+					<ellipse cx="788.204" cy="104.061" rx="6.64216" ry="2.21405" fill="#101012" />
+				</g>
+				<g>
+					<circle cx="785.989" cy="95.2043" r="2.21405" fill="#515266" />
+				</g>
+				<g>
+					<ellipse cx="791.524" cy="95.2043" rx="1.10703" ry="2.21405" fill="#5C5F73" />
+				</g>
+				<mask
+					id={`${uid}-mask0_4344_12073`}
+					style={{ maskType: 'alpha' }}
+					maskUnits="userSpaceOnUse"
+					x="219"
+					y="44"
+					width="100"
+					height="7"
+				>
+					<path
+						d="M219.19 48.7094C219.19 46.2638 221.173 44.2812 223.619 44.2812H314.395C316.84 44.2812 318.823 46.2638 318.823 48.7094V50.9234H219.19V48.7094Z"
+						fill="#F1EDE5"
+					/>
+				</mask>
+				<g mask={`url(#${uid}-mask0_4344_12073)`}>
+					<g>
+						<path
+							d="M219.19 48.7094C219.19 46.2638 221.173 44.2812 223.619 44.2812H314.395C316.84 44.2812 318.823 46.2638 318.823 48.7094V50.9234H219.19V48.7094Z"
+							fill="#B1B4B7"
+						/>
+					</g>
+					<g>
+						<rect x="219.19" y="44.2812" width="13.2843" height="6.64216" fill="black" fillOpacity="0.4" />
+					</g>
+					<g>
+						<rect x="219.19" y="44.2812" width="4.42811" height="6.64216" fill="black" fillOpacity="0.4" />
+					</g>
+					<g>
+						<rect x="305.539" y="44.2812" width="13.2843" height="6.64216" fill="black" fillOpacity="0.4" />
+					</g>
+					<g>
+						<rect x="314.396" y="44.2812" width="4.42811" height="6.64216" fill="black" fillOpacity="0.4" />
+					</g>
+				</g>
+				<mask
+					id={`${uid}-mask1_4344_12073`}
+					style={{ maskType: 'alpha' }}
+					maskUnits="userSpaceOnUse"
+					x="340"
+					y="44"
+					width="101"
+					height="7"
+				>
+					<path
+						d="M340.965 48.7094C340.965 46.2638 342.947 44.2812 345.393 44.2812H436.169C438.615 44.2812 440.597 46.2638 440.597 48.7094V50.9234H340.965V48.7094Z"
+						fill="#F1EDE5"
+					/>
+				</mask>
+				<g mask={`url(#${uid}-mask1_4344_12073)`}>
+					<g>
+						<path
+							d="M340.965 48.7094C340.965 46.2638 342.947 44.2812 345.393 44.2812H436.169C438.615 44.2812 440.597 46.2638 440.597 48.7094V50.9234H340.965V48.7094Z"
+							fill="#B1B4B7"
+						/>
+					</g>
+					<g>
+						<rect x="340.965" y="44.2812" width="13.2843" height="6.64216" fill="black" fillOpacity="0.4" />
+					</g>
+					<g>
+						<rect x="340.965" y="44.2812" width="4.42811" height="6.64216" fill="black" fillOpacity="0.4" />
+					</g>
+					<g>
+						<rect x="427.312" y="44.2812" width="13.2843" height="6.64216" fill="black" fillOpacity="0.4" />
+					</g>
+					<g>
+						<rect x="436.169" y="44.2812" width="4.42811" height="6.64216" fill="black" fillOpacity="0.4" />
+					</g>
+				</g>
+				<mask
+					id={`${uid}-mask2_4344_12073`}
+					style={{ maskType: 'alpha' }}
+					maskUnits="userSpaceOnUse"
+					x="1177"
+					y="44"
+					width="170"
+					height="7"
+				>
+					<path
+						d="M1177.88 48.7094C1177.88 46.2638 1179.86 44.2812 1182.31 44.2812H1341.72C1344.16 44.2812 1346.15 46.2638 1346.15 48.7094V50.9234H1177.88V48.7094Z"
+						fill="#F1EDE5"
+					/>
+				</mask>
+				<g mask={`url(#${uid}-mask2_4344_12073)`}>
+					<g>
+						<path
+							d="M1177.88 48.7094C1177.88 46.2638 1179.86 44.2812 1182.31 44.2812H1341.72C1344.16 44.2812 1346.15 46.2638 1346.15 48.7094V50.9234H1177.88V48.7094Z"
+							fill="#B1B4B7"
+						/>
+					</g>
+					<g>
+						<rect x="1177.88" y="44.2812" width="17.7124" height="6.64216" fill="black" fillOpacity="0.4" />
+					</g>
+					<g>
+						<rect x="1177.88" y="44.2812" width="6.64216" height="6.64216" fill="black" fillOpacity="0.4" />
+					</g>
+					<g>
+						<rect x="1328.43" y="44.2812" width="17.7124" height="6.64216" fill="black" fillOpacity="0.4" />
+					</g>
+					<g>
+						<rect x="1339.5" y="44.2812" width="6.64216" height="6.64216" fill="black" fillOpacity="0.4" />
+					</g>
+				</g>
+			</g>
 			<defs>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-<clipPath id={`${uid}-clip0_4344_12073`}>
-<rect x="183.736" y="148.312" width="1204.11" height="1843.79" rx="35.6418" fill="white"/>
-</clipPath>
-</defs>
+				<clipPath id={`${uid}-clip0_4344_12073`}>
+					<rect x="183.736" y="148.312" width="1204.11" height="1843.79" rx="35.6418" fill="white" />
+				</clipPath>
+			</defs>
 		</svg>
 	)
 }

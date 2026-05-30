@@ -1,13 +1,9 @@
 'use client'
 
-import {
-	CheckIcon,
-	CopyIcon,
-	EnvelopeClosedIcon,
-	ExclamationTriangleIcon
-} from '@radix-ui/react-icons'
+import { CheckIcon, CopyIcon, EnvelopeClosedIcon, ExclamationTriangleIcon } from '@radix-ui/react-icons'
 import { Box, Button, Callout, Flex, Link, Strong, Text } from '@radix-ui/themes'
 import { useCallback, useState } from 'react'
+import ContactEmailLink from '@/components/ContactEmailLink'
 import { formatFeedbackDraftPreview } from '@/lib/feedback/format-message'
 import { buildFeedbackMailto, getFeedbackDraftText } from '@/lib/feedback/mailto'
 import type { FeedbackPayload } from '@/types/feedback'
@@ -44,8 +40,8 @@ export default function FeedbackEmailFallback({ appName, contactEmail, payload, 
 				<Flex direction="column" gap="1" className="feedback-fallback__notice-body">
 					<Text weight="medium">We couldn&apos;t send your feedback</Text>
 					<Text size="2" color="gray">
-						Your message was not delivered yet. To reach us about {appName}, you still need to send it by
-						email — we kept what you wrote so you don&apos;t have to start over.
+						Your message was not delivered yet. To reach us about {appName}, you still need to send it by email — we
+						kept what you wrote so you don&apos;t have to start over.
 					</Text>
 				</Flex>
 			</Callout.Root>
@@ -74,10 +70,7 @@ export default function FeedbackEmailFallback({ appName, contactEmail, payload, 
 					</Link>
 				</Button>
 				<Text as="p" size="2" color="gray">
-					To{' '}
-					<Link href={`mailto:${contactEmail}`} size="2">
-						{contactEmail}
-					</Link>
+					To <ContactEmailLink email={contactEmail} size="2" />
 				</Text>
 			</Flex>
 

@@ -1,26 +1,14 @@
 'use client'
 
-import { Fragment } from 'react'
 import clsx from 'clsx'
 import type { LandingAppInfo } from '@/config'
 import { getLandingBySlug } from '@/config/landing-content'
-import type {
-	AppLandingConfig,
-	LandingFeature,
-	LandingHighlight,
-	LandingShowcase,
-	LandingTechItem
-} from '@/types/landing'
-import { getLandingGridIcon } from './landing-grid-icons'
+import type { AppLandingConfig, LandingHighlight, LandingShowcase, LandingTechItem } from '@/types/landing'
 import LandingAppIcon from './LandingAppIcon'
-import LandingDeviceStage from './LandingDeviceStage'
-import LandingHero from './LandingHero'
-import LandingBlogSection from './LandingBlogSection'
-import LandingPhotoMoment from './LandingPhotoMoment'
-import LandingPrimaryGrid from './LandingPrimaryGrid'
-import { LandingStageTunerProvider } from './LandingStageTunerContext'
+import LandingLazySection from './LandingLazySection'
 import { LandingReveal, LandingRevealItem, LandingRevealStagger } from './LandingReveal'
 import LandingStoreButton from './LandingStoreButton'
+import { getLandingGridIcon } from './landing-grid-icons'
 import { usePreferVerticalReveal } from './usePreferVerticalReveal'
 
 type Props = { app: LandingAppInfo }
@@ -74,52 +62,6 @@ function CtaPanel({
 	)
 }
 
-function FeatureSection({
-	app,
-	feature,
-	featureIndex,
-	verticalReveal
-}: {
-	app: LandingAppInfo
-	feature: LandingFeature
-	featureIndex: number
-	verticalReveal: boolean
-}) {
-	const reverse = feature.visualOnLeft === true
-	const contentDirection = verticalReveal ? 'up' : reverse ? 'right' : 'left'
-	const visualDirection = verticalReveal ? 'up' : reverse ? 'left' : 'right'
-
-	return (
-		<section className={`landing-feature${reverse ? ' landing-feature--reverse' : ''}`}>
-			<LandingReveal className="landing-feature__content" direction={contentDirection} duration={0.7}>
-				{feature.eyebrow && <p className="landing-feature__eyebrow">{feature.eyebrow}</p>}
-				<h2 className="landing-feature__title">{feature.title}</h2>
-				<p className="landing-feature__lead">{feature.description}</p>
-				{feature.bullets && feature.bullets.length > 0 && (
-					<ul className="landing-feature__bullets">
-						{feature.bullets.map((item) => (
-							<li key={item}>{item}</li>
-						))}
-					</ul>
-				)}
-			</LandingReveal>
-			<LandingReveal
-				className="landing-feature__visual"
-				direction={visualDirection}
-				delay={0.08}
-				duration={0.75}
-			>
-				<LandingDeviceStage
-					appSlug={app.slug}
-					appName={app.appName}
-					variant={feature.visual}
-					featureIndex={featureIndex}
-				/>
-			</LandingReveal>
-		</section>
-	)
-}
-
 function HighlightsSection({ items }: { items: LandingHighlight[] }) {
 	return (
 		<LandingReveal as="section" className="landing-highlights" aria-label="Key capabilities">
@@ -146,13 +88,7 @@ function ShowcaseQuote({ showcase }: { showcase: LandingShowcase }) {
 	)
 }
 
-function FeatureGrid({
-	grid,
-	compact = false
-}: {
-	grid: AppLandingConfig['grid']
-	compact?: boolean
-}) {
+function FeatureGrid({ grid, compact = false }: { grid: AppLandingConfig['grid']; compact?: boolean }) {
 	if (grid.items.length === 0) return null
 
 	const headerTitle = compact ? grid.secondaryTitle : grid.title
@@ -192,11 +128,7 @@ function FeatureGrid({
 	)
 }
 
-function TechBanner({
-	tech
-}: {
-	tech: { title: string; lead: string; items: LandingTechItem[] }
-}) {
+function TechBanner({ tech }: { tech: { title: string; lead: string; items: LandingTechItem[] } }) {
 	return (
 		<LandingReveal as="section" className="landing-tech" duration={0.7}>
 			<LandingReveal className="landing-tech__header" direction="none">
@@ -221,56 +153,63 @@ export default function AppLandingPage({ app }: Props) {
 	if (!landing) return null
 
 	return (
-		<LandingStageTunerProvider>
-		<article
-			className={`landing landing--${app.slug}`}
-			data-landing-app={app.slug}
-		>
-			<LandingHero app={app} landing={landing} />
-
+		<>
 			{landing.photoMoments
 				?.filter((moment) => moment.layout === 'spotlight')
-				.map((moment) => <LandingPhotoMoment key={moment.id} moment={moment} />)}
+				.map((moment) => (
+					<LandingLazySection
+						key={moment.id}
+						tier="viewport"
+						minHeight="28rem"
+						load={() => import('./LandingPhotoMoment')}
+						props={{ moment }}
+					/>
+				))}
 
-			{landing.highlights && landing.highlights.length > 0 && (
-				<HighlightsSection items={landing.highlights} />
-			)}
+			{landing.highlights && landing.highlights.length > 0 && <HighlightsSection items={landing.highlights} />}
 
 			{landing.showcase && <ShowcaseQuote showcase={landing.showcase} />}
 
 			{landing.photoMoments
 				?.filter((moment) => moment.layout === 'cinema')
-				.map((moment) => <LandingPhotoMoment key={moment.id} moment={moment} />)}
+				.map((moment) => (
+					<LandingLazySection
+						key={moment.id}
+						tier="viewport"
+						minHeight="22rem"
+						load={() => import('./LandingPhotoMoment')}
+						props={{ moment }}
+					/>
+				))}
 
 			{landing.grid.primary && landing.grid.primary.length > 0 && (
-				<LandingPrimaryGrid
-					id={`features-${app.slug}`}
-					title={landing.grid.title}
-					lead={landing.grid.lead}
-					items={landing.grid.primary}
+				<LandingLazySection
+					tier="viewport"
+					minHeight="24rem"
+					load={() => import('./LandingPrimaryGrid')}
+					props={{
+						id: `features-${app.slug}`,
+						title: landing.grid.title,
+						lead: landing.grid.lead,
+						items: landing.grid.primary
+					}}
 				/>
 			)}
 
 			<FeatureGrid grid={landing.grid} compact={Boolean(landing.grid.primary?.length)} />
 
 			{landing.features.length > 0 && (
-				<div className="landing__features landing__features--deep">
-					{landing.features.map((feature, index) => (
-						<Fragment key={feature.title}>
-							<FeatureSection
-								app={app}
-								feature={feature}
-								featureIndex={index}
-								verticalReveal={verticalReveal}
-							/>
-							{landing.photoMoments
-								?.filter((moment) => moment.afterFeature === index)
-								.map((moment) => (
-									<LandingPhotoMoment key={moment.id} moment={moment} />
-								))}
-						</Fragment>
-					))}
-				</div>
+				<LandingLazySection
+					tier="viewport"
+					minHeight="32rem"
+					load={() => import('./LandingFeaturesDeep')}
+					props={{
+						app,
+						features: landing.features,
+						photoMoments: landing.photoMoments,
+						verticalReveal
+					}}
+				/>
 			)}
 
 			{landing.tech && <TechBanner tech={landing.tech} />}
@@ -284,8 +223,14 @@ export default function AppLandingPage({ app }: Props) {
 				platformsLine={landing.platformsLine}
 			/>
 
-			{landing.blog != null && <LandingBlogSection appSlug={app.slug} section={landing.blog} />}
-		</article>
-		</LandingStageTunerProvider>
+			{landing.blog != null && (
+				<LandingLazySection
+					tier="viewport"
+					minHeight="14rem"
+					load={() => import('./LandingBlogSection')}
+					props={{ appSlug: app.slug, section: landing.blog }}
+				/>
+			)}
+		</>
 	)
 }

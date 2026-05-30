@@ -9,6 +9,7 @@ import type { IPhoneMockupProps } from '@/types/device-mockup'
  * iPhone mockup (Figma frame). Omit `width`/`height` to fill the parent; scale via CSS `transform`.
  */
 export default function IPhoneMockup({
+	instanceId,
 	width,
 	height,
 	className,
@@ -20,7 +21,7 @@ export default function IPhoneMockup({
 
 	return (
 		<div className={clsx('device-mockup', 'device-mockup--iphone', wrapperClassName)}>
-			<IPhoneMockupFrame className={className} width="100%" height="100%" {...size} {...rest}>
+			<IPhoneMockupFrame instanceId={instanceId} className={className} width="100%" height="100%" {...size} {...rest}>
 				{children}
 			</IPhoneMockupFrame>
 		</div>

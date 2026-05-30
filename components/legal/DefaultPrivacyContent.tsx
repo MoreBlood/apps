@@ -1,4 +1,5 @@
-import { Box, Container, Heading, Link, Strong, Text } from '@radix-ui/themes'
+import { Box, Container, Heading, Strong, Text } from '@radix-ui/themes'
+import ContactEmailLink from '@/components/ContactEmailLink'
 import type { PrivacyContentProps } from '@/config'
 
 export default function DefaultPrivacyContent({ app }: PrivacyContentProps) {
@@ -26,8 +27,8 @@ export default function DefaultPrivacyContent({ app }: PrivacyContentProps) {
 				Data Collection
 			</Heading>
 			<Text as="p" mb="4">
-				<Strong>{app.appName} does not collect, store, or transmit any personal data.</Strong>
-				{' '}The app operates entirely on your device and does not communicate with external servers.
+				<Strong>{app.appName} does not collect, store, or transmit any personal data.</Strong> The app operates entirely
+				on your device and does not communicate with external servers.
 			</Text>
 
 			<Heading size="5" mb="2" as="h2">
@@ -117,7 +118,7 @@ export default function DefaultPrivacyContent({ app }: PrivacyContentProps) {
 				</Text>
 				<Text as="p">
 					<Strong>Email: </Strong>
-					<Link href={`mailto:${app.contactEmail}`}>{app.contactEmail}</Link>
+					<ContactEmailLink email={app.contactEmail} />
 				</Text>
 			</Box>
 		</Container>

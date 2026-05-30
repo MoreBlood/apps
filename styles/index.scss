@@ -26,7 +26,7 @@ body {
 	display: block;
 	width: 100%;
 	height: 100%;
-	object-fit: cover;
+	object-fit: contain;
 }
 
 .app-shell {
@@ -46,18 +46,35 @@ body {
 	}
 }
 
+// Bar height default on :root (refined to px by AppNav); offset-top only under .radix-themes where --space-4 exists
+:root {
+	--app-nav-bar-height: 2.75rem;
+}
+
+@media (min-width: 1024px) {
+	:root {
+		--app-nav-bar-height: 3.25rem;
+	}
+}
+
 .app-nav-shell {
-	min-height: var(--app-nav-bar-height, 2.25rem);
+	--app-nav-offset-top: max(var(--space-4, 1rem), env(safe-area-inset-top, 0px));
+	min-height: calc(var(--app-nav-offset-top) + var(--app-nav-bar-height));
 	margin-bottom: var(--space-6);
 	padding-bottom: var(--space-3);
 }
 
 .app-nav {
-	--app-nav-offset-top: max(var(--space-4), env(safe-area-inset-top, 0px));
+	--app-nav-offset-top: max(var(--space-4, 1rem), env(safe-area-inset-top, 0px));
 	--app-nav-backdrop-blur: 28px;
 	--app-nav-backdrop-bg: color-mix(in srgb, var(--color-background) 30%, transparent);
 	position: fixed;
 	z-index: 200;
+
+	&[data-menu-open] {
+		visibility: hidden;
+		pointer-events: none;
+	}
 	top: var(--app-nav-offset-top);
 	left: max(var(--space-4), env(safe-area-inset-left, 0px));
 	right: max(var(--space-4), env(safe-area-inset-right, 0px));
@@ -318,7 +335,7 @@ $app-nav-ease-out: cubic-bezier(0.4, 0, 0.2, 1);
 .rt-DialogScrollPadding:has(.app-nav-dialog) {
 	align-items: stretch;
 	padding: 0;
-	min-height: 100%;
+	min-height: 0;
 }
 
 .app-nav-dialog {
@@ -670,6 +687,32 @@ $app-nav-ease-out: cubic-bezier(0.4, 0, 0.2, 1);
 	&:focus {
 		left: max(var(--space-4), env(safe-area-inset-left, 0px));
 		top: max(var(--space-4), env(safe-area-inset-top, 0px));
+	}
+}
+
+.app-nav-theme {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	width: 2.25rem;
+	height: 2.25rem;
+	flex-shrink: 0;
+
+	.app-nav-metal-btn.rt-IconButton {
+		opacity: 0;
+		pointer-events: none;
+		transition: opacity 0.28s cubic-bezier(0.22, 1, 0.36, 1);
+	}
+
+	&[data-ready] .app-nav-metal-btn.rt-IconButton {
+		opacity: 1;
+		pointer-events: auto;
+	}
+
+	@media (prefers-reduced-motion: reduce) {
+		.app-nav-metal-btn.rt-IconButton {
+			transition: none;
+		}
 	}
 }
 

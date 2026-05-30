@@ -1,6 +1,9 @@
 // Halide-inspired editorial photo bands (placeholders + full-bleed moments)
+@use 'landing-title-gradient' as *;
 
 .landing-photo {
+	content-visibility: auto;
+	contain-intrinsic-size: auto 480px;
 	--landing-photo-max: 76rem;
 
 	&__eyebrow {
@@ -20,6 +23,7 @@
 		line-height: 1.15;
 		margin: 0 0 0.65rem;
 		text-wrap: balance;
+		@include landing-title-gradient;
 	}
 
 	&__caption {

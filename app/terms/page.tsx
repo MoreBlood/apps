@@ -1,7 +1,10 @@
-import { redirect } from 'next/navigation'
+import { defaultAppParams } from '@/lib/default-app-slug'
+import Page, { generateMetadata as generateAppTermsMetadata } from '../[appSlug]/terms/page'
 
-const defaultAppSlug = 'rawclinic'
+export async function generateMetadata() {
+	return generateAppTermsMetadata({ params: defaultAppParams() })
+}
 
-export default function TermsRedirect() {
-	redirect(`/${defaultAppSlug}/terms`)
+export default function TermsPage() {
+	return <Page params={defaultAppParams()} />
 }

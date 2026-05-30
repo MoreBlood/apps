@@ -1,8 +1,8 @@
+import NextLink from 'next/link'
 import AppIcon from '@/components/AppIcon'
 import { DeviceScreen, IPhoneMockup } from '@/components/device'
 import type { HomeAppCardData } from '@/config/home-content'
 import { getAppPhoneScreenshotPath } from '@/lib/app-screenshot'
-import NextLink from 'next/link'
 
 type Props = {
 	app: HomeAppCardData
@@ -29,11 +29,13 @@ export default function HomeAppCard({ app }: Props) {
 					</span>
 				</div>
 				<div className="home-app-card__visual" aria-hidden>
-					<IPhoneMockup wrapperClassName="home-app-card__mockup">
+					<IPhoneMockup instanceId={`home-${app.slug}-iphone`} wrapperClassName="home-app-card__mockup">
 						<DeviceScreen
 							src={phoneScreenshot}
 							alt={`${app.appName} screenshot`}
 							className="home-app-card__screen"
+							priority={app.slug === 'rawclinic'}
+							sizes="(max-width: 900px) 40vw, 280px"
 						/>
 					</IPhoneMockup>
 				</div>

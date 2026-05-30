@@ -1,9 +1,11 @@
-import type { Metadata, Viewport } from 'next'
 import { Flex } from '@radix-ui/themes'
+import type { Metadata, Viewport } from 'next'
 import AppFooter from '@/components/AppFooter'
 import AppNav from '@/components/AppNav'
+import LandingCriticalStyles from '@/components/landing/LandingCriticalStyles'
 import ThemeProvider from '@/components/ThemeProvider'
 import { siteName } from '@/config'
+import { assetPath } from '@/lib/basePath'
 import 'modern-normalize/modern-normalize.css'
 import '@radix-ui/themes/styles.css'
 import '@/styles/index.scss'
@@ -17,6 +19,10 @@ const canonicalBase = `${siteUrl.replace(/\/$/, '')}${basePath ? `/${basePath.re
 
 export const metadata: Metadata = {
 	metadataBase: new URL(siteUrl),
+	icons: {
+		icon: assetPath('/icons/opt/raw-clinic.webp'),
+		apple: assetPath('/icons/opt/raw-clinic.webp')
+	},
 	verification: {
 		google: '9OhCZhfOt3p9_KR27LiHqmUcz0QLXssaHC9NKnjjMWY'
 	},
@@ -70,6 +76,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
 					dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
 				/>
 				<ThemeProvider>
+					<LandingCriticalStyles blocks={['navShell']} />
 					<a href="#main-content" className="skip-link">
 						Skip to main content
 					</a>

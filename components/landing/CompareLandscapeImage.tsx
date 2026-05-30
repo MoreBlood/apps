@@ -1,10 +1,10 @@
 'use client'
 
-import { useEffect, useRef, useState } from 'react'
-import Image from 'next/image'
 import clsx from 'clsx'
-import { assetPath } from '@/lib/basePath'
-import { getCompareImageMeta, type CompareImageMeta } from '@/lib/compare-image-meta'
+import Image from 'next/image'
+import { useEffect, useRef, useState } from 'react'
+import { type CompareImageMeta, getCompareImageMeta } from '@/lib/compare-image-meta'
+import { resolveOptimizedImage } from '@/lib/optimized-image'
 
 function panEndShift(meta: CompareImageMeta, frameAspect: number): string {
 	const imgAspect = meta.width / meta.height
@@ -44,20 +44,15 @@ type Props = {
 	priority?: boolean
 }
 
-export default function CompareLandscapeImage({
-	src,
-	blurDataURL,
-	alt,
-	isActive,
-	priority = false
-}: Props) {
+export default function CompareLandscapeImage({ src, blurDataURL, alt, isActive, priority = false }: Props) {
 	const { viewportRef, frameAspect } = useCompareFrameAspect()
 	const [documentVisible, setDocumentVisible] = useState(
 		() => typeof document === 'undefined' || document.visibilityState === 'visible'
 	)
+	const optimized = resolveOptimizedImage(src)
 	const meta = getCompareImageMeta(src)
-	const width = meta?.width ?? 1600
-	const height = meta?.height ?? 1200
+	const width = meta?.width ?? optimized.width
+	const height = meta?.height ?? optimized.height
 	const panEnd = meta != null ? panEndShift(meta, frameAspect) : '0'
 	const panRunning = isActive && documentVisible
 
@@ -70,14 +65,11 @@ export default function CompareLandscapeImage({
 	return (
 		<div ref={viewportRef} className="landing-compare__pan-viewport">
 			<div
-				className={clsx(
-					'landing-compare__pan-track',
-					panRunning && 'landing-compare__pan-track--active'
-				)}
+				className={clsx('landing-compare__pan-track', panRunning && 'landing-compare__pan-track--active')}
 				style={{ '--compare-pan-end': panEnd } as React.CSSProperties}
 			>
 				<Image
-					src={assetPath(src)}
+					src={optimized.src}
 					alt={isActive ? alt : ''}
 					width={width}
 					height={height}
@@ -86,6 +78,7 @@ export default function CompareLandscapeImage({
 					placeholder="blur"
 					blurDataURL={blurDataURL}
 					priority={priority}
+					loading={priority ? undefined : 'lazy'}
 					draggable={false}
 				/>
 			</div>
