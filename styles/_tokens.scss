@@ -1,0 +1,58 @@
+// Design tokens — single source for layout, type, color, motion (Radix scales for hues).
+
+:root {
+	// Content widths (narrow → wide)
+	--rc-content-max-micro: 22rem;
+	--rc-content-max-compact: 24rem;
+	--rc-content-max-tight: 32rem;
+	--rc-content-max-narrow: 36rem;
+	--rc-content-max-comfort: 38rem;
+	--rc-content-max-reading: 40rem;
+	--rc-content-max-photo: 42rem;
+	--rc-content-max-teaser: 44rem;
+	--rc-content-max-wide: 72rem;
+	--rc-content-max-marketing: 76rem;
+	--rc-inline-padding: clamp(1.25rem, 4vw, 2rem);
+
+	// Typography
+	--rc-text-eyebrow-size: 0.6875rem;
+	--rc-text-eyebrow-weight: 600;
+	--rc-text-eyebrow-tracking: 0.12em;
+	--rc-text-lead-size: clamp(1.0625rem, 2.2vw, 1.1875rem);
+	--rc-text-lead-line: 1.6;
+	--rc-text-title-page: clamp(2rem, 5vw, 3rem);
+	--rc-text-title-hero: clamp(2rem, 6.5vw, 4rem);
+
+	// Surfaces & borders (alias Radix)
+	--rc-border: var(--gray-a6);
+	--rc-surface-panel: var(--color-panel-solid);
+	--rc-text-primary: var(--gray-12);
+	--rc-text-secondary: var(--gray-11);
+
+	// Semantic status (not app brand accent)
+	--rc-semantic-success: var(--green-9);
+	--rc-semantic-success-subtle: var(--green-a3);
+	--rc-semantic-success-fg: var(--green-11);
+	--rc-semantic-warning: var(--amber-9);
+	--rc-semantic-warning-subtle: var(--amber-a3);
+	--rc-semantic-warning-fg: var(--amber-11);
+	--rc-semantic-neutral: var(--gray-9);
+	--rc-semantic-neutral-subtle: var(--gray-a3);
+	--rc-semantic-neutral-fg: var(--gray-11);
+
+	// Motion
+	--rc-ease-out: cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+// Breakpoints — mobile-first: @media (min-width: $rc-bp-lg) { … }
+// Below: @media (max-width: rc-below($rc-bp-lg)) { … }
+$rc-bp-2xs: 380px;
+$rc-bp-xs: 420px;
+$rc-bp-sm: 480px;
+$rc-bp-md: 768px;
+$rc-bp-lg: 900px;
+$rc-bp-xl: 1024px;
+
+@function rc-below($min-width) {
+	@return $min-width - 1px;
+}

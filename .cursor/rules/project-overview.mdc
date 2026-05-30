@@ -1,0 +1,36 @@
+---
+description: Raw Clinic web — architecture, apps, shared UI entry points
+alwaysApply: true
+---
+
+# Raw Clinic Web
+
+Next.js marketing + utility site for **Raw Clinic** (`rawclinic`, red accent) and **AQI Sense** (`aqi-sense`, green accent). Hub routes (`/`, `/blog`, `/faq`, legal, feedback) use **gray** accent via `resolveThemeAccent` in `config/app-theme.ts` — do not hardcode hub accent in components.
+
+## Two UI layers
+
+| Layer | Where | Styling |
+|-------|--------|---------|
+| **Landing / marketing** | `AppLandingPage`, `.landing` | `styles/landing*.scss`, metal surfaces, `LandingReveal` |
+| **Utility** | FAQ, legal, feedback, roadmap, blog | Radix `Container size="2"`, `styles/prose.scss`, `site-page-hero.scss` |
+
+Prefer **extending existing shared pieces** over new one-off layouts.
+
+## Reuse before creating
+
+- **Hero**: `SitePageHero` (utility); `AppLegalHero` (legal); landing hero blocks stay in `AppLandingPage` / `landing.scss`
+- **App cards**: `HomeAppCard` + `homeAppCardFromHomeData` / `homeAppCardFromAppConfig`
+- **Feature grids**: `LandingPrimaryGrid` — variants `featured` \| `panel` \| `compact` (not inline duplicate grids)
+- **CTA**: `AppContactCta`
+- **Images**: `OptimizedImage`
+- **Long copy**: `className="site-prose"` on Radix `Container`
+
+## Imports & paths
+
+- Use `@/` alias (`@/components/...`, `@/lib/...`, `@/config/...`)
+- Config/content: `config/`, `config/home-content.ts`, `config/landing-content.ts`
+- Do not reintroduce removed modules: `LandingHero`, `DescriptionText`, `RoadmapOverviewCard`
+
+## Scope
+
+Minimal diffs; match existing naming (BEM-ish: `landing-primary-grid__`, `home-page__`). New global SCSS → add `@use` in `styles/index.scss`.

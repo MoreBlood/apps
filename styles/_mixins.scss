@@ -1,17 +1,32 @@
 // Shared UI patterns — panels, tinted icon chips, uppercase eyebrows.
 
 @mixin content-panel {
-	border: 1px solid var(--gray-a6);
+	border: 1px solid var(--rc-border, var(--gray-a6));
 	border-radius: var(--radius-4);
-	background: var(--color-panel-solid);
+	background: var(--rc-surface-panel, var(--color-panel-solid));
 }
 
+/** Caps label — blog, FAQ, roadmap, utility heroes */
 @mixin page-eyebrow {
-	font-size: 0.6875rem;
-	font-weight: 600;
-	letter-spacing: 0.12em;
+	font-size: var(--rc-text-eyebrow-size, 0.6875rem);
+	font-weight: var(--rc-text-eyebrow-weight, 600);
+	letter-spacing: var(--rc-text-eyebrow-tracking, 0.12em);
 	text-transform: uppercase;
 	color: var(--accent-11);
+}
+
+/** Pill label — app landing hero only */
+@mixin page-eyebrow-pill {
+	@include page-eyebrow;
+	display: inline-block;
+	max-width: 100%;
+	text-wrap: balance;
+	color: var(--accent-12);
+	margin: 0 0 1.25rem;
+	padding: 0.35rem 0.85rem;
+	border-radius: var(--landing-hero-eyebrow-radius, 999px);
+	background: var(--accent-a4);
+	border: 1px solid var(--accent-a7);
 }
 
 @mixin tinted-icon-chip($bg, $fg, $border) {

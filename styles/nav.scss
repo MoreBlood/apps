@@ -1,11 +1,12 @@
 @use 'landing-title-gradient' as *;
+@use 'tokens' as *;
 // Fixed nav geometry — pure CSS (no JS measurement). Matches metal buttons (2.25rem) + pill padding.
 :root {
 	--app-nav-offset-top: max(1rem, env(safe-area-inset-top, 0px));
 	--app-nav-bar-height: 2.75rem;
 }
 
-@media (min-width: 1024px) {
+@media (min-width: $rc-bp-xl) {
 	:root {
 		--app-nav-bar-height: 3.25rem;
 	}
@@ -44,7 +45,7 @@
 	min-height: var(--app-nav-bar-height);
 	box-sizing: border-box;
 
-	@media (max-width: 1023px) {
+	@media (max-width: rc-below($rc-bp-xl)) {
 		grid-template-columns: 1fr auto;
 	}
 }
@@ -63,7 +64,7 @@
 	overflow: visible;
 
 	// Balance hamburger column when theme switcher is dialog-only (< lg)
-	@media (max-width: 1023px) {
+	@media (max-width: rc-below($rc-bp-xl)) {
 		width: 2.25rem;
 	}
 }

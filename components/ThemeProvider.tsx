@@ -3,16 +3,14 @@
 import { Theme } from '@radix-ui/themes'
 import { usePathname } from 'next/navigation'
 import { ThemeProvider as NextThemesProvider } from 'next-themes'
-import { getAppThemeMeta } from '@/config/app-theme'
+import { getAppThemeMeta, resolveThemeAccent } from '@/config/app-theme'
 import { getAppSlugFromPathname } from '@/lib/site-paths'
-
-const DEFAULT_ACCENT = 'blue' as const
 
 export default function ThemeProvider({ children }: { children: React.ReactNode }) {
 	const pathname = usePathname()
 	const appSlug = getAppSlugFromPathname(pathname)
 	const app = appSlug ? getAppThemeMeta(appSlug) : null
-	const accentColor = app?.accentColor ?? DEFAULT_ACCENT
+	const accentColor = resolveThemeAccent(pathname)
 	const appTheme = app?.slug
 
 	return (

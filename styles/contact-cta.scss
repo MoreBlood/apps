@@ -1,4 +1,5 @@
 @use 'mixins' as *;
+@use 'tokens' as *;
 
 .contact-cta--section {
 	margin-top: var(--space-6);
@@ -22,7 +23,7 @@
 }
 
 .contact-cta__lead {
-	max-width: 36rem;
+	max-width: var(--rc-content-max-narrow);
 	line-height: 1.55;
 	margin: 0 0 var(--space-4);
 }
@@ -31,14 +32,14 @@
 	display: grid;
 	gap: var(--space-2);
 
-	@media (min-width: 520px) {
+	@media (min-width: $rc-bp-sm) {
 		grid-template-columns: repeat(2, minmax(0, 1fr));
 	}
 
 	&--single {
-		@media (min-width: 520px) {
+		@media (min-width: $rc-bp-sm) {
 			grid-template-columns: 1fr;
-			max-width: 24rem;
+			max-width: var(--rc-content-max-compact);
 		}
 	}
 }
@@ -69,7 +70,7 @@
 		outline-offset: 2px;
 	}
 
-	@media (max-width: 519px) {
+	@media (max-width: rc-below($rc-bp-sm)) {
 		padding-inline: var(--space-3);
 	}
 }
@@ -89,7 +90,7 @@
 	}
 
 	&--feedback {
-		@include tinted-icon-chip(var(--jade-a3), var(--jade-11), var(--jade-a6));
+		@include tinted-icon-chip(var(--accent-a3), var(--accent-11), var(--accent-a6));
 	}
 }
 

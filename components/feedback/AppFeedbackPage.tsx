@@ -11,7 +11,7 @@ type Props = {
 
 export default function AppFeedbackPage({ app, appSlug }: Props) {
 	return (
-		<Container size="2" className="feedback-page">
+		<Container size="2" className="feedback-page site-prose">
 			<SitePageHero
 				className="site-page-hero--section"
 				eyebrow={app.appName}

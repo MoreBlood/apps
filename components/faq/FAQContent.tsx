@@ -38,7 +38,7 @@ export default function FAQContent({ app, appSlug }: FAQContentProps) {
 	if (!faq) return null
 
 	return (
-		<Container size="2">
+		<Container size="2" className="site-prose">
 			<SitePageHero className="site-page-hero--section" eyebrow={app.appName} title="FAQ" lead={faq.intro} />
 
 			{faq.sections.map((section) => (

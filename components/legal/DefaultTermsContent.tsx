@@ -6,7 +6,7 @@ import type { TermsContentProps } from '@/config'
 
 export default function DefaultTermsContent({ app, appSlug }: TermsContentProps) {
 	return (
-		<Container size="2">
+		<Container size="2" className="site-prose">
 			<AppLegalHero app={app} title="Terms of Service" />
 
 			<Heading size="5" mb="2" as="h2">

@@ -3,11 +3,11 @@
 @use 'mixins' as *;
 
 .site-page-hero {
-	--landing-text: var(--gray-12);
-	--landing-text-muted: var(--gray-11);
+	--landing-text: var(--rc-text-primary);
+	--landing-text-muted: var(--rc-text-secondary);
 
 	text-align: center;
-	max-width: 40rem;
+	max-width: var(--rc-content-max-reading);
 	margin-inline: auto;
 	padding-block: clamp(2rem, 8vw, 4rem) clamp(1.5rem, 5vw, 2.5rem);
 
@@ -22,7 +22,7 @@
 	}
 
 	&__title {
-		font-size: clamp(2rem, 5vw, 3rem);
+		font-size: var(--rc-text-title-page);
 		font-weight: 700;
 		letter-spacing: -0.04em;
 		margin: 0 0 1rem;
@@ -32,17 +32,17 @@
 	}
 
 	&__lead {
-		font-size: clamp(1.0625rem, 2.2vw, 1.1875rem);
-		line-height: 1.6;
+		font-size: var(--rc-text-lead-size);
+		line-height: var(--rc-text-lead-line);
 		color: var(--landing-text-muted);
 		margin: 0 auto;
-		max-width: 36rem;
+		max-width: var(--rc-content-max-narrow);
 		text-wrap: balance;
 	}
 
 	&__meta {
 		margin: 0.75rem auto 0;
-		max-width: 36rem;
+		max-width: var(--rc-content-max-narrow);
 		font-size: var(--font-size-1);
 		font-style: italic;
 		line-height: 1.5;

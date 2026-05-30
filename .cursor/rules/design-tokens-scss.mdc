@@ -1,0 +1,65 @@
+---
+description: SCSS tokens, breakpoints, content widths, mixins
+globs: styles/**/*.scss
+alwaysApply: false
+---
+
+# Design tokens (SCSS)
+
+**Source of truth**: `styles/_tokens.scss` (imported as `@use 'tokens'` from `styles/index.scss`).
+
+## Content max-width
+
+Never add new magic `max-width: Nrem` for copy/layout columns. Use CSS variables:
+
+| Token | rem | Typical use |
+|-------|-----|-------------|
+| `--rc-content-max-tight` | 32 | Short blurbs |
+| `--rc-content-max-narrow` | 36 | Section intros |
+| `--rc-content-max-comfort` | 38 | Quotes, asides |
+| `--rc-content-max-reading` | 40 | Hero leads, grid headers |
+| `--rc-content-max-teaser` | 44 | Hero stage copy |
+| `--rc-content-max-wide` | 72 | Blog/article shell |
+| `--rc-content-max-marketing` | 76 | Full landing shell |
+
+Landing aliases (inside `.landing` only): `--landing-max` → marketing; `--landing-content-max` → wide.
+
+```scss
+// ❌
+max-width: 40rem;
+// ✅
+max-width: var(--rc-content-max-reading);
+```
+
+Local UI constraints (e.g. `min(16rem, calc(100vw - …))` for a tuner pane) are OK when not part of the content scale.
+
+## Breakpoints
+
+Use `$rc-bp-*` from `_tokens.scss` — **not** raw `768px`, `900px`, etc.
+
+```scss
+@use 'tokens' as *;
+
+@media (min-width: $rc-bp-md) { … }
+@media (max-width: rc-below($rc-bp-lg)) { … }
+```
+
+Scale: `$rc-bp-2xs` 380 · `$rc-bp-xs` 420 · `$rc-bp-sm` 480 · `$rc-bp-md` 768 · `$rc-bp-lg` 900 · `$rc-bp-xl` 1024.
+
+## Mixins (`styles/_mixins.scss`)
+
+- `@include content-panel` — bordered utility panels
+- `@include page-eyebrow` — uppercase caps label (blog, FAQ, roadmap, utility heroes)
+- `@include page-eyebrow-pill` — **app landing hero only** (pill + accent fill)
+- `@include tinted-icon-chip($bg, $fg, $border)` — icon chips; prefer `var(--accent-a*)` / `var(--accent-11)` for brand chrome
+
+## Color discipline
+
+- **Brand chrome**: `var(--accent-*)` (theme-driven per route)
+- **Status / neutral UI**: `--rc-semantic-success|warning|neutral` — not per-section rainbow hues
+- **Text**: `--rc-text-primary`, `--rc-text-secondary`
+- Avoid new hardcoded hex brand colors (e.g. `#ffe066`, one-off jade/blue for decorative icons)
+
+## Prose
+
+Long-form utility pages: extend `.site-prose` in `styles/prose.scss`, not ad-hoc heading margins in page SCSS.

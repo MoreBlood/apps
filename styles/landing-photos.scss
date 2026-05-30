@@ -1,10 +1,11 @@
 // Halide-inspired editorial photo bands (placeholders + full-bleed moments)
 @use 'landing-title-gradient' as *;
+@use 'tokens' as *;
 
 .landing-photo {
 	content-visibility: auto;
 	contain-intrinsic-size: auto 480px;
-	--landing-photo-max: 76rem;
+	--landing-photo-max: var(--rc-content-max-marketing);
 
 	&__eyebrow {
 		font-size: 0.6875rem;
@@ -31,7 +32,7 @@
 		line-height: 1.55;
 		color: var(--landing-text-secondary, var(--gray-11));
 		margin: 0;
-		max-width: 36rem;
+		max-width: var(--rc-content-max-narrow);
 	}
 
 	&__caption-block {
@@ -182,7 +183,7 @@
 
 	&__intro {
 		text-align: center;
-		max-width: 42rem;
+		max-width: var(--rc-content-max-photo);
 		margin: 0 auto clamp(2rem, 5vw, 3rem);
 		padding-inline: var(--space-2);
 
@@ -420,7 +421,7 @@
 			max-height: 28rem;
 		}
 
-		@media (min-width: 720px) {
+		@media (min-width: $rc-bp-md) {
 			grid-template-columns: 1fr 1fr;
 			gap: 1rem;
 
@@ -483,7 +484,7 @@
 		aspect-ratio: 21 / 9;
 		border-radius: var(--radius-3);
 
-		@media (max-width: 640px) {
+		@media (max-width: rc-below($rc-bp-md)) {
 			aspect-ratio: 16 / 10;
 		}
 	}
@@ -501,7 +502,7 @@
 		gap: 2rem;
 		align-items: center;
 
-		@media (min-width: 900px) {
+		@media (min-width: $rc-bp-lg) {
 			grid-template-columns: 1fr 1.05fr;
 			gap: 3.5rem;
 		}
@@ -525,7 +526,7 @@
 		aspect-ratio: 4 / 5;
 		min-height: 16rem;
 
-		@media (min-width: 900px) {
+		@media (min-width: $rc-bp-lg) {
 			aspect-ratio: 5 / 6;
 		}
 	}

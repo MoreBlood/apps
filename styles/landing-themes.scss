@@ -1,4 +1,5 @@
 // Per-app landing visual identity (accent comes from ThemeProvider / data-app-theme).
+@use 'tokens' as *;
 
 // —— RAW Clinic — editorial ProRAW, warm, photography ———————————————————————
 
@@ -276,7 +277,7 @@
 		}
 
 		&__lead {
-			max-width: 36rem;
+			max-width: var(--rc-content-max-narrow);
 			line-height: 1.65;
 		}
 
@@ -292,7 +293,7 @@
 	}
 
 	.landing-feature {
-		@media (min-width: 900px) {
+		@media (min-width: $rc-bp-lg) {
 			gap: 5rem;
 		}
 

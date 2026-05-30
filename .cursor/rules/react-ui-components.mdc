@@ -1,0 +1,54 @@
+---
+description: React UI patterns, accents, landing vs utility components
+globs: components/**/*.tsx
+alwaysApply: false
+---
+
+# React UI
+
+## Theme & accent
+
+- Client theme: `ThemeProvider` uses `resolveThemeAccent(pathname)` from `config/app-theme.ts`
+- Hub = `HUB_ACCENT_COLOR` (`gray`); apps = `red` \| `green` from `getAppThemeMeta`
+- Decorative icons/links on marketing surfaces: Radix `var(--accent-*)`, not fixed palette colors per section
+
+## When to use what
+
+| Need | Component |
+|------|-----------|
+| Blog / FAQ / roadmap / feedback header | `SitePageHero` |
+| Legal page title block | `AppLegalHero` → `SitePageHero` |
+| Home or roadmap app promo | `HomeAppCard` + factory helpers |
+| App landing feature sections | `LandingPrimaryGrid` (`featured` default; `panel` / `compact` for denser blocks) |
+| Store / download CTA on landing | `LandingStoreButton` (not legacy `LandingHero`) |
+| Contact strip | `AppContactCta` |
+| Screenshots / marketing images | `OptimizedImage` |
+
+## Landing grids
+
+```tsx
+<LandingPrimaryGrid variant="featured" … />  // metal cards + LANDING_SURFACE_GRID
+<LandingPrimaryGrid variant="panel" … />     // bordered section
+<LandingPrimaryGrid variant="compact" … />   // panel + compact density
+```
+
+Do not duplicate grid markup in `AppLandingPage` — add items to `config/landing-content.ts` and render via `LandingPrimaryGrid`.
+
+## Utility pages
+
+```tsx
+<Container size="2" className="site-prose">
+  <SitePageHero eyebrow="…" title="…" lead="…" />
+  …
+</Container>
+```
+
+Legal content stays in `components/legal/*Content.tsx`; shared chrome only, not six different hero layouts.
+
+## Client components
+
+Use `'use client'` only when needed (animations, pathname, forms). Keep serializable props; theme meta via `AppThemeMeta`, not component refs in config.
+
+## Tests
+
+After layout/token changes: `npm run build` and `npm test`.

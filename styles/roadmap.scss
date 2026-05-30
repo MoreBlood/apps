@@ -1,6 +1,6 @@
 .roadmap {
 	width: 100%;
-	max-width: 40rem;
+	max-width: var(--rc-content-max-reading);
 	margin-inline: auto;
 
 	&__legend {
@@ -30,15 +30,15 @@
 		border-radius: 50%;
 
 		&--shipped {
-			background: var(--green-9);
+			background: var(--rc-semantic-success);
 		}
 
 		&--in_progress {
-			background: var(--amber-9);
+			background: var(--rc-semantic-warning);
 		}
 
 		&--planned {
-			background: var(--blue-9);
+			background: var(--rc-semantic-neutral);
 		}
 	}
 
@@ -94,8 +94,8 @@
 		}
 
 		&:has(.roadmap__lane--shipped)::before {
-			background: var(--green-9);
-			box-shadow: 0 0 0 2px var(--green-a6);
+			background: var(--rc-semantic-success);
+			box-shadow: 0 0 0 2px var(--rc-semantic-success-subtle);
 		}
 
 		&:has(.roadmap__lane--later)::before {
@@ -129,7 +129,7 @@
 		flex-direction: column;
 
 		&--shipped {
-			border-left: 3px solid var(--green-9);
+			border-left: 3px solid var(--rc-semantic-success);
 		}
 
 		&--quarter {
@@ -211,18 +211,18 @@
 		margin-bottom: 0.4rem;
 
 		&--shipped {
-			color: var(--green-11);
-			background: var(--green-a3);
+			color: var(--rc-semantic-success-fg);
+			background: var(--rc-semantic-success-subtle);
 		}
 
 		&--in_progress {
-			color: var(--amber-11);
-			background: var(--amber-a3);
+			color: var(--rc-semantic-warning-fg);
+			background: var(--rc-semantic-warning-subtle);
 		}
 
 		&--planned {
-			color: var(--blue-11);
-			background: var(--blue-a3);
+			color: var(--rc-semantic-neutral-fg);
+			background: var(--rc-semantic-neutral-subtle);
 		}
 	}
 
@@ -234,15 +234,15 @@
 		border-left-width: 3px;
 
 		&--shipped {
-			border-left-color: var(--green-9);
+			border-left-color: var(--rc-semantic-success);
 		}
 
 		&--in_progress {
-			border-left-color: var(--amber-9);
+			border-left-color: var(--rc-semantic-warning);
 		}
 
 		&--planned {
-			border-left-color: var(--blue-9);
+			border-left-color: var(--rc-semantic-neutral);
 		}
 	}
 

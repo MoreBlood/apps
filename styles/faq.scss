@@ -1,11 +1,12 @@
 @use 'mixins' as *;
+@use 'tokens' as *;
 
 .faq-section__heading {
 	min-width: 0;
 }
 
 .faq-section__icon {
-	@include tinted-icon-chip(var(--gray-a3), var(--gray-11), var(--gray-a6));
+	@include tinted-icon-chip(var(--accent-a3), var(--accent-11), var(--accent-a6));
 	width: 2rem;
 	height: 2rem;
 	border-radius: var(--radius-2);
@@ -14,34 +15,6 @@
 		width: 1.1rem;
 		height: 1.1rem;
 	}
-}
-
-.faq-section__icon--getting-started {
-	@include tinted-icon-chip(var(--jade-a3), var(--jade-11), var(--jade-a6));
-}
-
-.faq-section__icon--editing {
-	@include tinted-icon-chip(var(--violet-a3), var(--violet-11), var(--violet-a6));
-}
-
-.faq-section__icon--privacy {
-	@include tinted-icon-chip(var(--indigo-a3), var(--indigo-11), var(--indigo-a6));
-}
-
-.faq-section__icon--troubleshooting {
-	@include tinted-icon-chip(var(--red-a3), var(--red-11), var(--red-a6));
-}
-
-.faq-section__icon--data {
-	@include tinted-icon-chip(var(--cyan-a3), var(--cyan-11), var(--cyan-a6));
-}
-
-.faq-section__icon--providers-scales {
-	@include tinted-icon-chip(var(--orange-a3), var(--orange-11), var(--orange-a6));
-}
-
-.faq-section__icon--features {
-	@include tinted-icon-chip(var(--purple-a3), var(--purple-11), var(--purple-a6));
 }
 
 .faq-list {
@@ -95,7 +68,7 @@
 		outline-offset: -2px;
 	}
 
-	@media (max-width: 520px) {
+	@media (max-width: rc-below($rc-bp-sm)) {
 		padding-inline: var(--space-3);
 	}
 }
@@ -114,14 +87,14 @@
 	margin-top: 0.35rem;
 	color: var(--gray-10);
 	transition:
-		transform 0.35s cubic-bezier(0.22, 1, 0.36, 1),
+		transform 0.35s var(--rc-ease-out),
 		color 0.25s ease;
 }
 
 .faq-item__answer-wrap {
 	display: grid;
 	grid-template-rows: 0fr;
-	transition: grid-template-rows 0.38s cubic-bezier(0.22, 1, 0.36, 1);
+	transition: grid-template-rows 0.38s var(--rc-ease-out);
 }
 
 .faq-item--open .faq-item__answer-wrap {
@@ -136,7 +109,7 @@
 .faq-item__answer {
 	padding: 0 var(--space-4) var(--space-4);
 	border-top: 1px solid transparent;
-	color: var(--gray-12);
+	color: var(--rc-text-primary);
 	line-height: 1.6;
 	font-size: var(--font-size-2);
 	opacity: 0;
@@ -147,7 +120,7 @@
 		border-color 0.28s ease,
 		padding-top 0.28s ease;
 
-	@media (max-width: 520px) {
+	@media (max-width: rc-below($rc-bp-sm)) {
 		padding-inline: var(--space-3);
 	}
 

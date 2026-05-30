@@ -1,4 +1,5 @@
 // Global styles: Radix Themes CSS is imported in app/layout.tsx.
+@use 'tokens';
 @use 'device-mockup';
 @use 'landing';
 @use 'landing-surface';
@@ -9,6 +10,7 @@
 @use 'blog';
 @use 'roadmap';
 @use 'faq';
+@use 'prose';
 @use 'contact-cta';
 @use 'feedback';
 @use 'site-footer';

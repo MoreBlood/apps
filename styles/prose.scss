@@ -1,0 +1,45 @@
+// Long-form utility content (legal, docs) inside Radix Container.
+
+.site-prose {
+	color: var(--rc-text-primary);
+	line-height: 1.6;
+
+	.rt-Heading {
+		color: var(--rc-text-primary);
+		letter-spacing: -0.02em;
+	}
+
+	.rt-Heading[data-size='5'] {
+		margin-top: var(--space-5);
+	}
+
+	.rt-Text {
+		color: inherit;
+	}
+
+	.rt-Text + .rt-Text,
+	.rt-Heading + .rt-Text {
+		margin-top: 0;
+	}
+
+	p + p,
+	.rt-Text[data-as='p'] + .rt-Text[data-as='p'],
+	ul + .rt-Text,
+	.rt-Text + ul {
+		margin-top: var(--space-2);
+	}
+
+	ul,
+	ol {
+		margin: 0 0 var(--space-4);
+		padding-left: var(--space-5);
+	}
+
+	li + li {
+		margin-top: var(--space-1);
+	}
+
+	a {
+		color: var(--accent-11);
+	}
+}

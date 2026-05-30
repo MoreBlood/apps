@@ -5,7 +5,7 @@ import type { PrivacyContentProps } from '@/config'
 
 export default function DefaultPrivacyContent({ app }: PrivacyContentProps) {
 	return (
-		<Container size="2">
+		<Container size="2" className="site-prose">
 			<AppLegalHero app={app} title="Privacy Policy" />
 
 			<Heading size="5" mb="2" as="h2">
