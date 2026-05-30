@@ -73,7 +73,7 @@ export default function LandingPhotoMoment({ moment }: Props) {
 		const hasIntro = Boolean(moment.eyebrow || moment.title || moment.caption)
 
 		return (
-			<LandingReveal as="section" className="landing-photo landing-photo--spotlight" duration={0.7}>
+			<LandingReveal as="section" className="landing-photo landing-photo--spotlight">
 				{hasIntro && (
 					<header className="landing-photo__intro">
 						{moment.eyebrow && <p className="landing-photo__eyebrow">{moment.eyebrow}</p>}
@@ -115,7 +115,7 @@ export default function LandingPhotoMoment({ moment }: Props) {
 
 	if (moment.layout === 'cinema') {
 		return (
-			<LandingReveal as="section" className="landing-photo landing-photo--cinema" duration={0.75}>
+			<LandingReveal as="section" className="landing-photo landing-photo--cinema">
 				<div className="landing-photo__cinema-inner">
 					{moment.eyebrow && <p className="landing-photo__eyebrow">{moment.eyebrow}</p>}
 					<PhotoFrame src={primarySrc} alt={alt} label={moment.id} className="landing-photo__frame--cinema" />
@@ -130,7 +130,7 @@ export default function LandingPhotoMoment({ moment }: Props) {
 
 	// split
 	return (
-		<LandingReveal as="section" className="landing-photo landing-photo--split" duration={0.7}>
+		<LandingReveal as="section" className="landing-photo landing-photo--split">
 			<div className="landing-photo__split-grid">
 				<div className="landing-photo__split-copy">
 					{moment.eyebrow && <p className="landing-photo__eyebrow">{moment.eyebrow}</p>}

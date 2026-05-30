@@ -9,7 +9,6 @@ import LandingLazySection from './LandingLazySection'
 import { LandingReveal, LandingRevealItem, LandingRevealStagger } from './LandingReveal'
 import LandingStoreButton from './LandingStoreButton'
 import { getLandingGridIcon } from './landing-grid-icons'
-import { usePreferVerticalReveal } from './usePreferVerticalReveal'
 
 type Props = { app: LandingAppInfo }
 
@@ -35,7 +34,6 @@ function CtaPanel({
 			as="section"
 			className={clsx('landing-cta-panel', isFinal && 'landing-cta-panel--final')}
 			aria-labelledby={id}
-			duration={isFinal ? 0.8 : 0.7}
 		>
 			{isFinal ? (
 				<>
@@ -65,7 +63,7 @@ function CtaPanel({
 function HighlightsSection({ items }: { items: LandingHighlight[] }) {
 	return (
 		<LandingReveal as="section" className="landing-highlights" aria-label="Key capabilities">
-			<LandingRevealStagger as="ul" className="landing-highlights__grid" stagger={0.1}>
+			<LandingRevealStagger as="ul" className="landing-highlights__grid">
 				{items.map((item) => (
 					<LandingRevealItem key={item.title} className="landing-highlights__card">
 						<h3 className="landing-highlights__title">{item.title}</h3>
@@ -79,7 +77,7 @@ function HighlightsSection({ items }: { items: LandingHighlight[] }) {
 
 function ShowcaseQuote({ showcase }: { showcase: LandingShowcase }) {
 	return (
-		<LandingReveal as="section" className="landing-showcase" aria-label="Product philosophy" duration={0.8}>
+		<LandingReveal as="section" className="landing-showcase" aria-label="Product philosophy">
 			<blockquote className="landing-showcase__quote">
 				<p>{showcase.quote}</p>
 				{showcase.attribution && <footer>{showcase.attribution}</footer>}
@@ -96,18 +94,14 @@ function FeatureGrid({ grid, compact = false }: { grid: AppLandingConfig['grid']
 	const showHeader = Boolean(headerTitle || headerLead)
 
 	return (
-		<LandingReveal
-			as="section"
-			className={clsx('landing-grid-section', compact && 'landing-grid-section--compact')}
-			duration={0.7}
-		>
+		<LandingReveal as="section" className={clsx('landing-grid-section', compact && 'landing-grid-section--compact')}>
 			{showHeader && (
-				<LandingReveal className="landing-grid-section__header" direction="none" delay={0.05}>
+				<LandingReveal className="landing-grid-section__header" direction="none">
 					{headerTitle && <h2 className="landing-grid-section__title">{headerTitle}</h2>}
 					{headerLead && <p className="landing-grid-section__lead">{headerLead}</p>}
 				</LandingReveal>
 			)}
-			<LandingRevealStagger as="ul" className="landing-grid-section__grid" stagger={0.06}>
+			<LandingRevealStagger as="ul" className="landing-grid-section__grid">
 				{grid.items.map((item) => {
 					const ItemIcon = getLandingGridIcon(item.icon)
 
@@ -130,12 +124,12 @@ function FeatureGrid({ grid, compact = false }: { grid: AppLandingConfig['grid']
 
 function TechBanner({ tech }: { tech: { title: string; lead: string; items: LandingTechItem[] } }) {
 	return (
-		<LandingReveal as="section" className="landing-tech" duration={0.7}>
+		<LandingReveal as="section" className="landing-tech">
 			<LandingReveal className="landing-tech__header" direction="none">
 				<h2 className="landing-tech__title">{tech.title}</h2>
 				<p className="landing-tech__lead">{tech.lead}</p>
 			</LandingReveal>
-			<LandingRevealStagger as="ul" className="landing-tech__list" stagger={0.12}>
+			<LandingRevealStagger as="ul" className="landing-tech__list">
 				{tech.items.map((item) => (
 					<LandingRevealItem key={item.title} className="landing-tech__item">
 						<h3>{item.title}</h3>
@@ -149,7 +143,6 @@ function TechBanner({ tech }: { tech: { title: string; lead: string; items: Land
 
 export default function AppLandingPage({ app }: Props) {
 	const landing = getLandingBySlug(app.slug)
-	const verticalReveal = usePreferVerticalReveal()
 	if (!landing) return null
 
 	return (
@@ -159,8 +152,7 @@ export default function AppLandingPage({ app }: Props) {
 				.map((moment) => (
 					<LandingLazySection
 						key={moment.id}
-						tier="viewport"
-						minHeight="28rem"
+						tier="eager"
 						load={() => import('./LandingPhotoMoment')}
 						props={{ moment }}
 					/>
@@ -175,8 +167,7 @@ export default function AppLandingPage({ app }: Props) {
 				.map((moment) => (
 					<LandingLazySection
 						key={moment.id}
-						tier="viewport"
-						minHeight="22rem"
+						tier="eager"
 						load={() => import('./LandingPhotoMoment')}
 						props={{ moment }}
 					/>
@@ -184,8 +175,7 @@ export default function AppLandingPage({ app }: Props) {
 
 			{landing.grid.primary && landing.grid.primary.length > 0 && (
 				<LandingLazySection
-					tier="viewport"
-					minHeight="24rem"
+					tier="eager"
 					load={() => import('./LandingPrimaryGrid')}
 					props={{
 						id: `features-${app.slug}`,
@@ -200,14 +190,12 @@ export default function AppLandingPage({ app }: Props) {
 
 			{landing.features.length > 0 && (
 				<LandingLazySection
-					tier="viewport"
-					minHeight="32rem"
+					tier="eager"
 					load={() => import('./LandingFeaturesDeep')}
 					props={{
 						app,
 						features: landing.features,
-						photoMoments: landing.photoMoments,
-						verticalReveal
+						photoMoments: landing.photoMoments
 					}}
 				/>
 			)}
@@ -225,8 +213,7 @@ export default function AppLandingPage({ app }: Props) {
 
 			{landing.blog != null && (
 				<LandingLazySection
-					tier="viewport"
-					minHeight="14rem"
+					tier="eager"
 					load={() => import('./LandingBlogSection')}
 					props={{ appSlug: app.slug, section: landing.blog }}
 				/>

@@ -10,7 +10,8 @@ import {
 	getLandingStageDevices,
 	getLandingStageLayoutKey,
 	LANDING_STAGE_FEATURE_SCALE_OPTIONS,
-	LANDING_STAGE_HERO_SCALE_OPTIONS
+	LANDING_STAGE_HERO_SCALE_OPTIONS,
+	publishLandingHeroClusterScale
 } from '@/lib/landing-stage-scale'
 import { isLandingStageSizeLog, logLandingStageSize } from '@/lib/landing-stage-size-log'
 
@@ -21,22 +22,28 @@ type Options = {
 	featureIndex?: number
 }
 
+function getHeroMeasureElement(stage: HTMLElement): HTMLElement {
+	return (stage.closest('.landing-hero__showcase') as HTMLElement | null) ?? stage
+}
+
+function getFeatureMeasureElement(stage: HTMLElement): HTMLElement {
+	return (stage.closest('.landing-feature__visual') as HTMLElement | null) ?? stage
+}
+
 /** Positions mockups inside a fixed-size stage box (CSS owns outer dimensions). */
 export function useLandingStageScale(variant: Variant = 'hero', options: Options = {}) {
 	const stageRef = useRef<HTMLDivElement>(null)
 	const [debugReport, setDebugReport] = useState<string | null>(null)
 	const tuner = useLandingStageTunerOptional()
 	const { stageId, featureIndex } = options
+	const isFeature = featureIndex != null
 	const overrideRevision = tuner?.overrideRevision ?? 0
 	const tunerRef = useRef(tuner)
 	tunerRef.current = tuner
 	const readyRef = useRef(false)
-	const lastSlotHeightRef = useRef<number | undefined>(undefined)
-	const sizeLogRef = useRef(isLandingStageSizeLog())
 
 	useLayoutEffect(() => {
 		readyRef.current = false
-		lastSlotHeightRef.current = undefined
 		stageRef.current?.classList.remove('landing-stage--ready')
 	}, [variant, stageId, featureIndex])
 
@@ -44,20 +51,68 @@ export function useLandingStageScale(variant: Variant = 'hero', options: Options
 		const el = stageRef.current
 		if (!el) return
 
+		if (isFeature) {
+			const layoutKey = getLandingStageLayoutKey(variant, { featureIndex })
+			const tunerNow = tunerRef.current
+			const override = stageId ? tunerNow?.getOverride(stageId) : undefined
+			const resolvedSlots =
+				stageId && tunerNow ? tunerNow.resolveSlots(stageId, layoutKey) : getLandingStageDevices(layoutKey)
+			const measureEl = getFeatureMeasureElement(el)
+			let raf = 0
+
+			const tunerOpts =
+				override?.layoutKey === layoutKey
+					? {
+							scaleOverride: override.scaleOverride,
+							padding: override.padding,
+							fitMargin: override.fitMargin
+						}
+					: {}
+
+			const update = () => {
+				const { width, height } = measureEl.getBoundingClientRect()
+				if (width < 1 || height < 1) return
+
+				const result = computeLandingStageScaleResult(width, height, resolvedSlots, {
+					layoutKey,
+					debugLabel: `landing-stage:feature:${layoutKey}`,
+					...LANDING_STAGE_FEATURE_SCALE_OPTIONS,
+					...tunerOpts
+				})
+				applyLandingStageLayout(el, result)
+			}
+
+			const schedule = () => {
+				cancelAnimationFrame(raf)
+				raf = requestAnimationFrame(update)
+			}
+
+			schedule()
+			const observer = new ResizeObserver(schedule)
+			observer.observe(measureEl)
+			el.classList.add('landing-stage--ready')
+
+			return () => {
+				cancelAnimationFrame(raf)
+				observer.disconnect()
+			}
+		}
+
 		const debug = isLandingStageDebug()
-		sizeLogRef.current = isLandingStageSizeLog()
+		const sizeLog = isLandingStageSizeLog()
 		let raf = 0
+		const measureEl = getHeroMeasureElement(el)
+
 		const update = (reason: string) => {
 			const tunerNow = tunerRef.current
-			const { width, height } = el.getBoundingClientRect()
+			const { width, height } = measureEl.getBoundingClientRect()
 			if (width < 1 || height < 1) return
 
-			const layoutKey = getLandingStageLayoutKey(variant, { featureIndex })
+			const layoutKey = getLandingStageLayoutKey(variant)
 			const override = stageId ? tunerNow?.getOverride(stageId) : undefined
 			const resolvedSlots =
 				stageId && tunerNow ? tunerNow.resolveSlots(stageId, layoutKey) : getLandingStageDevices(layoutKey)
 
-			const scaleOpts = featureIndex != null ? LANDING_STAGE_FEATURE_SCALE_OPTIONS : LANDING_STAGE_HERO_SCALE_OPTIONS
 			const tunerOpts =
 				override?.layoutKey === layoutKey
 					? {
@@ -70,34 +125,25 @@ export function useLandingStageScale(variant: Variant = 'hero', options: Options
 			const result = computeLandingStageScaleResult(width, height, resolvedSlots, {
 				layoutKey,
 				debugLabel: `landing-stage:${variant}:${layoutKey}`,
-				...scaleOpts,
+				...LANDING_STAGE_HERO_SCALE_OPTIONS,
 				...tunerOpts
 			})
 			applyLandingStageLayout(el, result)
+			publishLandingHeroClusterScale(result.scale)
 
-			const firstReady = !readyRef.current
-			if (firstReady) {
+			if (!readyRef.current) {
 				readyRef.current = true
 				el.classList.add('landing-stage--ready')
 			}
 
-			if (sizeLogRef.current) {
-				const slot = (el.closest('.landing-hero__showcase') ??
-					el.closest('.landing-feature__visual')) as HTMLElement | null
-				const slotH = slot?.getBoundingClientRect().height
-				const prev = lastSlotHeightRef.current
-				const delta = slotH != null && prev != null ? slotH - prev : undefined
-				if (slotH != null) lastSlotHeightRef.current = slotH
-
+			if (sizeLog) {
 				logLandingStageSize(el, {
 					reason,
 					variant,
 					stageId,
 					layoutKey,
 					clusterScale: result.scale,
-					firstReady,
-					prevSlotH: prev,
-					deltaSlotH: delta != null && Math.abs(delta) > 0.5 ? delta : undefined
+					firstReady: readyRef.current
 				})
 			}
 
@@ -109,12 +155,10 @@ export function useLandingStageScale(variant: Variant = 'hero', options: Options
 			raf = requestAnimationFrame(() => update(reason))
 		}
 
-		if (sizeLogRef.current) {
-			logLandingStageSize(el, { reason: 'before-layout', variant, stageId })
-		}
 		update('mount-sync')
 		const observer = new ResizeObserver(() => schedule('resize'))
-		observer.observe(el)
+		observer.observe(measureEl)
+		if (measureEl !== el) observer.observe(el)
 		const onOrientation = () => schedule('orientation')
 		window.addEventListener('orientationchange', onOrientation)
 
@@ -124,7 +168,7 @@ export function useLandingStageScale(variant: Variant = 'hero', options: Options
 			window.removeEventListener('orientationchange', onOrientation)
 			if (debug) setDebugReport(null)
 		}
-	}, [variant, stageId, featureIndex, overrideRevision])
+	}, [variant, stageId, featureIndex, isFeature, overrideRevision])
 
-	return { stageRef, debugReport }
+	return { stageRef, debugReport: isFeature ? null : debugReport }
 }

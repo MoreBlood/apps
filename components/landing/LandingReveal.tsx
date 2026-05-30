@@ -26,7 +26,7 @@ export function LandingReveal({
 	className,
 	direction = 'up',
 	delay = 0,
-	duration = 0.65,
+	duration = 0.4,
 	as = 'div',
 	...rest
 }: RevealProps) {
@@ -98,7 +98,7 @@ type StaggerProps = {
 	stagger?: number
 }
 
-export function LandingRevealStagger({ children, className, as = 'div', stagger = 0.08 }: StaggerProps) {
+export function LandingRevealStagger({ children, className, as = 'div', stagger = 0.04 }: StaggerProps) {
 	const reduceMotion = useReducedMotion()
 	const Component = motion[as]
 
@@ -146,11 +146,11 @@ export function LandingRevealItem({
 				reduceMotion
 					? undefined
 					: {
-							hidden: { opacity: 0, y: 22 },
+							hidden: { opacity: 0, y: 16 },
 							visible: {
 								opacity: 1,
 								y: 0,
-								transition: { duration: 0.55, ease: landingEase }
+								transition: { duration: 0.35, ease: landingEase }
 							}
 						}
 			}

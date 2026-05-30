@@ -42,6 +42,7 @@ export default function LandingDeviceStage({ appSlug, appName, variant = 'hero',
 				ref={stageRef}
 				className={clsx(
 					'landing-stage',
+					featureIndex != null && 'landing-stage--feature',
 					(variant === 'hero' || variant === 'compact') && `landing-stage--${variant}`,
 					variant !== 'hero' && variant !== 'compact' && `landing-stage--${variant}`,
 					tunerEnabled && 'landing-stage--tuner-target',

@@ -42,7 +42,22 @@ export const LANDING_STAGE_HERO_SCALE_OPTIONS: Omit<ComputeStageScaleOptions, 'd
 	clusterScaleMult: 1.2
 }
 
-/** Deep feature rows — fit inside stage box (no top/bottom clip). */
+/** Feature cluster scale = hero × ratio (CSS on `.landing-stage--feature`). */
+export const LANDING_STAGE_FEATURE_TO_HERO_RATIO = 0.8
+
+/** Reference box for device positions only (matches hero showcase max-width 40rem). */
+export const LANDING_STAGE_FEATURE_COMPOSITION_REF_PX = 640
+
+/** Options for one-shot feature composition layout (positions only, 640×640 ref). */
+export const LANDING_STAGE_FEATURE_COMPOSITION_OPTIONS: Omit<ComputeStageScaleOptions, 'debugLabel' | 'layoutKey'> = {
+	padding: 0,
+	fitMargin: 1,
+	maxScale: 2,
+	shadowPad: 16,
+	clusterScaleMult: 1
+}
+
+/** Deep feature rows — scale to fit `.landing-feature__visual`. */
 export const LANDING_STAGE_FEATURE_SCALE_OPTIONS: Omit<ComputeStageScaleOptions, 'debugLabel' | 'layoutKey'> = {
 	padding: 10,
 	fitMargin: 1,

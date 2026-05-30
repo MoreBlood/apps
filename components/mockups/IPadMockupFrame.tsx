@@ -9,7 +9,7 @@ export type IPadMockupFrameProps = SVGProps<SVGSVGElement> & {
 	instanceId: string
 }
 
-/** Figma device frame — screen content goes in `children` (replaces #FF0090 slot). */
+/** Figma device frame — screen content in `children` (replaces screen slot). Gradients/filters stripped at build. */
 export function IPadMockupFrame({ children, className, instanceId, ...props }: IPadMockupFrameProps) {
 	const uid = stableDomId(instanceId, 'ipad-frame')
 	return (
@@ -27,8 +27,11 @@ export function IPadMockupFrame({ children, className, instanceId, ...props }: I
 					<rect x="79.7061" y="48.709" width="1414.78" height="2043.57" rx="132.843" fill="#8C8A94" />
 				</g>
 				<rect x="92.9902" y="61.9932" width="1388.21" height="2017" rx="123.987" fill="#000002" />
-				<g clipPath={`url(#${uid}-clip0_4344_12073)`}>
-					<foreignObject x="180.095" y="148.281" width="1210" height="1842">
+				<clipPath id={`${uid}-screen-clip`}>
+					<rect x="177.095" y="145.281" width="1216" height="1848" rx="35.6418" />
+				</clipPath>
+				<g clipPath={`url(#${uid}-screen-clip)`}>
+					<foreignObject x="177.095" y="145.281" width="1216" height="1848">
 						<div className="device-mockup-frame__screen">{children}</div>
 					</foreignObject>
 				</g>
@@ -154,11 +157,6 @@ export function IPadMockupFrame({ children, className, instanceId, ...props }: I
 					</g>
 				</g>
 			</g>
-			<defs>
-				<clipPath id={`${uid}-clip0_4344_12073`}>
-					<rect x="183.736" y="148.312" width="1204.11" height="1843.79" rx="35.6418" fill="white" />
-				</clipPath>
-			</defs>
 		</svg>
 	)
 }

@@ -3,6 +3,5 @@ export const landingEase = [0.22, 1, 0.36, 1] as const
 
 export const landingViewport = {
 	once: true,
-	amount: 0.12,
-	margin: '0px 0px -48px 0px'
+	amount: 0.08
 } as const

@@ -8,6 +8,7 @@
 		"dev": "next dev",
 		"build": "node scripts/generate-ai-txt.mjs && node scripts/generate-image-assets.mjs && next build",
 		"generate:images": "node scripts/generate-image-assets.mjs",
+		"generate:mockups": "node scripts/svg-mockup-to-tsx.mjs",
 		"start": "next start",
 		"generate:compare-blur": "node scripts/generate-image-assets.mjs",
 		"test": "vitest run",

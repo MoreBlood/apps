@@ -5,12 +5,11 @@ import { Box, Dialog, IconButton, Text } from '@radix-ui/themes'
 import NextLink from 'next/link'
 import { usePathname, useRouter } from 'next/navigation'
 import { useTheme } from 'next-themes'
-import { type CSSProperties, useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react'
+import { useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react'
 import { createPortal } from 'react-dom'
 import AppIcon from '@/components/AppIcon'
 import { getAppBySlug, getApps, siteName } from '@/config'
 import { homeContent } from '@/config/home-content'
-import { useScrollHeader } from '@/hooks/useScrollHeader'
 import {
 	dedupeSiteNavItems,
 	getSiteNavItems,
@@ -95,7 +94,6 @@ export default function AppNav() {
 	const currentApp = useMemo(() => (appSlug ? getAppBySlug(appSlug) : undefined), [appSlug])
 	const pageTitle = useMemo(() => getSitePageTitle(pathname), [pathname])
 	const barRef = useRef<HTMLDivElement>(null)
-	const { hideProgress } = useScrollHeader({ disabled: mobileOpen })
 
 	useEffect(() => {
 		setMounted(true)
@@ -126,9 +124,8 @@ export default function AppNav() {
 			aria-label="Main navigation"
 			className="app-nav"
 			data-menu-open={mobileOpen || undefined}
-			style={{ '--nav-hide-progress': hideProgress } as CSSProperties}
-			aria-hidden={mobileOpen || hideProgress >= 1}
-			inert={mobileOpen || hideProgress >= 1 || undefined}
+			aria-hidden={mobileOpen || undefined}
+			inert={mobileOpen || undefined}
 		>
 			<div ref={barRef} className="app-nav__bar">
 				<Box className="app-nav__start" display={{ initial: 'block', lg: 'none' }}>

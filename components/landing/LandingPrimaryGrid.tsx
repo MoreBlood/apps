@@ -27,7 +27,6 @@ export default function LandingPrimaryGrid({ id, title, lead, items }: Props) {
 			id={id}
 			className="landing-primary-grid"
 			aria-labelledby={title && titleId ? titleId : undefined}
-			duration={0.75}
 		>
 			{(title || lead) && (
 				<header className="landing-primary-grid__header">

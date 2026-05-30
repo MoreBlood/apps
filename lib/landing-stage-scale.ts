@@ -6,7 +6,10 @@ export {
 	getFeatureStageLayoutKey,
 	getLandingStageDevices,
 	getLandingStageLayoutKey,
+	LANDING_STAGE_FEATURE_COMPOSITION_OPTIONS,
+	LANDING_STAGE_FEATURE_COMPOSITION_REF_PX,
 	LANDING_STAGE_FEATURE_SCALE_OPTIONS,
+	LANDING_STAGE_FEATURE_TO_HERO_RATIO,
 	LANDING_STAGE_HERO_SCALE_OPTIONS,
 	LANDING_STAGE_LAYOUTS,
 	LANDING_STAGE_SCALE_OPTIONS,
@@ -274,8 +277,7 @@ export function computeLandingStageScaleResult(
 	}
 }
 
-export function applyLandingStageLayout(el: HTMLElement, result: LandingStageScaleResult) {
-	el.style.setProperty('--cluster-scale', result.scale.toFixed(4))
+export function applyLandingStageComposition(el: HTMLElement, result: LandingStageScaleResult) {
 	el.style.setProperty('--composition-w', `${result.composition.w}px`)
 	el.style.setProperty('--composition-h', `${result.composition.h}px`)
 
@@ -287,6 +289,16 @@ export function applyLandingStageLayout(el: HTMLElement, result: LandingStageSca
 		el.style.setProperty(`${prefix}-mult`, String(device.scaleMult))
 		el.style.setProperty(`${prefix}-z`, String(device.zIndex))
 	}
+}
+
+export function applyLandingStageLayout(el: HTMLElement, result: LandingStageScaleResult) {
+	applyLandingStageComposition(el, result)
+	el.style.setProperty('--cluster-scale', result.scale.toFixed(4))
+}
+
+/** Hero publishes live cluster scale (feature rows measure their own visual slot). */
+export function publishLandingHeroClusterScale(scale: number) {
+	document.documentElement.style.setProperty('--landing-hero-cluster-scale', scale.toFixed(4))
 }
 
 export function computeLandingStageScale(

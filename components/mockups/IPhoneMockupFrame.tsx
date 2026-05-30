@@ -9,7 +9,7 @@ export type IPhoneMockupFrameProps = SVGProps<SVGSVGElement> & {
 	instanceId: string
 }
 
-/** Figma device frame — screen content goes in `children` (replaces #FF0090 slot). */
+/** Figma device frame — screen content in `children` (replaces screen slot). Gradients/filters stripped at build. */
 export function IPhoneMockupFrame({ children, className, instanceId, ...props }: IPhoneMockupFrameProps) {
 	const uid = stableDomId(instanceId, 'iphone-frame')
 	return (
@@ -22,52 +22,13 @@ export function IPhoneMockupFrame({ children, className, instanceId, ...props }:
 			role="presentation"
 			{...props}
 		>
-			<g>
-				<mask
-					id={`${uid}-mask0_4344_12124`}
-					style={{ maskType: 'luminance' }}
-					maskUnits="userSpaceOnUse"
-					x="31"
-					y="34"
-					width="708"
-					height="1534"
-				>
-					<rect
-						x="33.2393"
-						y="36.7373"
-						width="703.271"
-						height="1529"
-						rx="99.7175"
-						fill="white"
-						stroke="white"
-						strokeWidth="3.49886"
-					/>
-				</mask>
-				<mask
-					id={`${uid}-screen-mask`}
-					style={{ maskType: 'luminance' }}
-					maskUnits="userSpaceOnUse"
-					x="31"
-					y="34"
-					width="708"
-					height="1534"
-				>
-					<rect
-						x="33.2393"
-						y="36.7373"
-						width="703.271"
-						height="1529"
-						rx="99.7175"
-						fill="white"
-						stroke="white"
-						strokeWidth="3.49886"
-					/>
-				</mask>
-				<g mask={`url(#${uid}-screen-mask)`}>
-					<foreignObject x="33.2393" y="36.7373" width="703.271" height="1529">
-						<div className="device-mockup-frame__screen">{children}</div>
-					</foreignObject>
-				</g>
+			<clipPath id={`${uid}-screen-clip`}>
+				<rect x="30.2393" y="33.7373" width="709.271" height="1535" rx="99.7175" />
+			</clipPath>
+			<g clipPath={`url(#${uid}-screen-clip)`}>
+				<foreignObject x="30.2393" y="33.7373" width="709.271" height="1535">
+					<div className="device-mockup-frame__screen">{children}</div>
+				</foreignObject>
 			</g>
 			<mask
 				id={`${uid}-mask1_4344_12124`}
@@ -85,39 +46,18 @@ export function IPhoneMockupFrame({ children, className, instanceId, ...props }:
 			</mask>
 			<g mask={`url(#${uid}-mask1_4344_12124)`}>
 				<g>
-					<rect
-						x="1.75"
-						y="610.551"
-						width="8.74715"
-						height="118.087"
-						rx="1.74943"
-						fill={`url(#${uid}-paint0_linear_4344_12124)`}
-					/>
+					<rect x="1.75" y="610.551" width="8.74715" height="118.087" rx="1.74943" fill="#3D3F4D" />
 				</g>
 				<g>
-					<rect
-						x="1.75"
-						y="461.85"
-						width="8.74715"
-						height="118.087"
-						rx="1.74943"
-						fill={`url(#${uid}-paint1_linear_4344_12124)`}
-					/>
+					<rect x="1.75" y="461.85" width="8.74715" height="118.087" rx="1.74943" fill="#424659" />
 				</g>
 				<g>
-					<rect
-						x="1.75"
-						y="334.141"
-						width="8.74715"
-						height="73.4761"
-						rx="1.74943"
-						fill={`url(#${uid}-paint2_linear_4344_12124)`}
-					/>
+					<rect x="1.75" y="334.141" width="8.74715" height="73.4761" rx="1.74943" fill="#3D3F4D" />
 				</g>
 				<g>
 					<path
 						d="M760.128 504.886C760.128 503.906 760.128 503.416 760.319 503.042C760.486 502.713 760.754 502.445 761.083 502.278C761.457 502.087 761.947 502.087 762.927 502.087H766.076C767.056 502.087 767.546 502.087 767.92 502.278C768.249 502.445 768.517 502.713 768.684 503.042C768.875 503.416 768.875 503.906 768.875 504.886V686.477C768.875 687.457 768.875 687.947 768.684 688.321C768.517 688.65 768.249 688.918 767.92 689.085C767.546 689.276 767.056 689.276 766.076 689.276H762.927C761.947 689.276 761.457 689.276 761.083 689.085C760.754 688.918 760.486 688.65 760.319 688.321C760.128 687.947 760.128 687.457 760.128 686.477V504.886Z"
-						fill={`url(#${uid}-paint3_linear_4344_12124)`}
+						fill="#3D3F4D"
 					/>
 				</g>
 				<g>
@@ -143,20 +83,8 @@ export function IPhoneMockupFrame({ children, className, instanceId, ...props }:
 				<rect x="6.99805" y="1413.54" width="10.4966" height="15.7449" fill="black" fillOpacity="0.1" />
 				<rect x="752.256" y="1413.54" width="10.4966" height="15.7449" fill="black" fillOpacity="0.1" />
 				<g opacity="0.55">
-					<circle
-						cx="462.725"
-						cy="91.8455"
-						r="7.87244"
-						transform="rotate(1 462.725 91.8455)"
-						fill={`url(#${uid}-paint4_linear_4344_12124)`}
-					/>
-					<circle
-						cx="462.725"
-						cy="91.8455"
-						r="7.87244"
-						transform="rotate(1 462.725 91.8455)"
-						fill={`url(#${uid}-paint5_linear_4344_12124)`}
-					/>
+					<circle cx="462.725" cy="91.8455" r="7.87244" transform="rotate(1 462.725 91.8455)" fill="#5B6A78" />
+					<circle cx="462.725" cy="91.8455" r="7.87244" transform="rotate(1 462.725 91.8455)" fill="#797E8E" />
 				</g>
 				<g>
 					<circle
@@ -195,204 +123,22 @@ export function IPhoneMockupFrame({ children, className, instanceId, ...props }:
 				</mask>
 				<g mask={`url(#${uid}-mask2_4344_12124)`}>
 					<g opacity="0.7">
-						<rect
-							x="1.74902"
-							y="610.551"
-							width="8.74715"
-							height="118.087"
-							rx="1.74943"
-							fill={`url(#${uid}-paint6_linear_4344_12124)`}
-						/>
+						<rect x="1.74902" y="610.551" width="8.74715" height="118.087" rx="1.74943" fill="#3D3F4D" />
 					</g>
 					<g opacity="0.7">
-						<rect
-							x="1.74902"
-							y="461.851"
-							width="8.74715"
-							height="118.087"
-							rx="1.74943"
-							fill={`url(#${uid}-paint7_linear_4344_12124)`}
-						/>
+						<rect x="1.74902" y="461.851" width="8.74715" height="118.087" rx="1.74943" fill="#3D3F4D" />
 					</g>
 					<g opacity="0.7">
-						<rect
-							x="1.74902"
-							y="334.141"
-							width="8.74715"
-							height="73.4761"
-							rx="1.74943"
-							fill={`url(#${uid}-paint8_linear_4344_12124)`}
-						/>
+						<rect x="1.74902" y="334.141" width="8.74715" height="73.4761" rx="1.74943" fill="#3D3F4D" />
 					</g>
 					<g opacity="0.7">
 						<path
 							d="M758.378 504.886C758.378 503.906 758.378 503.416 758.569 503.042C758.736 502.713 759.004 502.445 759.333 502.278C759.707 502.087 760.197 502.087 761.177 502.087H764.326C765.306 502.087 765.796 502.087 766.17 502.278C766.499 502.445 766.767 502.713 766.934 503.042C767.125 503.416 767.125 503.906 767.125 504.886V686.477C767.125 687.457 767.125 687.947 766.934 688.321C766.767 688.65 766.499 688.918 766.17 689.085C765.796 689.276 765.306 689.276 764.326 689.276H761.177C760.197 689.276 759.707 689.276 759.333 689.085C759.004 688.918 758.736 688.65 758.569 688.321C758.378 687.947 758.378 687.457 758.378 686.477V504.886Z"
-							fill={`url(#${uid}-paint9_linear_4344_12124)`}
+							fill="#3D3F4D"
 						/>
 					</g>
 				</g>
 			</g>
-			<defs>
-				<linearGradient
-					id={`${uid}-paint0_linear_4344_12124`}
-					x1="1.771"
-					y1="610.551"
-					x2="1.771"
-					y2="728.07"
-					gradientUnits="userSpaceOnUse"
-				>
-					<stop stopColor="#313546" />
-					<stop offset="0.0236902" stopColor="#D1D5F7" />
-					<stop offset="0.0964981" stopColor="#737687" />
-					<stop offset="0.493916" stopColor="#3D3F4D" />
-					<stop offset="0.921182" stopColor="#747889" />
-					<stop offset="0.963234" stopColor="#737687" />
-					<stop offset="0.986829" stopColor="#D1D5F7" />
-					<stop offset="1" stopColor="#313546" />
-				</linearGradient>
-				<linearGradient
-					id={`${uid}-paint1_linear_4344_12124`}
-					x1="1.771"
-					y1="461.85"
-					x2="1.771"
-					y2="579.369"
-					gradientUnits="userSpaceOnUse"
-				>
-					<stop stopColor="#313546" />
-					<stop offset="0.00895078" stopColor="#9194AC" />
-					<stop offset="0.0236902" stopColor="#747889" />
-					<stop offset="0.0722192" stopColor="#3D3F4D" />
-					<stop offset="0.493916" stopColor="#424659" />
-					<stop offset="0.921182" stopColor="#747889" />
-					<stop offset="0.963234" stopColor="#313546" />
-					<stop offset="0.986829" stopColor="#9194AC" />
-					<stop offset="1" stopColor="#313546" />
-				</linearGradient>
-				<linearGradient
-					id={`${uid}-paint2_linear_4344_12124`}
-					x1="1.771"
-					y1="334.141"
-					x2="1.771"
-					y2="407.264"
-					gradientUnits="userSpaceOnUse"
-				>
-					<stop stopColor="#313546" />
-					<stop offset="0.0236902" stopColor="#D1D5F7" />
-					<stop offset="0.0964981" stopColor="#737687" />
-					<stop offset="0.493916" stopColor="#3D3F4D" />
-					<stop offset="0.921182" stopColor="#747889" />
-					<stop offset="0.963234" stopColor="#737687" />
-					<stop offset="0.986829" stopColor="#D1D5F7" />
-					<stop offset="1" stopColor="#313546" />
-				</linearGradient>
-				<linearGradient
-					id={`${uid}-paint3_linear_4344_12124`}
-					x1="760.149"
-					y1="502.087"
-					x2="760.149"
-					y2="688.377"
-					gradientUnits="userSpaceOnUse"
-				>
-					<stop stopColor="#313546" />
-					<stop offset="0.0236902" stopColor="#D1D5F7" />
-					<stop offset="0.0964981" stopColor="#737687" />
-					<stop offset="0.493916" stopColor="#3D3F4D" />
-					<stop offset="0.921182" stopColor="#747889" />
-					<stop offset="0.963234" stopColor="#737687" />
-					<stop offset="0.986829" stopColor="#D1D5F7" />
-					<stop offset="1" stopColor="#313546" />
-				</linearGradient>
-				<linearGradient
-					id={`${uid}-paint4_linear_4344_12124`}
-					x1="454.853"
-					y1="94.9677"
-					x2="461.097"
-					y2="94.9677"
-					gradientUnits="userSpaceOnUse"
-				>
-					<stop stopColor="#5B6A78" />
-					<stop offset="1" stopColor="#6F7376" stopOpacity="0.01" />
-				</linearGradient>
-				<linearGradient
-					id={`${uid}-paint5_linear_4344_12124`}
-					x1="470.598"
-					y1="89.1352"
-					x2="465.177"
-					y2="89.1352"
-					gradientUnits="userSpaceOnUse"
-				>
-					<stop stopColor="#797E8E" stopOpacity="0.834579" />
-					<stop offset="1" stopColor="#6C7782" stopOpacity="0.01" />
-				</linearGradient>
-				<linearGradient
-					id={`${uid}-paint6_linear_4344_12124`}
-					x1="1.77003"
-					y1="610.551"
-					x2="1.77003"
-					y2="728.07"
-					gradientUnits="userSpaceOnUse"
-				>
-					<stop stopColor="#313546" />
-					<stop offset="0.0236902" stopColor="#D1D5F7" />
-					<stop offset="0.0964981" stopColor="#737687" />
-					<stop offset="0.493916" stopColor="#3D3F4D" />
-					<stop offset="0.921182" stopColor="#747889" />
-					<stop offset="0.963234" stopColor="#737687" />
-					<stop offset="0.986829" stopColor="#D1D5F7" />
-					<stop offset="1" stopColor="#313546" />
-				</linearGradient>
-				<linearGradient
-					id={`${uid}-paint7_linear_4344_12124`}
-					x1="1.77003"
-					y1="461.851"
-					x2="1.77003"
-					y2="579.37"
-					gradientUnits="userSpaceOnUse"
-				>
-					<stop stopColor="#313546" />
-					<stop offset="0.0236902" stopColor="#D1D5F7" />
-					<stop offset="0.0964981" stopColor="#737687" />
-					<stop offset="0.493916" stopColor="#3D3F4D" />
-					<stop offset="0.921182" stopColor="#747889" />
-					<stop offset="0.963234" stopColor="#737687" />
-					<stop offset="0.986829" stopColor="#D1D5F7" />
-					<stop offset="1" stopColor="#313546" />
-				</linearGradient>
-				<linearGradient
-					id={`${uid}-paint8_linear_4344_12124`}
-					x1="1.77003"
-					y1="334.141"
-					x2="1.77003"
-					y2="407.264"
-					gradientUnits="userSpaceOnUse"
-				>
-					<stop stopColor="#313546" />
-					<stop offset="0.0236902" stopColor="#D1D5F7" />
-					<stop offset="0.0964981" stopColor="#737687" />
-					<stop offset="0.493916" stopColor="#3D3F4D" />
-					<stop offset="0.921182" stopColor="#747889" />
-					<stop offset="0.963234" stopColor="#737687" />
-					<stop offset="0.986829" stopColor="#D1D5F7" />
-					<stop offset="1" stopColor="#313546" />
-				</linearGradient>
-				<linearGradient
-					id={`${uid}-paint9_linear_4344_12124`}
-					x1="758.399"
-					y1="502.087"
-					x2="758.399"
-					y2="688.377"
-					gradientUnits="userSpaceOnUse"
-				>
-					<stop stopColor="#313546" />
-					<stop offset="0.0236902" stopColor="#D1D5F7" />
-					<stop offset="0.0964981" stopColor="#737687" />
-					<stop offset="0.493916" stopColor="#3D3F4D" />
-					<stop offset="0.921182" stopColor="#747889" />
-					<stop offset="0.963234" stopColor="#737687" />
-					<stop offset="0.986829" stopColor="#D1D5F7" />
-					<stop offset="1" stopColor="#313546" />
-				</linearGradient>
-			</defs>
 		</svg>
 	)
 }
