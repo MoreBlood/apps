@@ -3,14 +3,13 @@
 import clsx from 'clsx'
 import type { LandingAppInfo } from '@/config'
 import { getLandingBySlug } from '@/config/landing-content'
-import type { AppLandingConfig, LandingHighlight, LandingShowcase, LandingTechItem } from '@/types/landing'
+import type { LandingHighlight, LandingShowcase, LandingTechItem } from '@/types/landing'
 import LandingAppIcon from './LandingAppIcon'
 import LandingBlogSection from './LandingBlogSection'
 import LandingFeaturesDeep from './LandingFeaturesDeep'
 import LandingPhotoMoment from './LandingPhotoMoment'
 import LandingPrimaryGrid from './LandingPrimaryGrid'
 import LandingStoreButton from './LandingStoreButton'
-import { getLandingGridIcon } from './landing-grid-icons'
 
 type Props = { app: LandingAppInfo }
 
@@ -84,42 +83,6 @@ function ShowcaseQuote({ showcase }: { showcase: LandingShowcase }) {
 	)
 }
 
-function FeatureGrid({ grid, compact = false }: { grid: AppLandingConfig['grid']; compact?: boolean }) {
-	if (grid.items.length === 0) return null
-
-	const headerTitle = compact ? grid.secondaryTitle : grid.title
-	const headerLead = compact ? grid.secondaryLead : grid.lead
-	const showHeader = Boolean(headerTitle || headerLead)
-
-	return (
-		<section className={clsx('landing-grid-section', compact && 'landing-grid-section--compact')}>
-			{showHeader && (
-				<header className="landing-grid-section__header">
-					{headerTitle && <h2 className="landing-grid-section__title">{headerTitle}</h2>}
-					{headerLead && <p className="landing-grid-section__lead">{headerLead}</p>}
-				</header>
-			)}
-			<ul className="landing-grid-section__grid">
-				{grid.items.map((item) => {
-					const ItemIcon = getLandingGridIcon(item.icon)
-
-					return (
-						<li key={item.title} className="landing-grid-section__card">
-							<h3 className="landing-grid-section__card-title">
-								<span className="landing-grid-section__icon" aria-hidden>
-									<ItemIcon />
-								</span>
-								{item.title}
-							</h3>
-							<p>{item.description}</p>
-						</li>
-					)
-				})}
-			</ul>
-		</section>
-	)
-}
-
 function TechBanner({ tech }: { tech: { title: string; lead: string; items: LandingTechItem[] } }) {
 	return (
 		<section className="landing-tech">
@@ -142,6 +105,10 @@ function TechBanner({ tech }: { tech: { title: string; lead: string; items: Land
 export default function AppLandingPage({ app }: Props) {
 	const landing = getLandingBySlug(app.slug)
 	if (!landing) return null
+
+	const hasPrimary = Boolean(landing.grid.primary?.length)
+	const secondaryTitle = hasPrimary ? landing.grid.secondaryTitle : landing.grid.title
+	const secondaryLead = hasPrimary ? landing.grid.secondaryLead : landing.grid.lead
 
 	return (
 		<>
@@ -167,10 +134,18 @@ export default function AppLandingPage({ app }: Props) {
 					title={landing.grid.title}
 					lead={landing.grid.lead}
 					items={landing.grid.primary}
+					variant="featured"
 				/>
 			)}
 
-			<FeatureGrid grid={landing.grid} compact={Boolean(landing.grid.primary?.length)} />
+			{landing.grid.items.length > 0 && (
+				<LandingPrimaryGrid
+					title={secondaryTitle}
+					lead={secondaryLead}
+					items={landing.grid.items}
+					variant={hasPrimary ? 'compact' : 'panel'}
+				/>
+			)}
 
 			{landing.features.length > 0 && (
 				<LandingFeaturesDeep app={app} features={landing.features} photoMoments={landing.photoMoments} />

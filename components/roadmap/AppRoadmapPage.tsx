@@ -1,7 +1,7 @@
 import { ArrowDownIcon, ArrowRightIcon } from '@radix-ui/react-icons'
 import { Container, Link, Text } from '@radix-ui/themes'
 import AppContactCta from '@/components/AppContactCta'
-import RoadmapOverviewCard from '@/components/roadmap/RoadmapOverviewCard'
+import HomeAppCard, { homeAppCardFromAppConfig } from '@/components/home/HomeAppCard'
 import SitePageHero from '@/components/shared/SitePageHero'
 import type { AppConfig } from '@/config'
 import { getRoadmapBySlug } from '@/config/roadmap-content'
@@ -144,7 +144,7 @@ export default function AppRoadmapPage({ app }: Props) {
 
 				<div className="roadmap__footer">
 					<div className="roadmap__overview-card">
-						<RoadmapOverviewCard app={app} />
+						<HomeAppCard {...homeAppCardFromAppConfig(app)} />
 					</div>
 					<AppContactCta
 						appSlug={app.slug}

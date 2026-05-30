@@ -1,10 +1,8 @@
-import clsx from 'clsx'
-import NextLink from 'next/link'
 import type { LandingAppInfo } from '@/config'
 import type { AppLandingConfig } from '@/types/landing'
-import AppleLogoIcon from './AppleLogoIcon'
 import LandingCriticalStyles from './LandingCriticalStyles'
 import LandingHeroShowcase from './LandingHeroShowcase'
+import LandingStoreButton from './LandingStoreButton'
 
 type Props = {
 	app: LandingAppInfo
@@ -33,23 +31,7 @@ export default function LandingHeroStatic({ app, landing }: Props) {
 				</h1>
 				<p className="landing-hero__lead">{landing.heroLead}</p>
 				<div className="landing-hero__actions">
-					{app.storeLink && (
-						<div className="landing-store-btn-wrap">
-							<NextLink
-								href={app.storeLink}
-								className={clsx('landing-store-btn', 'landing-store-btn--large')}
-								target="_blank"
-								rel="noopener noreferrer"
-								aria-label="Download on the App Store"
-							>
-								<span className="landing-store-btn__label">
-									<span className="landing-store-btn__label-full">Download on the App Store</span>
-									<span className="landing-store-btn__label-short">Download</span>
-								</span>
-								<AppleLogoIcon />
-							</NextLink>
-						</div>
-					)}
+					<LandingStoreButton app={app} label="Download on the App Store" size="large" />
 					<a href={`#features-${app.slug}`} className="landing-hero__secondary-cta">
 						Explore features
 					</a>

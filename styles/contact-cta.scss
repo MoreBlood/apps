@@ -1,3 +1,5 @@
+@use 'mixins' as *;
+
 .contact-cta--section {
 	margin-top: var(--space-6);
 	padding-top: var(--space-6);
@@ -5,9 +7,8 @@
 }
 
 .contact-cta__card {
+	@include content-panel;
 	padding: clamp(var(--space-4), 4vw, var(--space-5));
-	border: 1px solid var(--gray-a6);
-	border-radius: var(--radius-4);
 	background: linear-gradient(
 		165deg,
 		color-mix(in srgb, var(--accent-a3) 35%, var(--color-panel-solid)),
@@ -43,14 +44,13 @@
 }
 
 .contact-cta__action {
+	@include content-panel;
 	display: flex;
 	align-items: flex-start;
 	gap: var(--space-3);
 	min-width: 0;
 	padding: var(--space-3) var(--space-4);
-	border: 1px solid var(--gray-a6);
 	border-radius: var(--radius-3);
-	background: var(--color-panel-solid);
 	color: inherit;
 	text-decoration: none;
 	transition:
@@ -75,14 +75,9 @@
 }
 
 .contact-cta__action-icon {
-	display: inline-flex;
-	align-items: center;
-	justify-content: center;
-	flex-shrink: 0;
 	width: 2.25rem;
 	height: 2.25rem;
 	border-radius: var(--radius-2);
-	border: 1px solid transparent;
 
 	svg {
 		width: 1.1rem;
@@ -90,15 +85,11 @@
 	}
 
 	&--email {
-		background: var(--accent-a3);
-		color: var(--accent-11);
-		border-color: var(--accent-a6);
+		@include tinted-icon-chip(var(--accent-a3), var(--accent-11), var(--accent-a6));
 	}
 
 	&--feedback {
-		background: var(--jade-a3);
-		color: var(--jade-11);
-		border-color: var(--jade-a6);
+		@include tinted-icon-chip(var(--jade-a3), var(--jade-11), var(--jade-a6));
 	}
 }
 

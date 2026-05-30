@@ -1,0 +1,25 @@
+// Shared UI patterns — panels, tinted icon chips, uppercase eyebrows.
+
+@mixin content-panel {
+	border: 1px solid var(--gray-a6);
+	border-radius: var(--radius-4);
+	background: var(--color-panel-solid);
+}
+
+@mixin page-eyebrow {
+	font-size: 0.6875rem;
+	font-weight: 600;
+	letter-spacing: 0.12em;
+	text-transform: uppercase;
+	color: var(--accent-11);
+}
+
+@mixin tinted-icon-chip($bg, $fg, $border) {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	flex-shrink: 0;
+	border: 1px solid $border;
+	background: $bg;
+	color: $fg;
+}

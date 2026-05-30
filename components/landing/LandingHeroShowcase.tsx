@@ -10,7 +10,7 @@ type Props = {
 	appName: string
 }
 
-/** Hero device mockups — same layout path as `LandingHero` (stage fills showcase). */
+/** Hero device mockups — stage fills the showcase region (LCP-critical path). */
 export default function LandingHeroShowcase({ appSlug, appName }: Props) {
 	const loggedRef = useRef(false)
 

@@ -1,5 +1,7 @@
 // Shared page intro (eyebrow + title + lead) — blog, app subpages, home text block.
 
+@use 'mixins' as *;
+
 .site-page-hero {
 	--landing-text: var(--gray-12);
 	--landing-text-muted: var(--gray-11);
@@ -15,11 +17,7 @@
 	}
 
 	&__eyebrow {
-		font-size: 0.6875rem;
-		font-weight: 600;
-		letter-spacing: 0.12em;
-		text-transform: uppercase;
-		color: var(--accent-11);
+		@include page-eyebrow;
 		margin: 0 0 0.75rem;
 	}
 

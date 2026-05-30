@@ -54,6 +54,9 @@ export type LandingGridIconId =
 	| 'heart'
 	| 'lock'
 
+/** featured = hero feature grid; panel / compact = secondary inline cards */
+export type LandingGridVariant = 'featured' | 'panel' | 'compact'
+
 export type LandingGridItem = {
 	icon: LandingGridIconId
 	title: string

@@ -6,7 +6,7 @@ import LandingScrollProvider from '@/components/landing/LandingScrollProvider'
 import SitePageHero from '@/components/shared/SitePageHero'
 import type { HomeAppCardData } from '@/config/home-content'
 import { homeContent } from '@/config/home-content'
-import HomeAppCard from './HomeAppCard'
+import HomeAppCard, { homeAppCardFromHomeData } from './HomeAppCard'
 
 type Props = {
 	apps: HomeAppCardData[]
@@ -37,7 +37,7 @@ export default function HomePage({ apps }: Props) {
 					<LandingRevealStagger as="div" className="home-page__apps-grid" stagger={0.08}>
 						{apps.map((app) => (
 							<LandingRevealItem key={app.slug} as="div" className="home-page__apps-item">
-								<HomeAppCard app={app} />
+								<HomeAppCard {...homeAppCardFromHomeData(app)} />
 							</LandingRevealItem>
 						))}
 					</LandingRevealStagger>

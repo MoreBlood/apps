@@ -5,17 +5,35 @@ import {
 	landingSurfaceClassName,
 	landingSurfacePointerHandlers
 } from '@/lib/landing-surface'
-import type { LandingGridItem } from '@/types/landing'
+import type { LandingGridItem, LandingGridVariant } from '@/types/landing'
 import LandingSurfaceLayers from './LandingSurfaceLayers'
 import { getLandingGridIcon } from './landing-grid-icons'
 
 type Props = {
 	item: LandingGridItem
-	effects: LandingSurfaceEffects
+	variant: LandingGridVariant
+	effects?: LandingSurfaceEffects
 }
 
-export default function LandingPrimaryGridCard({ item, effects }: Props) {
+export default function LandingPrimaryGridCard({ item, variant, effects }: Props) {
 	const ItemIcon = getLandingGridIcon(item.icon)
+	const inline = variant !== 'featured'
+
+	if (inline) {
+		return (
+			<li className="landing-primary-grid__card landing-primary-grid__card--inline">
+				<h3 className="landing-primary-grid__title landing-primary-grid__title--inline">
+					<span className="landing-primary-grid__icon landing-primary-grid__icon--inline" aria-hidden>
+						<ItemIcon />
+					</span>
+					{item.title}
+				</h3>
+				<p className="landing-primary-grid__desc">{item.description}</p>
+			</li>
+		)
+	}
+
+	if (!effects) return null
 
 	return (
 		<li

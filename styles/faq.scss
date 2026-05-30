@@ -1,19 +1,14 @@
+@use 'mixins' as *;
+
 .faq-section__heading {
 	min-width: 0;
 }
 
 .faq-section__icon {
-	display: inline-flex;
-	align-items: center;
-	justify-content: center;
-	flex-shrink: 0;
+	@include tinted-icon-chip(var(--gray-a3), var(--gray-11), var(--gray-a6));
 	width: 2rem;
 	height: 2rem;
 	border-radius: var(--radius-2);
-	border: 1px solid transparent;
-	background: var(--gray-a3);
-	color: var(--gray-11);
-	border-color: var(--gray-a6);
 
 	svg {
 		width: 1.1rem;
@@ -22,45 +17,31 @@
 }
 
 .faq-section__icon--getting-started {
-	background: var(--jade-a3);
-	color: var(--jade-11);
-	border-color: var(--jade-a6);
+	@include tinted-icon-chip(var(--jade-a3), var(--jade-11), var(--jade-a6));
 }
 
 .faq-section__icon--editing {
-	background: var(--violet-a3);
-	color: var(--violet-11);
-	border-color: var(--violet-a6);
+	@include tinted-icon-chip(var(--violet-a3), var(--violet-11), var(--violet-a6));
 }
 
 .faq-section__icon--privacy {
-	background: var(--indigo-a3);
-	color: var(--indigo-11);
-	border-color: var(--indigo-a6);
+	@include tinted-icon-chip(var(--indigo-a3), var(--indigo-11), var(--indigo-a6));
 }
 
 .faq-section__icon--troubleshooting {
-	background: var(--red-a3);
-	color: var(--red-11);
-	border-color: var(--red-a6);
+	@include tinted-icon-chip(var(--red-a3), var(--red-11), var(--red-a6));
 }
 
 .faq-section__icon--data {
-	background: var(--cyan-a3);
-	color: var(--cyan-11);
-	border-color: var(--cyan-a6);
+	@include tinted-icon-chip(var(--cyan-a3), var(--cyan-11), var(--cyan-a6));
 }
 
 .faq-section__icon--providers-scales {
-	background: var(--orange-a3);
-	color: var(--orange-11);
-	border-color: var(--orange-a6);
+	@include tinted-icon-chip(var(--orange-a3), var(--orange-11), var(--orange-a6));
 }
 
 .faq-section__icon--features {
-	background: var(--purple-a3);
-	color: var(--purple-11);
-	border-color: var(--purple-a6);
+	@include tinted-icon-chip(var(--purple-a3), var(--purple-11), var(--purple-a6));
 }
 
 .faq-list {
@@ -70,9 +51,8 @@
 }
 
 .faq-item {
-	border: 1px solid var(--gray-a6);
+	@include content-panel;
 	border-radius: var(--radius-3);
-	background: var(--color-panel-solid);
 	transition:
 		border-color 0.25s ease,
 		box-shadow 0.25s ease,
