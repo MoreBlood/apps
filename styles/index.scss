@@ -30,6 +30,8 @@ body {
 }
 
 .app-shell {
+	max-width: 100%;
+	margin-inline: auto;
 	padding-inline: max(var(--space-4), env(safe-area-inset-left, 0px))
 		max(var(--space-4), env(safe-area-inset-right, 0px));
 	padding-top: max(var(--space-4), env(safe-area-inset-top, 0px));
@@ -46,8 +48,9 @@ body {
 	}
 }
 
-// Bar height default on :root (refined to px by AppNav); offset-top only under .radix-themes where --space-4 exists
+// Fixed nav geometry — pure CSS (no JS measurement). Matches metal buttons (2.25rem) + pill padding.
 :root {
+	--app-nav-offset-top: max(1rem, env(safe-area-inset-top, 0px));
 	--app-nav-bar-height: 2.75rem;
 }
 
@@ -58,14 +61,13 @@ body {
 }
 
 .app-nav-shell {
-	--app-nav-offset-top: max(var(--space-4, 1rem), env(safe-area-inset-top, 0px));
 	min-height: calc(var(--app-nav-offset-top) + var(--app-nav-bar-height));
-	margin-bottom: var(--space-6);
-	padding-bottom: var(--space-3);
+	margin-bottom: 1.5rem;
+	padding-bottom: 0.75rem;
 }
 
 .app-nav {
-	--app-nav-offset-top: max(var(--space-4, 1rem), env(safe-area-inset-top, 0px));
+	--app-nav-offset-top: max(1rem, env(safe-area-inset-top, 0px));
 	--app-nav-backdrop-blur: 28px;
 	--app-nav-backdrop-bg: color-mix(in srgb, var(--color-background) 30%, transparent);
 	position: fixed;
@@ -88,6 +90,8 @@ body {
 	align-items: center;
 	gap: var(--space-3);
 	width: 100%;
+	min-height: var(--app-nav-bar-height);
+	box-sizing: border-box;
 }
 
 .app-nav__start {
@@ -102,6 +106,11 @@ body {
 	justify-self: end;
 	min-width: 0;
 	overflow: visible;
+
+	// Balance hamburger column when theme switcher is dialog-only (< lg)
+	@media (max-width: 1023px) {
+		width: 2.25rem;
+	}
 }
 
 .app-nav__title-wrap {
@@ -443,7 +452,9 @@ $app-nav-ease-out: cubic-bezier(0.4, 0, 0.2, 1);
 .app-nav-dialog__inner {
 	display: flex;
 	flex-direction: column;
+	min-width: 0;
 	min-height: 100dvh;
+	overflow-x: hidden;
 	padding: max(var(--space-4), env(safe-area-inset-top, 0px))
 		max(var(--space-4), env(safe-area-inset-right, 0px))
 		max(var(--space-4), env(safe-area-inset-bottom, 0px))
@@ -559,7 +570,9 @@ $app-nav-ease-out: cubic-bezier(0.4, 0, 0.2, 1);
 
 .app-nav-dialog__apps {
 	flex: 1 1 auto;
+	min-width: 0;
 	min-height: 0;
+	overflow-x: hidden;
 	overflow-y: auto;
 	-webkit-overflow-scrolling: touch;
 }
@@ -574,9 +587,7 @@ $app-nav-ease-out: cubic-bezier(0.4, 0, 0.2, 1);
 .app-nav-dialog__apps-list {
 	list-style: none;
 	margin: 0;
-	// Scrollport clips box-shadows; bleed into inner padding without shifting copy.
-	margin-inline: -6px;
-	padding: 0 6px;
+	padding: 0;
 	display: flex;
 	flex-direction: column;
 	gap: clamp(var(--space-4), 4vw, var(--space-5));
@@ -635,12 +646,14 @@ $app-nav-ease-out: cubic-bezier(0.4, 0, 0.2, 1);
 	font-size: var(--font-size-4);
 	font-weight: 600;
 	line-height: 1.2;
+	overflow-wrap: anywhere;
 }
 
 .app-nav-dialog__app-tagline {
 	font-size: var(--font-size-2);
 	line-height: 1.35;
 	color: var(--app-nav-menu-muted);
+	overflow-wrap: anywhere;
 }
 
 .app-nav-dialog__footer {

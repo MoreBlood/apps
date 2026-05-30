@@ -3,7 +3,6 @@
 import { LANDING_SURFACE_GRID, landingSurfaceClassName, landingSurfacePointerHandlers } from '@/lib/landing-surface'
 import { stableDomId } from '@/lib/stable-dom-id'
 import type { LandingGridItem } from '@/types/landing'
-import { LandingReveal, LandingRevealItem, LandingRevealStagger } from './LandingReveal'
 import LandingSurfaceLayers from './LandingSurfaceLayers'
 import { getLandingGridIcon } from './landing-grid-icons'
 
@@ -22,12 +21,7 @@ export default function LandingPrimaryGrid({ id, title, lead, items }: Props) {
 	if (items.length === 0) return null
 
 	return (
-		<LandingReveal
-			as="section"
-			id={id}
-			className="landing-primary-grid"
-			aria-labelledby={title && titleId ? titleId : undefined}
-		>
+		<section id={id} className="landing-primary-grid" aria-labelledby={title && titleId ? titleId : undefined}>
 			{(title || lead) && (
 				<header className="landing-primary-grid__header">
 					{title && (
@@ -38,12 +32,12 @@ export default function LandingPrimaryGrid({ id, title, lead, items }: Props) {
 					{lead && <p className="landing-primary-grid__section-lead">{lead}</p>}
 				</header>
 			)}
-			<LandingRevealStagger as="ul" className="landing-primary-grid__grid" stagger={0.08}>
+			<ul className="landing-primary-grid__grid">
 				{items.map((item) => {
 					const ItemIcon = getLandingGridIcon(item.icon)
 
 					return (
-						<LandingRevealItem
+						<li
 							key={item.title}
 							className={landingSurfaceClassName(gridSurface, 'landing-primary-grid__card')}
 							{...landingSurfacePointerHandlers(gridSurface)}
@@ -54,10 +48,10 @@ export default function LandingPrimaryGrid({ id, title, lead, items }: Props) {
 							</span>
 							<h3 className="landing-primary-grid__title">{item.title}</h3>
 							<p className="landing-primary-grid__desc">{item.description}</p>
-						</LandingRevealItem>
+						</li>
 					)
 				})}
-			</LandingRevealStagger>
-		</LandingReveal>
+			</ul>
+		</section>
 	)
 }

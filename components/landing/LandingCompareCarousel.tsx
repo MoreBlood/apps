@@ -105,6 +105,7 @@ export default function LandingCompareCarousel({ pairs, labels, intervalMs = DEF
 	indexRef.current = index
 	const [autoplayPaused, setAutoplayPaused] = useState(false)
 	const [inView, setInView] = useState(false)
+	const [hasBeenInView, setHasBeenInView] = useState(false)
 	const [documentVisible, setDocumentVisible] = useState(
 		() => typeof document !== 'undefined' && document.visibilityState === 'visible'
 	)
@@ -190,6 +191,7 @@ export default function LandingCompareCarousel({ pairs, labels, intervalMs = DEF
 					const slide = el.children[locked] as HTMLElement | undefined
 					if (slide && Math.abs(slide.offsetLeft - el.scrollLeft) < 4) {
 						scrollLockRef.current = null
+						syncIndexFromScroll(el)
 					}
 					return
 				}
@@ -232,7 +234,14 @@ export default function LandingCompareCarousel({ pairs, labels, intervalMs = DEF
 		const root = compareRef.current
 		if (!root) return
 
-		const observer = new IntersectionObserver(([entry]) => setInView(entry.isIntersecting), { threshold: 0.15 })
+		const observer = new IntersectionObserver(
+			([entry]) => {
+				const visible = entry.isIntersecting
+				setInView(visible)
+				if (visible) setHasBeenInView(true)
+			},
+			{ threshold: 0.05, rootMargin: '120px 0px' }
+		)
 		observer.observe(root)
 		return () => observer.disconnect()
 	}, [])
@@ -270,7 +279,7 @@ export default function LandingCompareCarousel({ pairs, labels, intervalMs = DEF
 					const embedded = embeddedSlides[slideIndex]
 					const raw = rawSlides[slideIndex]
 					const isActive = slideIndex === index
-					const shouldLoad = inView && slideIndex === index
+					const shouldLoad = hasBeenInView
 
 					return (
 						<section

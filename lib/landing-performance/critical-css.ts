@@ -12,9 +12,10 @@ export const LANDING_CRITICAL_CSS_BLOCKS = {
 		'.landing-stage__glow{opacity:0}'
 	].join(''),
 	navShell: [
-		':root{--app-nav-bar-height:2.75rem}',
+		':root{--app-nav-offset-top:max(1rem,env(safe-area-inset-top,0px));--app-nav-bar-height:2.75rem}',
 		'@media(min-width:1024px){:root{--app-nav-bar-height:3.25rem}}',
-		'.app-nav-shell{--app-nav-offset-top:max(1rem,env(safe-area-inset-top,0px));min-height:calc(var(--app-nav-offset-top) + var(--app-nav-bar-height))}'
+		'.app-nav-shell{min-height:calc(var(--app-nav-offset-top) + var(--app-nav-bar-height));margin-bottom:1.5rem;padding-bottom:0.75rem}',
+		'.app-nav__bar{min-height:var(--app-nav-bar-height);box-sizing:border-box}'
 	].join('')
 } as const
 

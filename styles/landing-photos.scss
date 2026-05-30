@@ -417,7 +417,7 @@
 			aspect-ratio: 4 / 5;
 			width: 100%;
 			height: auto;
-			max-height: min(40dvh, 28rem);
+			max-height: 28rem;
 		}
 
 		@media (min-width: 720px) {
@@ -426,7 +426,7 @@
 
 			.landing-photo__frame {
 				aspect-ratio: 3 / 4;
-				max-height: min(58dvh, 34rem);
+				max-height: 34rem;
 			}
 		}
 	}

@@ -5,7 +5,7 @@ import { Box, Dialog, IconButton, Text } from '@radix-ui/themes'
 import NextLink from 'next/link'
 import { usePathname, useRouter } from 'next/navigation'
 import { useTheme } from 'next-themes'
-import { useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import { createPortal } from 'react-dom'
 import AppIcon from '@/components/AppIcon'
 import { getAppBySlug, getApps, siteName } from '@/config'
@@ -93,26 +93,11 @@ export default function AppNav() {
 	const { primary: primaryItems, app: appItems } = useMemo(() => splitSiteNavItems(items), [items])
 	const currentApp = useMemo(() => (appSlug ? getAppBySlug(appSlug) : undefined), [appSlug])
 	const pageTitle = useMemo(() => getSitePageTitle(pathname), [pathname])
-	const barRef = useRef<HTMLDivElement>(null)
 
 	useEffect(() => {
 		setMounted(true)
 		setPortalRoot(document.querySelector<HTMLElement>('.radix-themes'))
 	}, [])
-
-	useLayoutEffect(() => {
-		const el = barRef.current
-		if (!el) return
-
-		const sync = () => {
-			document.documentElement.style.setProperty('--app-nav-bar-height', `${el.offsetHeight}px`)
-		}
-		sync()
-
-		const observer = new ResizeObserver(sync)
-		observer.observe(el)
-		return () => observer.disconnect()
-	}, [pathname])
 
 	const goTo = (href: string) => {
 		router.push(href)
@@ -127,7 +112,7 @@ export default function AppNav() {
 			aria-hidden={mobileOpen || undefined}
 			inert={mobileOpen || undefined}
 		>
-			<div ref={barRef} className="app-nav__bar">
+			<div className="app-nav__bar">
 				<Box className="app-nav__start" display={{ initial: 'block', lg: 'none' }}>
 					{mounted ? (
 						<Dialog.Root open={mobileOpen} onOpenChange={setMobileOpen}>
@@ -256,7 +241,9 @@ export default function AppNav() {
 				</Box>
 
 				<Box className="app-nav__end" flexShrink="0">
-					<ThemeSwitcher mounted={mounted} />
+					<Box display={{ initial: 'none', lg: 'block' }}>
+						<ThemeSwitcher mounted={mounted} />
+					</Box>
 				</Box>
 			</div>
 		</nav>

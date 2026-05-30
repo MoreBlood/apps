@@ -78,15 +78,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
 						Skip to main content
 					</a>
 					<AppNav />
-					<Flex
-						direction="column"
-						className="app-shell"
-						style={{
-							minHeight: '100vh',
-							maxWidth: '100%',
-							margin: '0 auto'
-						}}
-					>
+					<Flex direction="column" className="app-shell">
 						<Flex asChild direction="column" flexGrow="1">
 							{/* biome-ignore lint: stable id required for skip-link target */}
 							<main id="main-content">{children}</main>

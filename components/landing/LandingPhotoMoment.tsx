@@ -1,16 +1,10 @@
 'use client'
 
 import clsx from 'clsx'
-import dynamic from 'next/dynamic'
 import OptimizedImage from '@/components/shared/OptimizedImage'
 import { getComparePairs } from '@/config/compare-content'
 import type { LandingPhotoMoment as LandingPhotoMomentConfig } from '@/types/landing'
-import { LandingReveal } from './LandingReveal'
-
-const LandingCompareCarousel = dynamic(() => import('./LandingCompareCarousel'), {
-	ssr: true,
-	loading: () => <div className="landing-compare landing-compare--loading" aria-hidden />
-})
+import LandingCompareCarousel from './LandingCompareCarousel'
 
 type Props = {
 	moment: LandingPhotoMomentConfig
@@ -40,7 +34,7 @@ function PhotoFrame({
 						className="landing-photo__frame-image"
 						imgClassName="landing-photo__img"
 						sizes="(max-width: 900px) 100vw, 50vw"
-						deferUntilVisible
+						deferUntilVisible={false}
 					/>
 				</div>
 				{compareLabel && <figcaption className="landing-photo__compare-label">{compareLabel}</figcaption>}
@@ -73,7 +67,7 @@ export default function LandingPhotoMoment({ moment }: Props) {
 		const hasIntro = Boolean(moment.eyebrow || moment.title || moment.caption)
 
 		return (
-			<LandingReveal as="section" className="landing-photo landing-photo--spotlight">
+			<section className="landing-photo landing-photo--spotlight">
 				{hasIntro && (
 					<header className="landing-photo__intro">
 						{moment.eyebrow && <p className="landing-photo__eyebrow">{moment.eyebrow}</p>}
@@ -109,13 +103,13 @@ export default function LandingPhotoMoment({ moment }: Props) {
 						/>
 					</div>
 				)}
-			</LandingReveal>
+			</section>
 		)
 	}
 
 	if (moment.layout === 'cinema') {
 		return (
-			<LandingReveal as="section" className="landing-photo landing-photo--cinema">
+			<section className="landing-photo landing-photo--cinema">
 				<div className="landing-photo__cinema-inner">
 					{moment.eyebrow && <p className="landing-photo__eyebrow">{moment.eyebrow}</p>}
 					<PhotoFrame src={primarySrc} alt={alt} label={moment.id} className="landing-photo__frame--cinema" />
@@ -124,13 +118,13 @@ export default function LandingPhotoMoment({ moment }: Props) {
 						<p className="landing-photo__caption">{moment.caption}</p>
 					</div>
 				</div>
-			</LandingReveal>
+			</section>
 		)
 	}
 
 	// split
 	return (
-		<LandingReveal as="section" className="landing-photo landing-photo--split">
+		<section className="landing-photo landing-photo--split">
 			<div className="landing-photo__split-grid">
 				<div className="landing-photo__split-copy">
 					{moment.eyebrow && <p className="landing-photo__eyebrow">{moment.eyebrow}</p>}
@@ -139,6 +133,6 @@ export default function LandingPhotoMoment({ moment }: Props) {
 				</div>
 				<PhotoFrame src={primarySrc} alt={alt} label={moment.id} className="landing-photo__frame--split" />
 			</div>
-		</LandingReveal>
+		</section>
 	)
 }

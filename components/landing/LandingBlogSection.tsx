@@ -5,7 +5,6 @@ import NextLink from 'next/link'
 import { LANDING_SURFACE_METAL_DOTS, landingSurfaceClassName } from '@/lib/landing-surface'
 import { stableDomId } from '@/lib/stable-dom-id'
 import type { LandingBlogSection as LandingBlogSectionConfig } from '@/types/landing'
-import { LandingReveal } from './LandingReveal'
 import LandingSurfaceLayers from './LandingSurfaceLayers'
 
 type Props = {
@@ -49,13 +48,13 @@ export default function LandingBlogSection({ appSlug, section }: Props) {
 	const roadmapHref = section?.roadmapHref ?? `/${appSlug}/roadmap`
 
 	return (
-		<LandingReveal as="section" className="landing-blog landing-blog--teaser" aria-label="Blog and roadmap">
+		<section className="landing-blog landing-blog--teaser" aria-label="Blog and roadmap">
 			<div className="landing-blog__teaser-grid">
 				<BlogTeaserCard href={blogHref} eyebrow="Essays & updates" title={blogTitle} titleId={blogTitleId} />
 				{roadmapTitle && (
 					<BlogTeaserCard href={roadmapHref} eyebrow={roadmapEyebrow} title={roadmapTitle} titleId={roadmapTitleId} />
 				)}
 			</div>
-		</LandingReveal>
+		</section>
 	)
 }
