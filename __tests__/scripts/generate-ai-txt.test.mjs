@@ -1,4 +1,4 @@
-import { describe, it, expect } from 'vitest'
+import { describe, expect, it } from 'vitest'
 import { buildCanonicalBase, buildContent } from '../../scripts/generate-ai-txt.mjs'
 
 describe('buildCanonicalBase', () => {
@@ -11,23 +11,28 @@ describe('buildCanonicalBase', () => {
 	})
 
 	it('appends clean basePath', () => {
-		expect(buildCanonicalBase('https://mysite.com', 'rawclinic-web')).toBe(
-			'https://mysite.com/rawclinic-web'
-		)
+		expect(buildCanonicalBase('https://mysite.com', 'rawclinic-web')).toBe('https://mysite.com/rawclinic-web')
 	})
 
 	it('strips leading and trailing slashes from basePath', () => {
-		expect(buildCanonicalBase('https://mysite.com/', '/rawclinic-web/')).toBe(
-			'https://mysite.com/rawclinic-web'
-		)
+		expect(buildCanonicalBase('https://mysite.com/', '/rawclinic-web/')).toBe('https://mysite.com/rawclinic-web')
 	})
 
-	it('falls back to https://example.com when siteUrl is undefined', () => {
+	it('falls back to https://example.com in production without env', () => {
+		const prev = process.env.NODE_ENV
+		const prevGh = process.env.GITHUB_REPOSITORY
+		process.env.NODE_ENV = 'production'
+		delete process.env.GITHUB_REPOSITORY
 		expect(buildCanonicalBase(undefined, '')).toBe('https://example.com')
+		process.env.NODE_ENV = prev
+		process.env.GITHUB_REPOSITORY = prevGh
 	})
 
-	it('falls back to https://example.com and appends basePath', () => {
-		expect(buildCanonicalBase(undefined, 'sub')).toBe('https://example.com/sub')
+	it('derives origin from GITHUB_REPOSITORY when siteUrl is undefined', () => {
+		const prevGh = process.env.GITHUB_REPOSITORY
+		process.env.GITHUB_REPOSITORY = 'moreblood/apps'
+		expect(buildCanonicalBase(undefined, 'apps')).toBe('https://moreblood.github.io/apps')
+		process.env.GITHUB_REPOSITORY = prevGh
 	})
 })
 

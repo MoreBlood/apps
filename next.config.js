@@ -1,14 +1,21 @@
 /** @type {import('next').NextConfig} */
 
 const getBasePath = () => {
-	if (process.env.BASE_PATH) {
-		return process.env.BASE_PATH
+	const explicit = process.env.BASE_PATH?.trim()
+	if (explicit) {
+		return explicit.startsWith('/') ? explicit : `/${explicit}`
 	}
 
 	if (process.env.GITHUB_REPOSITORY) {
 		const repoName = process.env.GITHUB_REPOSITORY.split('/')[1]
-		// Для username.github.io используем '/', иначе '/repo-name/'
-		return repoName.endsWith('.github.io') ? '/' : `/${repoName}`
+		// user.github.io → site root; project repo `apps` → /apps
+		if (repoName.endsWith('.github.io')) {
+			return ''
+		}
+		if (repoName === 'apps') {
+			return '/apps'
+		}
+		return `/${repoName}`
 	}
 
 	return ''

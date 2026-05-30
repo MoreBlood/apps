@@ -1,6 +1,6 @@
-import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest'
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 
-describe('getBaseUrl', () => {
+describe('siteUrl', () => {
 	const originalEnv = process.env
 
 	beforeEach(() => {
@@ -13,42 +13,47 @@ describe('getBaseUrl', () => {
 	})
 
 	async function load() {
-		const mod = await import('@/lib/siteUrl')
-		return mod.getBaseUrl
+		return import('@/lib/siteUrl')
 	}
 
-	it('returns fallback when NEXT_PUBLIC_SITE_URL is not set', async () => {
-		delete process.env.NEXT_PUBLIC_SITE_URL
+	it('uses NEXT_PUBLIC_SITE_URL when set', async () => {
+		process.env.NEXT_PUBLIC_SITE_URL = 'https://mysite.com/'
+		delete process.env.GITHUB_REPOSITORY
 		delete process.env.NEXT_PUBLIC_BASE_PATH
-		const getBaseUrl = await load()
+		const { getBaseUrl } = await load()
+		expect(getBaseUrl()).toBe('https://mysite.com')
+	})
+
+	it('derives origin from GITHUB_REPOSITORY for project pages', async () => {
+		delete process.env.NEXT_PUBLIC_SITE_URL
+		process.env.GITHUB_REPOSITORY = 'moreblood/apps'
+		process.env.NEXT_PUBLIC_BASE_PATH = '/apps'
+		const { getBaseUrl } = await load()
+		expect(getBaseUrl()).toBe('https://moreblood.github.io/apps')
+	})
+
+	it('uses localhost in development without env', async () => {
+		vi.stubEnv('NODE_ENV', 'development')
+		delete process.env.NEXT_PUBLIC_SITE_URL
+		delete process.env.GITHUB_REPOSITORY
+		delete process.env.NEXT_PUBLIC_BASE_PATH
+		const { getBaseUrl } = await load()
+		expect(getBaseUrl()).toBe('http://localhost:3000')
+	})
+
+	it('falls back to example.com in production without env', async () => {
+		vi.stubEnv('NODE_ENV', 'production')
+		delete process.env.NEXT_PUBLIC_SITE_URL
+		delete process.env.GITHUB_REPOSITORY
+		delete process.env.NEXT_PUBLIC_BASE_PATH
+		const { getBaseUrl } = await load()
 		expect(getBaseUrl()).toBe('https://example.com')
 	})
 
-	it('returns site URL without trailing slash', async () => {
-		process.env.NEXT_PUBLIC_SITE_URL = 'https://mysite.com/'
-		delete process.env.NEXT_PUBLIC_BASE_PATH
-		const getBaseUrl = await load()
-		expect(getBaseUrl()).toBe('https://mysite.com')
-	})
-
-	it('appends basePath that already starts with /', async () => {
-		process.env.NEXT_PUBLIC_SITE_URL = 'https://mysite.com'
-		process.env.NEXT_PUBLIC_BASE_PATH = '/sub'
-		const getBaseUrl = await load()
-		expect(getBaseUrl()).toBe('https://mysite.com/sub')
-	})
-
-	it('adds leading slash to basePath when missing', async () => {
-		process.env.NEXT_PUBLIC_SITE_URL = 'https://mysite.com'
-		process.env.NEXT_PUBLIC_BASE_PATH = 'sub'
-		const getBaseUrl = await load()
-		expect(getBaseUrl()).toBe('https://mysite.com/sub')
-	})
-
-	it('returns base URL when basePath is empty string', async () => {
-		process.env.NEXT_PUBLIC_SITE_URL = 'https://mysite.com'
-		process.env.NEXT_PUBLIC_BASE_PATH = ''
-		const getBaseUrl = await load()
-		expect(getBaseUrl()).toBe('https://mysite.com')
+	it('metadataBase includes deploy basePath', async () => {
+		process.env.NEXT_PUBLIC_SITE_URL = 'https://moreblood.github.io'
+		process.env.NEXT_PUBLIC_BASE_PATH = '/apps'
+		const { getMetadataBase } = await load()
+		expect(getMetadataBase().href).toBe('https://moreblood.github.io/apps/')
 	})
 })

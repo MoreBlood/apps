@@ -1,9 +1,27 @@
 import { writeFileSync } from 'node:fs'
-import { join, dirname } from 'node:path'
+import { dirname, join } from 'node:path'
 import { fileURLToPath } from 'node:url'
 
+export function resolveSiteOrigin(siteUrl) {
+	if (siteUrl?.trim()) {
+		return siteUrl.trim().replace(/\/$/, '')
+	}
+	const gh = process.env.GITHUB_REPOSITORY
+	if (gh) {
+		const [owner, repo] = gh.split('/')
+		if (repo.endsWith('.github.io')) {
+			return `https://${repo}`
+		}
+		return `https://${owner}.github.io`
+	}
+	if (process.env.NODE_ENV !== 'production') {
+		return 'http://localhost:3000'
+	}
+	return 'https://example.com'
+}
+
 export function buildCanonicalBase(siteUrl, basePath) {
-	const cleanBase = (siteUrl ?? 'https://example.com').replace(/\/$/, '')
+	const cleanBase = resolveSiteOrigin(siteUrl)
 	const cleanPath = (basePath ?? '').replace(/^\/|\/$/g, '')
 	return cleanPath ? `${cleanBase}/${cleanPath}` : cleanBase
 }

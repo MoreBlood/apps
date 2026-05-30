@@ -1,5 +1,6 @@
 import type { Metadata } from 'next'
 import { getAppBySlug, getApps } from '@/config'
+import { getBaseUrl } from '@/lib/siteUrl'
 
 type Props = {
 	children: React.ReactNode
@@ -14,6 +15,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 	}
 	const title = app.appName
 	const description = `${app.appName} - ${app.tagline}. ${app.description}`
+	const pageUrl = `${getBaseUrl()}/${appSlug}/`
 	return {
 		title,
 		description,
@@ -21,7 +23,8 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 			title,
 			description,
 			type: 'website',
-			locale: 'en'
+			locale: 'en',
+			url: pageUrl
 		},
 		twitter: {
 			card: 'summary',
@@ -29,7 +32,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 			description
 		},
 		alternates: {
-			canonical: `/${appSlug}/`
+			canonical: pageUrl
 		}
 	}
 }

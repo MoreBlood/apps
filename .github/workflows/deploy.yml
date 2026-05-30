@@ -41,6 +41,9 @@ jobs:
         run: pnpm build
         env:
           GITHUB_REPOSITORY: ${{ github.repository }}
+          NEXT_PUBLIC_SITE_URL: https://${{ github.repository_owner }}.github.io
+          # Published at https://<owner>.github.io/apps/ (not /rawclinic-web/)
+          BASE_PATH: /apps
           # Feedback (set in repo Settings → Secrets and variables → Actions)
           NEXT_PUBLIC_FEEDBACK_PROVIDER: ${{ vars.NEXT_PUBLIC_FEEDBACK_PROVIDER }}
           NEXT_PUBLIC_WEB3FORMS_ACCESS_KEY: ${{ secrets.NEXT_PUBLIC_WEB3FORMS_ACCESS_KEY }}

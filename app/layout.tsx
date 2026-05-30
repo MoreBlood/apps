@@ -6,19 +6,15 @@ import LandingCriticalStyles from '@/components/landing/LandingCriticalStyles'
 import ThemeProvider from '@/components/ThemeProvider'
 import { siteName } from '@/config'
 import { assetPath } from '@/lib/basePath'
+import { getBaseUrl, getMetadataBase } from '@/lib/siteUrl'
 import 'modern-normalize/modern-normalize.css'
 import '@radix-ui/themes/styles.css'
 import '@/styles/index.scss'
 
-const siteUrl =
-	typeof process.env.NEXT_PUBLIC_SITE_URL === 'string' && process.env.NEXT_PUBLIC_SITE_URL
-		? process.env.NEXT_PUBLIC_SITE_URL
-		: 'https://example.com'
-const basePath = process.env.NEXT_PUBLIC_BASE_PATH ?? ''
-const canonicalBase = `${siteUrl.replace(/\/$/, '')}${basePath ? `/${basePath.replace(/^\/|\/$/g, '')}` : ''}`
+const canonicalBase = getBaseUrl()
 
 export const metadata: Metadata = {
-	metadataBase: new URL(siteUrl),
+	metadataBase: getMetadataBase(),
 	icons: {
 		icon: assetPath('/icons/opt/raw-clinic.webp'),
 		apple: assetPath('/icons/opt/raw-clinic.webp')
@@ -32,7 +28,8 @@ export const metadata: Metadata = {
 		title: siteName,
 		description: `Mobile applications by ${siteName}.`,
 		type: 'website',
-		locale: 'en'
+		locale: 'en',
+		url: `${canonicalBase}/`
 	},
 	twitter: {
 		card: 'summary',
