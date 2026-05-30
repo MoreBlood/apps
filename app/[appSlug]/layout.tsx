@@ -1,4 +1,5 @@
 import type { Metadata } from 'next'
+import SafariAppBannerSync from '@/components/SafariAppBannerSync'
 import { getAppBySlug, getApps } from '@/config'
 import { getAppleItunesAppMeta } from '@/lib/app-store'
 import { getBaseUrl } from '@/lib/siteUrl'
@@ -44,6 +45,12 @@ export function generateStaticParams() {
 	return getApps().map((app) => ({ appSlug: app.slug }))
 }
 
-export default function AppSlugLayout({ children }: Props) {
-	return <>{children}</>
+export default async function AppSlugLayout({ children, params }: Props) {
+	const { appSlug } = await params
+	return (
+		<>
+			<SafariAppBannerSync appSlug={appSlug} />
+			{children}
+		</>
+	)
 }
