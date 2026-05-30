@@ -1,4 +1,5 @@
 import { FEEDBACK_SUBMIT_ERROR } from '@/lib/feedback/errors'
+import { formatFeedbackMessage } from '@/lib/feedback/format-message'
 import type { FeedbackPayload, FeedbackProvider, FeedbackSubmitResult } from '@/types/feedback'
 
 type SupabaseRow = {
@@ -9,6 +10,7 @@ type SupabaseRow = {
 	message: string
 	submitted_at: string
 	page_url: string | null
+	screenshots: FeedbackPayload['screenshots'] | null
 }
 
 function restUrl(supabaseUrl: string, table: string): string {
@@ -25,9 +27,10 @@ export function createSupabaseFeedbackProvider(supabaseUrl: string, anonKey: str
 				app_name: payload.appName,
 				category: payload.category,
 				email: payload.email ?? null,
-				message: payload.message,
+				message: formatFeedbackMessage(payload),
 				submitted_at: payload.submittedAt,
-				page_url: payload.pageUrl ?? null
+				page_url: payload.pageUrl ?? null,
+				screenshots: payload.screenshots?.length ? payload.screenshots : null
 			}
 
 			try {

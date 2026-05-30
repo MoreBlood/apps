@@ -6,11 +6,13 @@ export const ROOT_STATIC_SEGMENTS = new Set(['blog', 'faq', 'feedback', 'privacy
 const KNOWN_APP_SLUGS = new Set(getApps().map((app) => app.slug))
 
 export function normalizeSitePath(pathname: string): string {
-	const trimmed = pathname.replace(/\/$/, '')
+	if (!pathname || pathname === '/') return '/'
+	const withLeading = pathname.startsWith('/') ? pathname : `/${pathname}`
+	const trimmed = withLeading.replace(/\/+$/, '')
 	return trimmed || '/'
 }
 
-function stripBasePath(pathname: string): string {
+export function stripBasePath(pathname: string): string {
 	const basePath = process.env.NEXT_PUBLIC_BASE_PATH ?? ''
 	if (!basePath) return pathname
 	const prefix = basePath.startsWith('/') ? basePath : `/${basePath}`
@@ -31,6 +33,22 @@ export function getAppSlugFromPathname(pathname: string | null): string | null {
 		return null
 	}
 	return segment
+}
+
+/** Path for nav active-state checks (strips basePath + trailing slash). */
+export function toComparableSitePath(pathname: string): string {
+	return normalizeSitePath(stripBasePath(pathname))
+}
+
+export function isSiteNavItemActive(pathname: string | null | undefined, href: string): boolean {
+	const current = toComparableSitePath(pathname ?? '/')
+	const target = normalizeSitePath(href)
+
+	if (target === '/') {
+		return current === '/'
+	}
+
+	return current === target
 }
 
 export function isAppLandingPath(pathname: string | null): boolean {

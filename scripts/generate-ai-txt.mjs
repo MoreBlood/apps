@@ -60,7 +60,7 @@ if (process.argv[1] === fileURLToPath(import.meta.url)) {
 
 	const siteUrl = process.env.NEXT_PUBLIC_SITE_URL
 	const basePath = process.env.NEXT_PUBLIC_BASE_PATH
-	const siteName = process.env.SITE_NAME ?? 'Artihovich Apps'
+	const siteName = process.env.SITE_NAME ?? 'AK Apps'
 	const canonicalBase = buildCanonicalBase(siteUrl, basePath)
 	const content = buildContent(siteName, canonicalBase)
 

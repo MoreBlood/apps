@@ -2,6 +2,7 @@
 
 import { Cross2Icon, DesktopIcon, HamburgerMenuIcon, MoonIcon, SunIcon } from '@radix-ui/react-icons'
 import { Box, Dialog, IconButton, Text } from '@radix-ui/themes'
+import clsx from 'clsx'
 import NextLink from 'next/link'
 import { usePathname, useRouter } from 'next/navigation'
 import { useTheme } from 'next-themes'
@@ -10,26 +11,20 @@ import { createPortal } from 'react-dom'
 import AppIcon from '@/components/AppIcon'
 import { getAppBySlug, getApps, siteName } from '@/config'
 import { homeContent } from '@/config/home-content'
-import {
-	dedupeSiteNavItems,
-	getSiteNavItems,
-	getSitePageTitle,
-	type SiteNavItem,
-	splitSiteNavItems
-} from '@/lib/site-nav'
-import { getAppSlugFromPathname, normalizeSitePath } from '@/lib/site-paths'
+import { dedupeSiteNavItems, getSiteNavItems, type SiteNavItem, splitSiteNavItems } from '@/lib/site-nav'
+import { getAppSlugFromPathname, isSiteNavItemActive } from '@/lib/site-paths'
 
 type ThemeValue = 'light' | 'dark' | 'system'
 
-function PillNavLinks({ items, normalizedPath }: { items: SiteNavItem[]; normalizedPath: string }) {
+function PillNavLinks({ items, pathname }: { items: SiteNavItem[]; pathname: string }) {
 	return items.map(({ href, label }) => {
-		const isActive = normalizedPath === normalizeSitePath(href)
+		const isActive = isSiteNavItemActive(pathname, href)
 		return (
 			<NextLink
 				key={`${href}:${label}`}
 				href={href}
-				className="app-nav-pill__item"
-				data-active={isActive || undefined}
+				className={clsx('app-nav-pill__item', isActive && 'app-nav-pill__item--active')}
+				data-active={isActive ? '' : undefined}
 				aria-current={isActive ? 'page' : undefined}
 			>
 				{label}
@@ -87,13 +82,11 @@ export default function AppNav() {
 	const menuApps = useMemo(() => getApps(), [])
 	const copyrightYear = new Date().getFullYear()
 
-	const normalizedPath = useMemo(() => normalizeSitePath(pathname ?? '/'), [pathname])
-	const appSlug = useMemo(() => getAppSlugFromPathname(pathname), [pathname])
+	const currentPath = pathname ?? '/'
+	const appSlug = useMemo(() => getAppSlugFromPathname(currentPath), [currentPath])
 	const items = useMemo(() => dedupeSiteNavItems(getSiteNavItems(appSlug)), [appSlug])
 	const { primary: primaryItems, app: appItems } = useMemo(() => splitSiteNavItems(items), [items])
 	const currentApp = useMemo(() => (appSlug ? getAppBySlug(appSlug) : undefined), [appSlug])
-	const pageTitle = useMemo(() => getSitePageTitle(pathname), [pathname])
-
 	useEffect(() => {
 		setMounted(true)
 		setPortalRoot(document.querySelector<HTMLElement>('.radix-themes'))
@@ -138,12 +131,16 @@ export default function AppNav() {
 
 									<nav className="app-nav-dialog__primary" aria-label="Site">
 										{primaryItems.map(({ href, label }) => {
-											const isActive = normalizedPath === normalizeSitePath(href)
+											const isActive = isSiteNavItemActive(currentPath, href)
 											return (
 												<Dialog.Close
 													key={`${href}:${label}`}
-													className="app-nav-dialog__primary-link"
-													data-active={isActive || undefined}
+													className={clsx(
+														'app-nav-dialog__primary-link',
+														isActive && 'app-nav-dialog__primary-link--active'
+													)}
+													data-active={isActive ? '' : undefined}
+													aria-current={isActive ? 'page' : undefined}
 													onClick={() => goTo(href)}
 												>
 													<span>{label}</span>
@@ -155,12 +152,13 @@ export default function AppNav() {
 									{appItems.length > 0 && (
 										<nav className="app-nav-dialog__section" aria-label="Current app">
 											{appItems.map(({ href, label }) => {
-												const isActive = normalizedPath === normalizeSitePath(href)
+												const isActive = isSiteNavItemActive(currentPath, href)
 												return (
 													<Dialog.Close
 														key={`${href}:${label}`}
 														className="app-nav-dialog__section-link"
-														data-active={isActive || undefined}
+														data-active={isActive ? '' : undefined}
+														aria-current={isActive ? 'page' : undefined}
 														onClick={() => goTo(href)}
 													>
 														<span>{label}</span>
@@ -179,7 +177,8 @@ export default function AppNav() {
 												<li key={app.slug}>
 													<Dialog.Close
 														className="app-nav-dialog__app-row"
-														data-active={appSlug === app.slug || undefined}
+														data-active={appSlug === app.slug ? '' : undefined}
+														aria-current={appSlug === app.slug ? 'page' : undefined}
 														onClick={() => goTo(`/${app.slug}`)}
 													>
 														<span className="app-nav-dialog__app-row-inner">
@@ -215,25 +214,17 @@ export default function AppNav() {
 					)}
 				</Box>
 
-				<div className="app-nav__title-wrap">
-					<div className="app-nav-pill__track">
-						<span className="app-nav__title" aria-current="page">
-							{pageTitle}
-						</span>
-					</div>
-				</div>
-
 				<Box display={{ initial: 'none', lg: 'block' }} className="app-nav-desktop">
 					<div className="app-nav-pill-row">
 						<nav className="app-nav-pill" aria-label="Site">
 							<div className="app-nav-pill__track">
-								<PillNavLinks items={primaryItems} normalizedPath={normalizedPath} />
+								<PillNavLinks items={primaryItems} pathname={currentPath} />
 							</div>
 						</nav>
 						{appItems.length > 0 && (
 							<nav className="app-nav-pill" aria-label={currentApp?.appName ?? 'App'}>
 								<div className="app-nav-pill__track">
-									<PillNavLinks items={appItems} normalizedPath={normalizedPath} />
+									<PillNavLinks items={appItems} pathname={currentPath} />
 								</div>
 							</nav>
 						)}

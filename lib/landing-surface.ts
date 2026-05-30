@@ -1,6 +1,11 @@
 import clsx from 'clsx'
-import type { MouseEvent } from 'react'
-import { onLandingSurfacePointerLeave, onLandingSurfacePointerMove } from './landing-surface-pointer'
+import type { MouseEvent, TouchEvent } from 'react'
+import {
+	onLandingSurfacePointerLeave,
+	onLandingSurfacePointerMove,
+	onLandingSurfaceTouchEnd,
+	onLandingSurfaceTouchMove
+} from './landing-surface-pointer'
 
 export type LandingSurfaceRadius = 'card' | 'tile' | 'section'
 
@@ -65,6 +70,9 @@ export function landingSurfacePointerHandlers(effects: LandingSurfaceEffects): {
 	onMouseEnter?: (event: MouseEvent<HTMLElement>) => void
 	onMouseMove?: (event: MouseEvent<HTMLElement>) => void
 	onMouseLeave?: (event: MouseEvent<HTMLElement>) => void
+	onTouchStart?: (event: TouchEvent<HTMLElement>) => void
+	onTouchMove?: (event: TouchEvent<HTMLElement>) => void
+	onTouchEnd?: (event: TouchEvent<HTMLElement>) => void
 } {
 	if (!effects.pointer) {
 		return {}
@@ -73,7 +81,10 @@ export function landingSurfacePointerHandlers(effects: LandingSurfaceEffects): {
 	return {
 		onMouseEnter: onLandingSurfacePointerMove,
 		onMouseMove: onLandingSurfacePointerMove,
-		onMouseLeave: onLandingSurfacePointerLeave
+		onMouseLeave: onLandingSurfacePointerLeave,
+		onTouchStart: onLandingSurfaceTouchMove,
+		onTouchMove: onLandingSurfaceTouchMove,
+		onTouchEnd: onLandingSurfaceTouchEnd
 	}
 }
 

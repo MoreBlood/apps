@@ -1,3 +1,4 @@
+import { buildFeedbackFormData } from '@/lib/feedback/build-form-body'
 import { FEEDBACK_SUBMIT_ERROR } from '@/lib/feedback/errors'
 import { formatFeedbackMessage } from '@/lib/feedback/format-message'
 import { FEEDBACK_CATEGORY_LABELS } from '@/lib/feedback/schema'
@@ -13,24 +14,26 @@ export function createFormspreeFeedbackProvider(formId: string): FeedbackProvide
 		id: 'formspree',
 		async submit(payload: FeedbackPayload): Promise<FeedbackSubmitResult> {
 			const categoryLabel = FEEDBACK_CATEGORY_LABELS[payload.category].label
+			const hasAttachments = Boolean(payload.screenshots?.length)
 
 			try {
 				const response = await fetch(formspreeEndpoint(formId), {
 					method: 'POST',
-					headers: {
-						'Content-Type': 'application/json',
-						Accept: 'application/json'
-					},
-					body: JSON.stringify({
-						_subject: `[${payload.appName}] ${categoryLabel}`,
-						email: payload.email,
-						message: formatFeedbackMessage(payload),
-						app_slug: payload.appSlug,
-						app_name: payload.appName,
-						category: payload.category,
-						page_url: payload.pageUrl,
-						submitted_at: payload.submittedAt
-					})
+					headers: hasAttachments
+						? { Accept: 'application/json' }
+						: { 'Content-Type': 'application/json', Accept: 'application/json' },
+					body: hasAttachments
+						? buildFeedbackFormData(payload)
+						: JSON.stringify({
+								_subject: `[${payload.appName}] ${categoryLabel}`,
+								email: payload.email,
+								message: formatFeedbackMessage(payload),
+								app_slug: payload.appSlug,
+								app_name: payload.appName,
+								category: payload.category,
+								page_url: payload.pageUrl,
+								submitted_at: payload.submittedAt
+							})
 				})
 
 				if (!response.ok) {

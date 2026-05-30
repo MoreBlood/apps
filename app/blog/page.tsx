@@ -4,7 +4,7 @@ import { siteName } from '@/config'
 
 export const metadata: Metadata = {
 	title: `Blog · ${siteName}`,
-	description: 'Product notes and photography workflows from Artihovich Apps.'
+	description: 'Product notes and photography workflows from AK Apps.'
 }
 
 export default function Page() {

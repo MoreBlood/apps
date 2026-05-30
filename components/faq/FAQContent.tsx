@@ -1,7 +1,8 @@
-import { Box, Container, Flex, Heading, Text } from '@radix-ui/themes'
+import { Box, Container, Flex, Heading } from '@radix-ui/themes'
 import AppContactCta from '@/components/AppContactCta'
 import FAQAccordionItem from '@/components/faq/FAQAccordionItem'
 import { getFAQSectionIcon } from '@/components/faq/faq-icons'
+import SitePageHero from '@/components/shared/SitePageHero'
 import type { AppConfig } from '@/config'
 import { getFAQBySlug } from '@/config/faq-content'
 import type { FAQSection } from '@/types/faq'
@@ -38,17 +39,7 @@ export default function FAQContent({ app, appSlug }: FAQContentProps) {
 
 	return (
 		<Container size="2">
-			<Heading size="8" mb="2" as="h1">
-				FAQ
-			</Heading>
-			<Heading size="5" mb="2" as="h2">
-				{app.appName}
-			</Heading>
-			{faq.intro && (
-				<Text as="p" size="3" color="gray" mb="6">
-					{faq.intro}
-				</Text>
-			)}
+			<SitePageHero className="site-page-hero--section" eyebrow={app.appName} title="FAQ" lead={faq.intro} />
 
 			{faq.sections.map((section) => (
 				<FAQSectionBlock key={section.id} section={section} />

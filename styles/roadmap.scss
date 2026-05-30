@@ -3,40 +3,6 @@
 	max-width: 40rem;
 	margin-inline: auto;
 
-	&__hero {
-		text-align: center;
-		padding-block: clamp(0.5rem, 2vw, 1rem) clamp(1.5rem, 4vw, 2.5rem);
-	}
-
-	&__eyebrow {
-		font-size: 0.8125rem;
-		font-weight: 600;
-		letter-spacing: 0.06em;
-		text-transform: uppercase;
-		color: var(--accent-11);
-		margin: 0 0 0.75rem;
-	}
-
-	&__title {
-		font-size: clamp(1.75rem, 4vw, 2.5rem);
-		line-height: 1.15;
-		letter-spacing: -0.02em;
-		font-weight: 700;
-		margin: 0 0 1rem;
-	}
-
-	&__intro {
-		font-size: 1.0625rem;
-		line-height: 1.55;
-		color: var(--gray-11);
-		margin: 0 auto 0.75rem;
-		max-width: 36rem;
-	}
-
-	&__updated {
-		margin: 0 0 1.25rem;
-	}
-
 	&__legend {
 		display: inline-flex;
 		flex-wrap: wrap;
@@ -320,5 +286,14 @@
 
 	&__footer {
 		margin-top: clamp(1rem, 3vw, 2rem);
+	}
+
+	&__overview-card {
+		margin-bottom: var(--space-5);
+		width: 100%;
+
+		.home-app-card {
+			width: 100%;
+		}
 	}
 }

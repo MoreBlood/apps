@@ -1,9 +1,9 @@
-# ai.txt for Artihovich Apps
-# https://example.com/ai.txt
+# ai.txt for AK Apps
+# http://localhost:3000/ai.txt
 
 [identity]
-name: Artihovich Apps
-url: https://example.com
+name: AK Apps
+url: http://localhost:3000
 
 [permissions]
 - Summarise publicly available content from this website
@@ -18,6 +18,6 @@ url: https://example.com
 - Do not present app capabilities or features that are not stated on the site
 
 [attribution]
-preferred_citation: Artihovich Apps (https://example.com)
+preferred_citation: AK Apps (http://localhost:3000)
 when_quoting: Include page or app name and link to source
 link_policy: Prefer linking to the original page when possible

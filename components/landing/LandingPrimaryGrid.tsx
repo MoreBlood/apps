@@ -1,10 +1,9 @@
 'use client'
 
-import { LANDING_SURFACE_GRID, landingSurfaceClassName, landingSurfacePointerHandlers } from '@/lib/landing-surface'
+import { LANDING_SURFACE_GRID } from '@/lib/landing-surface'
 import { stableDomId } from '@/lib/stable-dom-id'
 import type { LandingGridItem } from '@/types/landing'
-import LandingSurfaceLayers from './LandingSurfaceLayers'
-import { getLandingGridIcon } from './landing-grid-icons'
+import LandingPrimaryGridCard from './LandingPrimaryGridCard'
 
 type Props = {
 	id?: string
@@ -33,24 +32,9 @@ export default function LandingPrimaryGrid({ id, title, lead, items }: Props) {
 				</header>
 			)}
 			<ul className="landing-primary-grid__grid">
-				{items.map((item) => {
-					const ItemIcon = getLandingGridIcon(item.icon)
-
-					return (
-						<li
-							key={item.title}
-							className={landingSurfaceClassName(gridSurface, 'landing-primary-grid__card')}
-							{...landingSurfacePointerHandlers(gridSurface)}
-						>
-							<LandingSurfaceLayers effects={gridSurface} />
-							<span className="landing-primary-grid__icon" aria-hidden>
-								<ItemIcon />
-							</span>
-							<h3 className="landing-primary-grid__title">{item.title}</h3>
-							<p className="landing-primary-grid__desc">{item.description}</p>
-						</li>
-					)
-				})}
+				{items.map((item) => (
+					<LandingPrimaryGridCard key={item.title} item={item} effects={gridSurface} />
+				))}
 			</ul>
 		</section>
 	)

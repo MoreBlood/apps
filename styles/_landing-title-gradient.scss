@@ -1,5 +1,5 @@
 @mixin landing-title-gradient($gradient: var(--landing-hero-title-gradient)) {
-	color: var(--landing-text);
+	color: var(--landing-text, currentColor);
 
 	@supports ((-webkit-background-clip: text) or (background-clip: text)) {
 		background-image: $gradient;

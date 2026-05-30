@@ -34,7 +34,6 @@ function PhotoFrame({
 						className="landing-photo__frame-image"
 						imgClassName="landing-photo__img"
 						sizes="(max-width: 900px) 100vw, 50vw"
-						deferUntilVisible={false}
 					/>
 				</div>
 				{compareLabel && <figcaption className="landing-photo__compare-label">{compareLabel}</figcaption>}

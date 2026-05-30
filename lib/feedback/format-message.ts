@@ -3,12 +3,16 @@ import type { FeedbackPayload } from '@/types/feedback'
 
 export function formatFeedbackMessage(payload: FeedbackPayload): string {
 	const categoryLabel = FEEDBACK_CATEGORY_LABELS[payload.category].label
+	const screenshotNote =
+		payload.screenshots && payload.screenshots.length > 0 ? `Screenshots: ${payload.screenshots.length} attached` : null
+
 	const lines = [
 		`App: ${payload.appName} (${payload.appSlug})`,
 		`Category: ${categoryLabel}`,
 		payload.email ? `Email: ${payload.email}` : 'Email: (not provided)',
 		`Submitted: ${payload.submittedAt}`,
 		payload.pageUrl ? `Page: ${payload.pageUrl}` : null,
+		screenshotNote,
 		'',
 		payload.message
 	]

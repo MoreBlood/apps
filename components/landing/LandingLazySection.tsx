@@ -1,7 +1,6 @@
 'use client'
 
-import { type ComponentType, useEffect, useState } from 'react'
-import { useDeferUntilVisible } from '@/hooks/useDeferUntilVisible'
+import { type ComponentType, useEffect, useRef, useState } from 'react'
 import { LANDING_LOAD_POLICIES, type LandingLoadTier } from '@/lib/landing-performance'
 
 type Props<P extends object> = {
@@ -18,18 +17,34 @@ type Props<P extends object> = {
 export default function LandingLazySection<P extends object>({ tier, load, props, minHeight, className }: Props<P>) {
 	const policy = LANDING_LOAD_POLICIES[tier]
 	const deferViewport = tier === 'viewport'
-	const { ref, visible } = useDeferUntilVisible({
-		defer: deferViewport,
-		rootMargin: policy.rootMargin
-	})
+	const viewportRef = useRef<HTMLDivElement>(null)
+	const [inViewport, setInViewport] = useState(!deferViewport)
 	const [Component, setComponent] = useState<ComponentType<P> | null>(null)
 	const [idleGateOpen, setIdleGateOpen] = useState(tier !== 'idle')
+
+	useEffect(() => {
+		if (!deferViewport) return
+		const node = viewportRef.current
+		if (!node) return
+
+		const observer = new IntersectionObserver(
+			([entry]) => {
+				if (entry.isIntersecting) {
+					setInViewport(true)
+					observer.disconnect()
+				}
+			},
+			{ rootMargin: policy.rootMargin, threshold: 0.01 }
+		)
+		observer.observe(node)
+		return () => observer.disconnect()
+	}, [deferViewport, policy.rootMargin])
 
 	const canFetch =
 		tier === 'eager' || tier === 'critical'
 			? true
 			: tier === 'viewport'
-				? visible
+				? inViewport
 				: tier === 'idle'
 					? idleGateOpen
 					: false
@@ -52,7 +67,7 @@ export default function LandingLazySection<P extends object>({ tier, load, props
 
 	return (
 		<div
-			ref={deferViewport ? ref : undefined}
+			ref={deferViewport ? viewportRef : undefined}
 			className={className}
 			style={!Component && minHeight ? { minHeight } : undefined}
 			aria-hidden={!Component ? true : undefined}

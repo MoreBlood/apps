@@ -1,20 +1,13 @@
 import { Box, Callout, Container, Heading, Link, Strong, Text } from '@radix-ui/themes'
 import NextLink from 'next/link'
 import ContactEmailLink from '@/components/ContactEmailLink'
+import AppLegalHero from '@/components/legal/AppLegalHero'
 import type { TermsContentProps } from '@/config'
 
 export default function DefaultTermsContent({ app, appSlug }: TermsContentProps) {
 	return (
 		<Container size="2">
-			<Heading size="8" mb="2" as="h1">
-				Terms of Service
-			</Heading>
-			<Heading size="5" mb="2" as="h2">
-				{app.appName}
-			</Heading>
-			<Text size="1" color="gray" mb="6" style={{ fontStyle: 'italic' }}>
-				Last updated: {app.lastUpdated}
-			</Text>
+			<AppLegalHero app={app} title="Terms of Service" />
 
 			<Heading size="5" mb="2" as="h2">
 				1. Acceptance of Terms

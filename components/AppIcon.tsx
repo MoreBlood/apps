@@ -24,7 +24,6 @@ export default function AppIcon({ slug, className, priority = false, fill: fillP
 				imgClassName="app-icon__img"
 				sizes="(max-width: 900px) 92px, 128px"
 				priority={priority}
-				deferUntilVisible={!priority}
 			/>
 		)
 	}
@@ -38,7 +37,6 @@ export default function AppIcon({ slug, className, priority = false, fill: fillP
 			height={64}
 			sizes="64px"
 			priority={priority}
-			deferUntilVisible={!priority}
 		/>
 	)
 }

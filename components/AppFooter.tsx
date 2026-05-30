@@ -8,16 +8,16 @@ import AppIcon from '@/components/AppIcon'
 import { getAppBySlug, getApps, siteName } from '@/config'
 import { homeContent } from '@/config/home-content'
 import { dedupeSiteNavItems, getSiteNavItems, splitSiteNavItems } from '@/lib/site-nav'
-import { getAppSlugFromPathname, normalizeSitePath } from '@/lib/site-paths'
+import { getAppSlugFromPathname, isSiteNavItemActive } from '@/lib/site-paths'
 
 function FooterNavColumn({
 	title,
 	items,
-	normalizedPath
+	pathname
 }: {
 	title: string
 	items: { href: string; label: string }[]
-	normalizedPath: string
+	pathname: string
 }) {
 	if (items.length === 0) return null
 
@@ -26,13 +26,13 @@ function FooterNavColumn({
 			<h2 className="site-footer__column-title">{title}</h2>
 			<ul className="site-footer__links">
 				{items.map(({ href, label }) => {
-					const isActive = normalizedPath === normalizeSitePath(href)
+					const isActive = isSiteNavItemActive(pathname, href)
 					return (
 						<li key={`${href}:${label}`}>
 							<NextLink
 								href={href}
 								className="site-footer__link"
-								data-active={isActive || undefined}
+								data-active={isActive ? '' : undefined}
 								aria-current={isActive ? 'page' : undefined}
 							>
 								{label}
@@ -50,8 +50,8 @@ export default function AppFooter() {
 	const year = new Date().getFullYear()
 	const apps = useMemo(() => getApps(), [])
 
-	const normalizedPath = useMemo(() => normalizeSitePath(pathname ?? '/'), [pathname])
-	const appSlug = useMemo(() => getAppSlugFromPathname(pathname), [pathname])
+	const currentPath = pathname ?? '/'
+	const appSlug = useMemo(() => getAppSlugFromPathname(currentPath), [currentPath])
 	const currentApp = useMemo(() => (appSlug ? getAppBySlug(appSlug) : undefined), [appSlug])
 	const items = useMemo(() => dedupeSiteNavItems(getSiteNavItems(appSlug)), [appSlug])
 	const { primary: primaryItems, app: appItems } = useMemo(() => splitSiteNavItems(items), [items])
@@ -95,9 +95,9 @@ export default function AppFooter() {
 					</div>
 
 					<div className="site-footer__nav-grid">
-						<FooterNavColumn title="Site" items={primaryItems} normalizedPath={normalizedPath} />
+						<FooterNavColumn title="Site" items={primaryItems} pathname={currentPath} />
 						{appItems.length > 0 && (
-							<FooterNavColumn title={currentApp?.appName ?? 'App'} items={appItems} normalizedPath={normalizedPath} />
+							<FooterNavColumn title={currentApp?.appName ?? 'App'} items={appItems} pathname={currentPath} />
 						)}
 					</div>
 				</div>

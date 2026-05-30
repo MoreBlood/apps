@@ -2,7 +2,6 @@
 
 import clsx from 'clsx'
 import Image from 'next/image'
-import { useDeferUntilVisible } from '@/hooks/useDeferUntilVisible'
 import { resolveOptimizedImage } from '@/lib/optimized-image'
 
 type Props = {
@@ -13,8 +12,6 @@ type Props = {
 	imgClassName?: string
 	/** Above-the-fold LCP — loads immediately, no defer. */
 	priority?: boolean
-	/** Wait for viewport (recommended for below-fold device screens). */
-	deferUntilVisible?: boolean
 	fill?: boolean
 	width?: number
 	height?: number
@@ -31,7 +28,6 @@ export default function OptimizedImage({
 	className,
 	imgClassName,
 	priority = false,
-	deferUntilVisible = !priority,
 	fill = false,
 	width,
 	height,
@@ -39,33 +35,14 @@ export default function OptimizedImage({
 	onLoad
 }: Props) {
 	const image = resolveOptimizedImage(src)
-	const shouldDefer = deferUntilVisible && !priority
-	const { ref, visible } = useDeferUntilVisible({ defer: shouldDefer })
-
 	const shellClass = clsx('optimized-image', className)
-
-	if (!visible) {
-		return (
-			<div
-				ref={ref}
-				className={shellClass}
-				aria-hidden={alt === ''}
-				style={{
-					backgroundImage: `url(${image.blurDataURL})`,
-					backgroundSize: 'cover',
-					backgroundPosition: 'top center'
-				}}
-			/>
-		)
-	}
-
 	const placeholderProps = priority
 		? { placeholder: 'empty' as const }
 		: { placeholder: 'blur' as const, blurDataURL: image.blurDataURL }
 
 	if (fill) {
 		return (
-			<div ref={shouldDefer ? ref : undefined} className={shellClass}>
+			<div className={shellClass}>
 				<Image
 					src={image.src}
 					alt={alt}

@@ -9,8 +9,12 @@ create table if not exists public.feedback (
   message text not null,
   submitted_at timestamptz not null,
   page_url text,
+  screenshots jsonb,
   created_at timestamptz not null default now()
 );
+
+-- Optional: if the table already exists without screenshots:
+-- alter table public.feedback add column if not exists screenshots jsonb;
 
 alter table public.feedback enable row level security;
 

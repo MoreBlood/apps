@@ -1,5 +1,5 @@
 import { getAppBySlug, siteName } from '@/config'
-import { getAppSlugFromPathname, normalizeSitePath, ROOT_STATIC_SEGMENTS } from '@/lib/site-paths'
+import { getAppSlugFromPathname, normalizeSitePath, ROOT_STATIC_SEGMENTS, toComparableSitePath } from '@/lib/site-paths'
 
 export type SiteNavItem = { href: string; label: string }
 
@@ -51,8 +51,8 @@ export function getSitePageTitle(pathname: string | null): string {
 		if (app) return app.appName
 	}
 
-	const normalized = normalizeSitePath(pathname)
-	const match = getSiteNavItems(null).find((item) => normalizeSitePath(item.href) === normalized)
+	const comparable = toComparableSitePath(pathname)
+	const match = getSiteNavItems(null).find((item) => normalizeSitePath(item.href) === comparable)
 	if (match) return match.label
 
 	return siteName

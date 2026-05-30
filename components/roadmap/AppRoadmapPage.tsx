@@ -1,7 +1,8 @@
 import { ArrowDownIcon, ArrowRightIcon } from '@radix-ui/react-icons'
 import { Container, Link, Text } from '@radix-ui/themes'
-import NextLink from 'next/link'
 import AppContactCta from '@/components/AppContactCta'
+import RoadmapOverviewCard from '@/components/roadmap/RoadmapOverviewCard'
+import SitePageHero from '@/components/shared/SitePageHero'
 import type { AppConfig } from '@/config'
 import { getRoadmapBySlug } from '@/config/roadmap-content'
 import { groupItemsByColumn, STATUS_LABEL } from '@/lib/roadmap-grouping'
@@ -108,58 +109,58 @@ export default function AppRoadmapPage({ app }: Props) {
 	const quarterCount = columns.filter((c) => c.column.kind === 'quarter').length
 
 	return (
-		<article className="roadmap">
-			<header className="roadmap__hero">
-				<p className="roadmap__eyebrow">{app.appName}</p>
-				<h1 className="roadmap__title">Product roadmap</h1>
-				<p className="roadmap__intro">{roadmap.intro}</p>
-				<Text as="p" size="1" color="gray" className="roadmap__updated">
-					Last updated: {roadmap.lastUpdated} · {total} items · {quarterCount} quarters ahead
-				</Text>
-				<div className="roadmap__legend" aria-hidden>
-					{STATUS_ORDER.map((status, index) => (
-						<span key={status} className="roadmap__legend-step">
-							<span className={`roadmap__legend-dot roadmap__legend-dot--${status}`} />
-							<span>{STATUS_LABEL[status]}</span>
-							{index < STATUS_ORDER.length - 1 && <ArrowRightIcon className="roadmap__legend-arrow" />}
-						</span>
-					))}
+		<Container size="2">
+			<article className="roadmap">
+				<SitePageHero
+					className="site-page-hero--section"
+					eyebrow={app.appName}
+					title="Product roadmap"
+					lead={roadmap.intro}
+					meta={`Last updated: ${roadmap.lastUpdated} · ${total} items · ${quarterCount} quarters ahead`}
+				>
+					<div className="roadmap__legend" aria-hidden>
+						{STATUS_ORDER.map((status, index) => (
+							<span key={status} className="roadmap__legend-step">
+								<span className={`roadmap__legend-dot roadmap__legend-dot--${status}`} />
+								<span>{STATUS_LABEL[status]}</span>
+								{index < STATUS_ORDER.length - 1 && <ArrowRightIcon className="roadmap__legend-arrow" />}
+							</span>
+						))}
+					</div>
+				</SitePageHero>
+
+				<RoadmapBoard roadmap={roadmap} />
+
+				<p className="roadmap__flow-hint">
+					<ArrowDownIcon aria-hidden />
+					<span>
+						{columns.map((c, i) => (
+							<span key={c.column.id}>
+								{c.column.label} ({c.items.length}){i < columns.length - 1 ? ' ↓ ' : ''}
+							</span>
+						))}
+					</span>
+				</p>
+
+				<div className="roadmap__footer">
+					<div className="roadmap__overview-card">
+						<RoadmapOverviewCard app={app} />
+					</div>
+					<AppContactCta
+						appSlug={app.slug}
+						contactEmail={app.contactEmail}
+						title="Missing something important?"
+						lead={`Tell us what would make ${app.appName} better for you.`}
+					/>
+					{app.storeLink && (
+						<Text as="p" size="2" mt="4">
+							<Link asChild href={app.storeLink} target="_blank" rel="noopener noreferrer">
+								Download on the App Store
+							</Link>
+						</Text>
+					)}
 				</div>
-			</header>
-
-			<RoadmapBoard roadmap={roadmap} />
-
-			<p className="roadmap__flow-hint">
-				<ArrowDownIcon aria-hidden />
-				<span>
-					{columns.map((c, i) => (
-						<span key={c.column.id}>
-							{c.column.label} ({c.items.length}){i < columns.length - 1 ? ' ↓ ' : ''}
-						</span>
-					))}
-				</span>
-			</p>
-
-			<Container size="2" className="roadmap__footer">
-				<AppContactCta
-					appSlug={app.slug}
-					contactEmail={app.contactEmail}
-					title="Missing something important?"
-					lead={`Tell us what would make ${app.appName} better for you.`}
-				/>
-				{app.storeLink && (
-					<Text as="p" size="2" mt="4">
-						<Link asChild href={app.storeLink} target="_blank" rel="noopener noreferrer">
-							Download on the App Store
-						</Link>
-					</Text>
-				)}
-				<Text as="p" size="1" color="gray" mt="4">
-					<Link asChild>
-						<NextLink href={`/${app.slug}`}>← Back to overview</NextLink>
-					</Link>
-				</Text>
-			</Container>
-		</article>
+			</article>
+		</Container>
 	)
 }

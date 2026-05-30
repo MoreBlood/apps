@@ -1,19 +1,12 @@
 import { Box, Container, Heading, Strong, Text } from '@radix-ui/themes'
 import ContactEmailLink from '@/components/ContactEmailLink'
+import AppLegalHero from '@/components/legal/AppLegalHero'
 import type { PrivacyContentProps } from '@/config'
 
 export default function AQISensePrivacyContent({ app }: PrivacyContentProps) {
 	return (
 		<Container size="2">
-			<Heading size="8" mb="2" as="h1">
-				Privacy Policy
-			</Heading>
-			<Heading size="5" mb="2" as="h2">
-				{app.appName}
-			</Heading>
-			<Text size="1" color="gray" mb="6" style={{ fontStyle: 'italic' }}>
-				Last updated: {app.lastUpdated}
-			</Text>
+			<AppLegalHero app={app} title="Privacy Policy" />
 
 			<Heading size="5" mb="2" as="h2">
 				Introduction

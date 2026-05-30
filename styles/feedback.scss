@@ -2,32 +2,6 @@
 	min-width: 0;
 }
 
-.feedback-page__head {
-	min-width: 0;
-}
-
-.feedback-page__icon {
-	display: inline-flex;
-	align-items: center;
-	justify-content: center;
-	flex-shrink: 0;
-	width: 3rem;
-	height: 3rem;
-	border-radius: var(--radius-3);
-	background: var(--accent-a4);
-	color: var(--accent-11);
-	border: 1px solid var(--accent-a6);
-
-	svg {
-		width: 1.35rem;
-		height: 1.35rem;
-	}
-}
-
-.feedback-page__intro {
-	max-width: 38rem;
-}
-
 .feedback-page__panel {
 	border: 1px solid var(--gray-a6);
 	border-radius: var(--radius-4);
@@ -37,10 +11,28 @@
 }
 
 .feedback-form {
+	--feedback-screenshot-chip-bg: color-mix(in srgb, var(--color-background) 78%, var(--gray-12) 22%);
+	--feedback-screenshot-chip-fg: var(--gray-12);
+	--feedback-screenshot-chip-border: color-mix(in srgb, var(--accent-a7) 45%, var(--gray-a7));
+	--feedback-screenshot-chip-highlight: color-mix(in srgb, white 42%, transparent);
+	--feedback-screenshot-chip-shadow: color-mix(in srgb, black 14%, transparent);
+	--feedback-screenshot-preview-border: var(--gray-a6);
+	--feedback-screenshot-preview-bg: var(--gray-a3);
+
 	display: flex;
 	flex-direction: column;
 	gap: var(--space-5);
 	min-width: 0;
+}
+
+:where(.dark, .dark-theme) .feedback-form {
+	--feedback-screenshot-chip-bg: color-mix(in srgb, var(--color-background) 62%, var(--gray-1) 38%);
+	--feedback-screenshot-chip-fg: var(--gray-12);
+	--feedback-screenshot-chip-border: color-mix(in srgb, var(--accent-a6) 55%, var(--gray-a6));
+	--feedback-screenshot-chip-highlight: color-mix(in srgb, white 18%, transparent);
+	--feedback-screenshot-chip-shadow: color-mix(in srgb, black 32%, transparent);
+	--feedback-screenshot-preview-border: var(--gray-a6);
+	--feedback-screenshot-preview-bg: var(--gray-a4);
 }
 
 .feedback-form__field {
@@ -140,6 +132,115 @@
 	background: var(--gray-a3);
 	color: var(--gray-11);
 	border-color: var(--gray-a6);
+}
+
+.feedback-form__file-input {
+	position: absolute;
+	width: 1px;
+	height: 1px;
+	padding: 0;
+	margin: -1px;
+	overflow: hidden;
+	clip: rect(0, 0, 0, 0);
+	white-space: nowrap;
+	border: 0;
+}
+
+.feedback-form__screenshot-actions {
+	margin-top: var(--space-2);
+}
+
+.feedback-form__screenshots {
+	list-style: none;
+	margin: var(--space-3) 0 0;
+	padding: 0;
+	display: grid;
+	grid-template-columns: repeat(auto-fill, minmax(7.5rem, 1fr));
+	gap: var(--space-3);
+}
+
+.feedback-form__screenshot {
+	display: flex;
+	flex-direction: column;
+	gap: var(--space-2);
+	min-width: 0;
+}
+
+.feedback-form__screenshot-preview {
+	position: relative;
+	overflow: hidden;
+	border-radius: var(--radius-3);
+	border: 1px solid var(--feedback-screenshot-preview-border);
+	background: var(--feedback-screenshot-preview-bg);
+}
+
+.feedback-form__screenshot-thumb {
+	display: block;
+	width: 100%;
+	aspect-ratio: 9 / 16;
+	object-fit: cover;
+}
+
+.feedback-form__screenshot-badge,
+.feedback-form__screenshot-remove {
+	border: 1px solid var(--feedback-screenshot-chip-border);
+	background: var(--feedback-screenshot-chip-bg);
+	color: var(--feedback-screenshot-chip-fg);
+	-webkit-backdrop-filter: blur(10px);
+	backdrop-filter: blur(10px);
+	box-shadow:
+		inset 0 1px 0 var(--feedback-screenshot-chip-highlight),
+		0 1px 2px var(--feedback-screenshot-chip-shadow);
+}
+
+.feedback-form__screenshot-badge {
+	position: absolute;
+	left: var(--space-2);
+	bottom: var(--space-2);
+	z-index: 1;
+	padding: 0.15rem 0.45rem;
+	border-radius: var(--radius-2);
+	font-size: 0.65rem;
+	font-weight: 600;
+	line-height: 1.2;
+	letter-spacing: 0.02em;
+}
+
+.feedback-form__screenshot-remove {
+	position: absolute;
+	top: var(--space-2);
+	right: var(--space-2);
+	z-index: 2;
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	width: 1.75rem;
+	height: 1.75rem;
+	padding: 0;
+	border-radius: var(--radius-2);
+	cursor: pointer;
+	transition:
+		background 0.15s ease,
+		border-color 0.15s ease,
+		transform 0.15s ease;
+
+	&:hover {
+		background: color-mix(in srgb, var(--feedback-screenshot-chip-bg) 88%, var(--accent-a4));
+		border-color: color-mix(in srgb, var(--accent-a8) 55%, var(--feedback-screenshot-chip-border));
+	}
+
+	&:focus-visible {
+		outline: 2px solid var(--accent-8);
+		outline-offset: 2px;
+	}
+}
+
+.feedback-form__screenshot-name {
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+	padding-inline: var(--space-1);
+	color: var(--gray-11);
 }
 
 .feedback-form__actions {

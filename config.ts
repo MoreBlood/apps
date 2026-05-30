@@ -112,7 +112,7 @@ const apps: AppConfig[] = [
 	}
 ]
 
-export const siteName = 'Artihovich Apps'
+export const siteName = 'AK Apps'
 
 export function getApps(): AppConfig[] {
 	return apps
