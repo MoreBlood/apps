@@ -107,7 +107,7 @@ export const imageAssets: Record<string, ImageAsset> = {
 		blurDataURL:
 			'data:image/jpeg;base64,/9j/2wBDABQODxIPDRQSEBIXFRQYHjIhHhwcHj0sLiQySUBMS0dARkVQWnNiUFVtVkVGZIhlbXd7gYKBTmCNl4x9lnN+gXz/2wBDARUXFx4aHjshITt8U0ZTfHx8fHx8fHx8fHx8fHx8fHx8fHx8fHx8fHx8fHx8fHx8fHx8fHx8fHx8fHx8fHx8fHz/wAARCAAMAAgDASIAAhEBAxEB/8QAFQABAQAAAAAAAAAAAAAAAAAAAAb/xAAhEAAABAUFAAAAAAAAAAAAAAAAERITAQIDBBQhIiNRwf/EABQBAQAAAAAAAAAAAAAAAAAAAAD/xAAUEQEAAAAAAAAAAAAAAAAAAAAA/9oADAMBAAIRAxEAPwCb5Mc29qYHM36AZ91NQYjcVGUpQrQuiAB//9k='
 	},
-	'/screenshots/iphone-export.PNG': {
+	'/screenshots/iphone-export.png': {
 		src: '/screenshots/opt/iphone-export.webp',
 		width: 640,
 		height: 1391,

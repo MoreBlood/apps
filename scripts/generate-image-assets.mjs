@@ -2,6 +2,7 @@
  * Build-time WebP + blur placeholders for landing screenshots and compare photos.
  * Run: node scripts/generate-image-assets.mjs
  */
+import { spawnSync } from 'node:child_process'
 import { mkdirSync, readdirSync, readFileSync, writeFileSync } from 'node:fs'
 import { basename, dirname, join } from 'node:path'
 import { fileURLToPath } from 'node:url'
@@ -15,6 +16,22 @@ const TABLET_MAX_WIDTH = 1024
 const COMPARE_MAX_WIDTH = 1200
 /** 2× for largest UI slot (.landing-icon up to 8rem ≈ 128px CSS). */
 const ICON_MAX_WIDTH = 256
+
+const generatedConfigPaths = [
+	join(root, 'config/image-assets.ts'),
+	join(root, 'config/compare-blur-data.ts'),
+	join(root, 'config/compare-image-meta.ts')
+]
+
+function formatGeneratedConfigs() {
+	const result = spawnSync('npx', ['@biomejs/biome', 'check', '--write', ...generatedConfigPaths], {
+		cwd: root,
+		stdio: 'inherit'
+	})
+	if (result.status !== 0) {
+		process.exit(result.status ?? 1)
+	}
+}
 
 const landingContentPath = join(root, 'config/landing-content.ts')
 const compareContentPath = join(root, 'config/compare-content.ts')
@@ -148,5 +165,7 @@ ${metaEntries.join(',\n')}
 }
 `
 )
+
+formatGeneratedConfigs()
 
 console.log(`Optimized ${uniquePaths.length} images → config/image-assets.ts`)

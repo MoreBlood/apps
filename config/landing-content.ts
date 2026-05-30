@@ -66,7 +66,7 @@ export const landingBySlug: Record<string, AppLandingConfig> = {
 					'Save JPG, HEIC, or TIFF to Photos or Share. Your originals stay untouched; the queue is ready for the next session.',
 				visual: 'color',
 				screenshots: {
-					iphone: '/screenshots/iphone-export.PNG',
+					iphone: '/screenshots/iphone-export.png',
 					ipad: '/screenshots/ipad-watermark.png'
 				}
 			}
