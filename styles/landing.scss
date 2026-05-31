@@ -354,7 +354,7 @@ $mockup-iphone-h: 1603px;
 			width: $mockup-ipad-w;
 			height: $mockup-ipad-h;
 			z-index: var(--device-ipad-z, 1);
-			--device-rotate: var(--device-ipad-rotate, -4deg);
+			--device-rotate: var(--device-ipad-rotate, 0deg);
 			--device-scale-mult: var(--device-ipad-mult, 1);
 		}
 
@@ -364,7 +364,7 @@ $mockup-iphone-h: 1603px;
 			width: $mockup-iphone-w;
 			height: $mockup-iphone-h;
 			z-index: var(--device-iphone-z, 2);
-			--device-rotate: var(--device-iphone-rotate, 6deg);
+			--device-rotate: var(--device-iphone-rotate, 0deg);
 			--device-scale-mult: var(--device-iphone-mult, 1);
 		}
 
@@ -400,6 +400,11 @@ $mockup-iphone-h: 1603px;
 
 	&__mockup {
 		display: block;
+	}
+
+	&__device-motion {
+		width: 100%;
+		height: 100%;
 	}
 
 	&__screen {
@@ -490,6 +495,113 @@ $mockup-iphone-h: 1603px;
 	&--settings .landing-stage__screen--tablet {
 		background: linear-gradient(160deg, var(--gray-3), var(--gray-8), var(--accent-9));
 	}
+
+	&--interactive {
+		.landing-stage__device {
+			pointer-events: auto;
+			cursor: pointer;
+			transition:
+				transform 0.5s cubic-bezier(0.32, 0.72, 0, 1),
+				opacity 0.4s ease,
+				filter 0.25s ease;
+
+			&:focus-visible {
+				outline: 2px solid var(--accent-9);
+				outline-offset: 6px;
+			}
+
+			@media (prefers-reduced-motion: reduce) {
+				transition: none;
+			}
+		}
+	}
+
+	&--focused {
+		position: relative;
+		overflow: visible;
+
+		.landing-stage__device {
+			animation: none;
+		}
+	}
+
+	&--focus-iphone .landing-stage__device--iphone,
+	&--focus-ipad .landing-stage__device--ipad {
+		z-index: 30;
+		pointer-events: none;
+	}
+}
+
+.landing-stage-scrim {
+	position: fixed;
+	inset: 0;
+	z-index: 9990;
+	margin: 0;
+	padding: 0;
+	border: none;
+	background: color-mix(in srgb, var(--gray-1) 25%, transparent);
+	-webkit-backdrop-filter: blur(12px);
+	backdrop-filter: blur(12px);
+	cursor: pointer;
+
+	@media (prefers-reduced-motion: reduce) {
+		animation: none;
+	}
+}
+
+html.landing-stage-focus-open,
+body.landing-stage-focus-open {
+	overflow: hidden;
+	overscroll-behavior: none;
+	touch-action: none;
+}
+
+.landing-stage-focus-layer {
+	position: fixed;
+	inset: 0;
+	z-index: 10002;
+	overflow: visible;
+	pointer-events: none;
+	contain: layout style;
+}
+
+.landing-stage-focus-underlay {
+	position: fixed;
+	inset: 0;
+	z-index: 9989;
+	overflow: visible;
+	pointer-events: none;
+	contain: layout style;
+}
+
+.landing-stage-focus-clone {
+	position: absolute;
+	left: var(--focus-clone-left, 0px);
+	top: var(--focus-clone-top, 0px);
+	width: var(--focus-clone-width, 1px);
+	height: var(--focus-clone-height, 1px);
+	overflow: visible;
+	transform-origin: top left;
+	pointer-events: none;
+	filter: drop-shadow(0 34px 80px -24px var(--gray-a11)) drop-shadow(0 12px 28px -12px var(--gray-a9));
+	will-change: transform;
+
+	.device-mockup {
+		width: 100%;
+		height: 100%;
+		line-height: 0;
+	}
+}
+
+.landing-feature:has(.landing-stage--focused) {
+	content-visibility: visible;
+}
+
+.landing-hero__showcase:has(.landing-stage--focused),
+.landing-hero__showcase:has(.landing-stage--focused) > *,
+.landing-feature__visual:has(.landing-stage--focused) {
+	overflow: visible;
+	isolation: auto;
 }
 
 // —— Stage tuner (?landing_stage_tuner=1) ———————————————————————————————————
@@ -1793,15 +1905,15 @@ html.lenis body {
 
 // Device float — decorative only; scroll reveals use Framer Motion
 @media (prefers-reduced-motion: no-preference) {
-	.landing-stage__device--ipad {
+	.landing-stage:not(.landing-stage--interactive) .landing-stage__device--ipad {
 		animation: landing-float 6s ease-in-out infinite;
 	}
 
-	.landing-stage__device--iphone:not(.landing-stage__device--secondary) {
+	.landing-stage:not(.landing-stage--interactive) .landing-stage__device--iphone:not(.landing-stage__device--secondary) {
 		animation: landing-float 6s ease-in-out -2s infinite;
 	}
 
-	.landing-stage__device--secondary {
+	.landing-stage:not(.landing-stage--interactive) .landing-stage__device--secondary {
 		animation: landing-float 6s ease-in-out -4s infinite;
 	}
 }
@@ -1809,10 +1921,12 @@ html.lenis body {
 @keyframes landing-stage-enter {
 	from {
 		opacity: 0;
+		transform: translate(-50%, calc(-50% + 18px)) scale(var(--cluster-scale, 0.28));
 	}
 
 	to {
 		opacity: 1;
+		transform: translate(-50%, -50%) scale(var(--cluster-scale, 0.28));
 	}
 }
 

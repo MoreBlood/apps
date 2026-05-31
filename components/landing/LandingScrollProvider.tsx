@@ -4,6 +4,8 @@ import { createContext, useContext, useEffect, useRef, useState } from 'react'
 
 type LenisInstance = {
 	scrollTo: (target: string | number | HTMLElement, options?: { offset?: number; duration?: number }) => void
+	start: () => void
+	stop: () => void
 	destroy: () => void
 }
 

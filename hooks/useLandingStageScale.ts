@@ -34,6 +34,7 @@ function getFeatureMeasureElement(stage: HTMLElement): HTMLElement {
 export function useLandingStageScale(variant: Variant = 'hero', options: Options = {}) {
 	const stageRef = useRef<HTMLDivElement>(null)
 	const [debugReport, setDebugReport] = useState<string | null>(null)
+	const [ready, setReady] = useState(false)
 	const tuner = useLandingStageTunerOptional()
 	const { stageId, featureIndex } = options
 	const isFeature = featureIndex != null
@@ -44,6 +45,7 @@ export function useLandingStageScale(variant: Variant = 'hero', options: Options
 
 	useLayoutEffect(() => {
 		readyRef.current = false
+		setReady(false)
 		stageRef.current?.classList.remove('landing-stage--ready')
 	}, [variant, stageId, featureIndex])
 
@@ -90,6 +92,8 @@ export function useLandingStageScale(variant: Variant = 'hero', options: Options
 			schedule()
 			const observer = new ResizeObserver(schedule)
 			observer.observe(measureEl)
+			readyRef.current = true
+			setReady(true)
 			el.classList.add('landing-stage--ready')
 
 			return () => {
@@ -133,6 +137,7 @@ export function useLandingStageScale(variant: Variant = 'hero', options: Options
 
 			if (!readyRef.current) {
 				readyRef.current = true
+				setReady(true)
 				el.classList.add('landing-stage--ready')
 			}
 
@@ -170,5 +175,5 @@ export function useLandingStageScale(variant: Variant = 'hero', options: Options
 		}
 	}, [variant, stageId, featureIndex, isFeature, overrideRevision])
 
-	return { stageRef, debugReport: isFeature ? null : debugReport }
+	return { stageRef, debugReport: isFeature ? null : debugReport, ready }
 }

@@ -24,6 +24,12 @@
 	--app-nav-backdrop-bg: color-mix(in srgb, var(--color-background) 30%, transparent);
 	position: fixed;
 	z-index: 200;
+	transform: translateY(0);
+	opacity: 1;
+	transition:
+		transform 0.44s cubic-bezier(0.32, 0, 0.67, 0),
+		opacity 0.28s ease;
+	will-change: transform;
 
 	&[data-menu-open] {
 		visibility: hidden;
@@ -34,6 +40,15 @@
 	right: max(var(--space-4), env(safe-area-inset-right, 0px));
 	width: auto;
 	background: transparent;
+}
+
+html.landing-stage-focus-present .app-nav {
+	transform: translateY(calc(-1 * (var(--app-nav-offset-top) + var(--app-nav-bar-height) + 1.5rem)));
+	opacity: 0;
+	pointer-events: none;
+	transition:
+		transform 0.5s cubic-bezier(0.32, 0.72, 0, 1),
+		opacity 0.24s ease;
 }
 
 .app-nav__bar {
@@ -47,6 +62,24 @@
 
 	@media (max-width: rc-below($rc-bp-xl)) {
 		grid-template-columns: 1fr auto;
+	}
+}
+
+.app-nav-pill__item,
+.app-nav-theme,
+.app-nav__start,
+.app-nav__end {
+	filter: blur(0);
+	transition: filter 0.28s ease;
+}
+
+html.landing-stage-focus-present {
+	.app-nav-pill__item,
+	.app-nav-theme,
+	.app-nav__start,
+	.app-nav__end {
+		filter: blur(10px);
+		transition: filter 0.24s ease;
 	}
 }
 
