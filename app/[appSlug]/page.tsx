@@ -1,6 +1,7 @@
 import { notFound } from 'next/navigation'
 import { preload } from 'react-dom'
 import AppLandingPage from '@/components/landing/AppLandingPage'
+import LandingAbExperiment from '@/components/landing/LandingAbExperiment'
 import LandingHeroStatic from '@/components/landing/LandingHeroStatic'
 import LandingScrollProvider from '@/components/landing/LandingScrollProvider'
 import { LandingStageTunerProvider } from '@/components/landing/LandingStageTunerContext'
@@ -26,8 +27,10 @@ export default async function AppLanding({ params }: { params: Promise<{ appSlug
 		<LandingScrollProvider>
 			<LandingStageTunerProvider>
 				<article className={`landing landing--${appSlug}`} data-landing-app={appSlug}>
-					<LandingHeroStatic app={landingApp} landing={landing} />
-					<AppLandingPage app={landingApp} />
+					<LandingAbExperiment app={landingApp}>
+						<LandingHeroStatic app={landingApp} landing={landing} />
+						<AppLandingPage app={landingApp} />
+					</LandingAbExperiment>
 				</article>
 			</LandingStageTunerProvider>
 		</LandingScrollProvider>

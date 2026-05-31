@@ -9,9 +9,18 @@ import { useTheme } from 'next-themes'
 import { useEffect, useMemo, useState } from 'react'
 import { createPortal } from 'react-dom'
 import AppIcon from '@/components/AppIcon'
+import AppNavCrackMenu from '@/components/AppNavCrackMenu'
+import AppNavMacMenu from '@/components/AppNavMacMenu'
 import { getAppBySlug, getApps, siteName } from '@/config'
 import { homeContent } from '@/config/home-content'
-import { dedupeSiteNavItems, getSiteNavItems, type SiteNavItem, splitSiteNavItems } from '@/lib/site-nav'
+import { useLandingCrackChrome } from '@/lib/landing-crack-chrome'
+import {
+	dedupeSiteNavItems,
+	getCrackNavMenuGroups,
+	getSiteNavItems,
+	type SiteNavItem,
+	splitSiteNavItems
+} from '@/lib/site-nav'
 import { getAppSlugFromPathname, isSiteNavItemActive } from '@/lib/site-paths'
 
 type ThemeValue = 'light' | 'dark' | 'system'
@@ -75,6 +84,7 @@ function ThemeSwitcher({ mounted }: { mounted: boolean }) {
 export default function AppNav() {
 	const pathname = usePathname()
 	const router = useRouter()
+	const { active: crackChrome, skin: crackSkin } = useLandingCrackChrome()
 	const [mounted, setMounted] = useState(false)
 	const [portalRoot, setPortalRoot] = useState<HTMLElement | null>(null)
 	const [mobileOpen, setMobileOpen] = useState(false)
@@ -87,6 +97,16 @@ export default function AppNav() {
 	const items = useMemo(() => dedupeSiteNavItems(getSiteNavItems(appSlug)), [appSlug])
 	const { primary: primaryItems, app: appItems } = useMemo(() => splitSiteNavItems(items), [items])
 	const currentApp = useMemo(() => (appSlug ? getAppBySlug(appSlug) : undefined), [appSlug])
+	const crackAppName = currentApp?.appName ?? siteName
+	const crackMenuGroups = useMemo(
+		() =>
+			getCrackNavMenuGroups(items, menuApps, {
+				appMenuLabel: currentApp?.appName ?? 'App',
+				appsSectionTitle: homeContent.appsTitle
+			}),
+		[items, menuApps, currentApp?.appName]
+	)
+
 	useEffect(() => {
 		setMounted(true)
 		setPortalRoot(document.querySelector<HTMLElement>('.radix-themes'))
@@ -240,10 +260,22 @@ export default function AppNav() {
 		</nav>
 	)
 
+	const crackNav =
+		crackSkin === 'mac' ? (
+			<AppNavMacMenu pathname={currentPath} appSlug={appSlug} appName={crackAppName} menuGroups={crackMenuGroups} />
+		) : (
+			<AppNavCrackMenu pathname={currentPath} appSlug={appSlug} appName={crackAppName} menuGroups={crackMenuGroups} />
+		)
+
 	return (
 		<>
-			<div className="app-nav-shell" />
-			{portalRoot ? createPortal(nav, portalRoot) : nav}
+			<div
+				className={clsx(
+					'app-nav-shell',
+					crackChrome && (crackSkin === 'mac' ? 'app-nav-shell--mac' : 'app-nav-shell--crack')
+				)}
+			/>
+			{portalRoot ? createPortal(crackChrome ? crackNav : nav, portalRoot) : crackChrome ? crackNav : nav}
 		</>
 	)
 }

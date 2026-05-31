@@ -1,0 +1,247 @@
+// macOS Sonoma menu bar — active with html[data-landing-crack-skin='mac']
+@use 'tokens' as *;
+
+:root {
+	--app-nav-mac-height: 1.75rem;
+	--app-nav-mac-font: -apple-system, BlinkMacSystemFont, 'SF Pro Text', 'Segoe UI', system-ui, sans-serif;
+}
+
+html[data-landing-crack-chrome][data-landing-crack-skin='mac'] {
+	--app-nav-bar-height: var(--app-nav-mac-height);
+	--app-nav-offset-top: 0px;
+	color-scheme: light;
+
+	.app-nav-shell {
+		min-height: calc(env(safe-area-inset-top, 0px) + var(--app-nav-mac-height));
+		margin-bottom: 0;
+		padding-bottom: 0;
+	}
+
+	.app-nav-shell--mac {
+		min-height: calc(env(safe-area-inset-top, 0px) + var(--app-nav-mac-height));
+	}
+
+	&.landing-stage-focus-present .app-nav {
+		transform: none;
+		opacity: 1;
+		pointer-events: auto;
+	}
+}
+
+.app-nav--mac {
+	top: env(safe-area-inset-top, 0);
+	left: 0;
+	right: 0;
+	padding: 0;
+	background: rgb(255 255 255 / 72%);
+	backdrop-filter: blur(20px) saturate(180%);
+	-webkit-backdrop-filter: blur(20px) saturate(180%);
+	border-bottom: 1px solid rgb(0 0 0 / 8%);
+	box-shadow: inset 0 -1px 0 rgb(255 255 255 / 45%);
+	z-index: 250;
+}
+
+.app-nav-mac {
+	display: flex;
+	align-items: stretch;
+	width: 100%;
+	min-height: var(--app-nav-mac-height);
+	padding: 0 0.5rem;
+	font-family: var(--app-nav-mac-font);
+	font-size: 13px;
+	line-height: 1;
+	color: #1d1d1f;
+	background: transparent;
+	border: none;
+
+	&__apple {
+		all: unset;
+		box-sizing: border-box;
+		display: inline-flex;
+		align-items: center;
+		justify-content: center;
+		width: 1.75rem;
+		height: var(--app-nav-mac-height);
+		flex-shrink: 0;
+		cursor: default;
+		border-radius: 4px;
+
+		&[data-state='open'],
+		&:hover {
+			background: rgb(0 0 0 / 8%);
+		}
+	}
+
+	&__apple-glyph {
+		display: block;
+		width: 13px;
+		height: 16px;
+		background-color: currentColor;
+		mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 814 1000'%3E%3Cpath d='M788.1 340.9c-5.8 4.5-108.2 62.2-108.2 190.5 0 148.4 130.3 200.9 134.2 202.2-.6 3.2-20.7 71.9-68.7 141.9-42.8 61.6-87.5 123.1-155.5 123.1s-85.5-39.5-163.7-39.5c-76 0-103.7 40.8-165.9 40.8s-105.2-57.5-155.9-127.4C46 790.7 0 663 0 541.8c0-194.2 126.4-297.5 250.8-297.5 66.1 0 121.2 43.4 162.7 43.4 39.5 0 101.1-46 176.3-46 28.2 0 129.5 2.6 196.3 99.2zM554.1 159.4c31.1-37.9 53.1-90.7 53.1-143.1 0-7.4-.6-14.9-1.3-22.4-50.6 1.9-110.8 33.7-147.1 75.8-28.2 32.4-54.4 84.7-54.4 137.5 0 8.2.6 16.4 1.3 24.2 3.3.3 6.7.4 10.2.4 45.6 0 102.8-34.8 138.2-72.4z'/%3E%3C/svg%3E");
+		mask-size: contain;
+		mask-repeat: no-repeat;
+		mask-position: center;
+		-webkit-mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 814 1000'%3E%3Cpath d='M788.1 340.9c-5.8 4.5-108.2 62.2-108.2 190.5 0 148.4 130.3 200.9 134.2 202.2-.6 3.2-20.7 71.9-68.7 141.9-42.8 61.6-87.5 123.1-155.5 123.1s-85.5-39.5-163.7-39.5c-76 0-103.7 40.8-165.9 40.8s-105.2-57.5-155.9-127.4C46 790.7 0 663 0 541.8c0-194.2 126.4-297.5 250.8-297.5 66.1 0 121.2 43.4 162.7 43.4 39.5 0 101.1-46 176.3-46 28.2 0 129.5 2.6 196.3 99.2zM554.1 159.4c31.1-37.9 53.1-90.7 53.1-143.1 0-7.4-.6-14.9-1.3-22.4-50.6 1.9-110.8 33.7-147.1 75.8-28.2 32.4-54.4 84.7-54.4 137.5 0 8.2.6 16.4 1.3 24.2 3.3.3 6.7.4 10.2.4 45.6 0 102.8-34.8 138.2-72.4z'/%3E%3C/svg%3E");
+		-webkit-mask-size: contain;
+		-webkit-mask-repeat: no-repeat;
+		-webkit-mask-position: center;
+	}
+
+	&__menu-trigger {
+		all: unset;
+		box-sizing: border-box;
+		display: inline-flex;
+		align-items: center;
+		height: var(--app-nav-mac-height);
+		padding: 0 0.65rem;
+		font: inherit;
+		font-size: 13px;
+		color: inherit;
+		cursor: default;
+		user-select: none;
+		border-radius: 4px;
+
+		&:hover {
+			background: rgb(0 0 0 / 6%);
+		}
+
+		&[data-state='open'] {
+			background: rgb(0 0 0 / 10%);
+			color: inherit;
+			box-shadow: none;
+		}
+	}
+
+	&__title {
+		display: flex;
+		align-items: center;
+		justify-content: flex-end;
+		gap: 0.4rem;
+		flex: 1;
+		min-width: 0;
+		padding: 0 0.35rem 0 0.75rem;
+		font-size: 13px;
+		font-weight: 600;
+		letter-spacing: -0.01em;
+		white-space: nowrap;
+		overflow: hidden;
+		text-overflow: ellipsis;
+		pointer-events: none;
+		opacity: 0.85;
+	}
+
+	&__title-icon {
+		display: inline-flex;
+		width: 16px;
+		height: 16px;
+		flex-shrink: 0;
+
+		.app-icon {
+			width: 16px;
+			height: 16px;
+			border-radius: 4px;
+		}
+	}
+
+	&__title-text {
+		overflow: hidden;
+		text-overflow: ellipsis;
+	}
+
+	&__dropdown {
+		z-index: 500;
+		min-width: 11rem;
+		padding: 0.35rem;
+		font-family: var(--app-nav-mac-font);
+		font-size: 13px;
+		color: #1d1d1f;
+		background: rgb(255 255 255 / 92%);
+		backdrop-filter: blur(24px) saturate(180%);
+		-webkit-backdrop-filter: blur(24px) saturate(180%);
+		border: 1px solid rgb(0 0 0 / 8%);
+		border-radius: 8px;
+		box-shadow:
+			0 8px 32px rgb(0 0 0 / 14%),
+			0 0 0 1px rgb(255 255 255 / 50%) inset;
+
+		&--sub {
+			margin-top: -4px;
+		}
+	}
+
+	&__dropdown-item {
+		display: flex;
+		align-items: center;
+		gap: 0.35rem;
+		padding: 0.28rem 0.65rem;
+		font: inherit;
+		font-size: 13px;
+		line-height: 1.35;
+		text-decoration: none;
+		color: inherit;
+		background: transparent;
+		border: none;
+		border-radius: 6px;
+		cursor: default;
+		outline: none;
+
+		&[data-highlighted] {
+			background: var(--crack-mac-accent, #007aff);
+			color: #ffffff;
+		}
+
+		&[data-active] {
+			font-weight: 600;
+		}
+
+		&[data-disabled] {
+			opacity: 0.4;
+			pointer-events: none;
+		}
+	}
+
+	&__sub-trigger {
+		justify-content: space-between;
+
+		&::after {
+			content: '›';
+			margin-left: 0.75rem;
+			font-size: 14px;
+			opacity: 0.5;
+		}
+	}
+
+	&__separator {
+		height: 1px;
+		margin: 0.25rem 0.35rem;
+		background: rgb(0 0 0 / 10%);
+	}
+
+	&__radio-item {
+		position: relative;
+		padding-left: 1.5rem;
+	}
+
+	&__radio-dot {
+		position: absolute;
+		left: 0.45rem;
+		font-size: 11px;
+		font-weight: 700;
+		line-height: 1;
+		color: var(--crack-mac-accent, #007aff);
+	}
+
+	[data-highlighted] &__radio-dot {
+		color: #ffffff;
+	}
+}
+
+@media (max-width: rc-below($rc-bp-sm)) {
+	.app-nav-mac__menu-trigger {
+		padding-inline: 0.4rem;
+	}
+
+	.app-nav-mac__title-text {
+		display: none;
+	}
+}

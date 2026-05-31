@@ -41,6 +41,81 @@ export function splitSiteNavItems(items: SiteNavItem[]) {
 	return { primary, app }
 }
 
+export type CrackNavMenuEntry =
+	| { type: 'item'; href: string; label: string }
+	| { type: 'separator' }
+	| { type: 'sub'; label: string; items: SiteNavItem[] }
+
+export type CrackNavMenuGroup = {
+	/** Win9x menubar label */
+	label: string
+	/** Matches real nav aria-label */
+	ariaLabel: string
+	entries: CrackNavMenuEntry[]
+}
+
+const HELP_SEGMENTS = new Set(['faq', 'privacy', 'terms', 'feedback'])
+
+function isHelpNavItem(href: string): boolean {
+	const segment = href.split('/').filter(Boolean).pop()
+	return segment != null && HELP_SEGMENTS.has(segment)
+}
+
+function toMenuEntries(items: SiteNavItem[]): CrackNavMenuEntry[] {
+	return items.map((item) => ({ type: 'item', href: item.href, label: item.label }))
+}
+
+function buildAppMenuEntries(appItems: SiteNavItem[]): CrackNavMenuEntry[] {
+	const main: SiteNavItem[] = []
+	const help: SiteNavItem[] = []
+	for (const item of appItems) {
+		if (isHelpNavItem(item.href)) help.push(item)
+		else main.push(item)
+	}
+	const entries = toMenuEntries(main)
+	if (help.length > 0) {
+		entries.push({ type: 'separator' })
+		entries.push({ type: 'sub', label: 'Help', items: help })
+	}
+	return entries
+}
+
+/** Same links as pill nav + mobile apps list (for crack-style menubar). */
+export function getCrackNavMenuGroups(
+	items: SiteNavItem[],
+	apps: { slug: string; appName: string }[],
+	options: { appMenuLabel: string; appsSectionTitle: string }
+): CrackNavMenuGroup[] {
+	const { primary, app } = splitSiteNavItems(items)
+	const groups: CrackNavMenuGroup[] = []
+
+	if (primary.length > 0) {
+		groups.push({ label: 'Site', ariaLabel: 'Site', entries: toMenuEntries(primary) })
+	}
+
+	if (app.length > 0) {
+		groups.push({
+			label: options.appMenuLabel,
+			ariaLabel: options.appMenuLabel,
+			entries: buildAppMenuEntries(app)
+		})
+	}
+
+	if (apps.length > 0) {
+		groups.push({
+			label: options.appsSectionTitle,
+			ariaLabel: options.appsSectionTitle,
+			entries: apps.map((entry) => ({
+				type: 'item',
+				href: `/${entry.slug}`,
+				label: entry.appName
+			}))
+		})
+	}
+
+	return groups
+}
+
 /** Label for the mobile nav bar title (app name on app routes; site nav label elsewhere). */
 export function getSitePageTitle(pathname: string | null): string {
 	if (!pathname) return siteName
