@@ -195,7 +195,12 @@ html.dark .app-nav {
 	&[data-active],
 	&[aria-current='page'] {
 		color: var(--gray-12);
-		font-weight: 600;
+		&::after{
+			content: attr(data-label) / "";
+			position: absolute;
+			font-weight: 600;
+			pointer-events: none;
+		}
 
 		&::before {
 			background: linear-gradient(

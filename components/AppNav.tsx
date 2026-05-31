@@ -26,6 +26,7 @@ function PillNavLinks({ items, pathname }: { items: SiteNavItem[]; pathname: str
 				className={clsx('app-nav-pill__item', isActive && 'app-nav-pill__item--active')}
 				data-active={isActive ? '' : undefined}
 				aria-current={isActive ? 'page' : undefined}
+				data-label={label}
 			>
 				{label}
 			</NextLink>
