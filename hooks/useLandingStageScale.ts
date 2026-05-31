@@ -3,6 +3,7 @@
 import { useLayoutEffect, useRef, useState } from 'react'
 import { useLandingStageTunerOptional } from '@/components/landing/LandingStageTunerContext'
 import { isLandingStageDebug } from '@/lib/landing-stage-debug'
+import type { LandingStageLayoutKey } from '@/lib/landing-stage-scale'
 import {
 	applyLandingStageLayout,
 	computeLandingStageScaleResult,
@@ -20,6 +21,7 @@ type Variant = 'hero' | 'compact' | string
 type Options = {
 	stageId?: string
 	featureIndex?: number
+	layoutKey?: LandingStageLayoutKey
 }
 
 function getHeroMeasureElement(stage: HTMLElement): HTMLElement {
@@ -36,7 +38,7 @@ export function useLandingStageScale(variant: Variant = 'hero', options: Options
 	const [debugReport, setDebugReport] = useState<string | null>(null)
 	const [ready, setReady] = useState(false)
 	const tuner = useLandingStageTunerOptional()
-	const { stageId, featureIndex } = options
+	const { stageId, featureIndex, layoutKey: layoutKeyOverride } = options
 	const isFeature = featureIndex != null
 	const overrideRevision = tuner?.overrideRevision ?? 0
 	const tunerRef = useRef(tuner)
@@ -54,7 +56,7 @@ export function useLandingStageScale(variant: Variant = 'hero', options: Options
 		if (!el) return
 
 		if (isFeature) {
-			const layoutKey = getLandingStageLayoutKey(variant, { featureIndex })
+			const layoutKey = layoutKeyOverride ?? getLandingStageLayoutKey(variant, { featureIndex })
 			const tunerNow = tunerRef.current
 			const override = stageId ? tunerNow?.getOverride(stageId) : undefined
 			const resolvedSlots =
@@ -112,7 +114,7 @@ export function useLandingStageScale(variant: Variant = 'hero', options: Options
 			const { width, height } = measureEl.getBoundingClientRect()
 			if (width < 1 || height < 1) return
 
-			const layoutKey = getLandingStageLayoutKey(variant)
+			const layoutKey = layoutKeyOverride ?? getLandingStageLayoutKey(variant)
 			const override = stageId ? tunerNow?.getOverride(stageId) : undefined
 			const resolvedSlots =
 				stageId && tunerNow ? tunerNow.resolveSlots(stageId, layoutKey) : getLandingStageDevices(layoutKey)

@@ -499,7 +499,7 @@ $mockup-iphone-h: 1603px;
 	&--interactive {
 		.landing-stage__device {
 			pointer-events: auto;
-			cursor: pointer;
+			cursor: zoom-in;
 			transition:
 				transform 0.5s cubic-bezier(0.32, 0.72, 0, 1),
 				opacity 0.4s ease,
@@ -540,9 +540,9 @@ $mockup-iphone-h: 1603px;
 	padding: 0;
 	border: none;
 	background: color-mix(in srgb, var(--gray-1) 25%, transparent);
-	-webkit-backdrop-filter: blur(12px);
-	backdrop-filter: blur(12px);
-	cursor: pointer;
+	-webkit-backdrop-filter: blur(var(--landing-stage-scrim-blur, 12px));
+	backdrop-filter: blur(var(--landing-stage-scrim-blur, 12px));
+	cursor: zoom-out;
 
 	@media (prefers-reduced-motion: reduce) {
 		animation: none;
@@ -563,6 +563,16 @@ body.landing-stage-focus-open {
 	overflow: visible;
 	pointer-events: none;
 	contain: layout style;
+
+	&--document {
+		position: absolute;
+		top: 0;
+		left: 0;
+		right: auto;
+		bottom: auto;
+		width: 0;
+		height: 0;
+	}
 }
 
 .landing-stage-focus-underlay {
@@ -572,6 +582,20 @@ body.landing-stage-focus-open {
 	overflow: visible;
 	pointer-events: none;
 	contain: layout style;
+
+	&--document {
+		position: absolute;
+		top: 0;
+		left: 0;
+		right: auto;
+		bottom: auto;
+		width: 0;
+		height: 0;
+	}
+
+	&--returning {
+		z-index: 10002;
+	}
 }
 
 .landing-stage-focus-clone {

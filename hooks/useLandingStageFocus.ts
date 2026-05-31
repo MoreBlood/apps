@@ -1,8 +1,9 @@
 'use client'
 
 import type { KeyboardEvent, MouseEvent } from 'react'
-import { useCallback, useEffect, useState } from 'react'
+import { useCallback, useEffect, useRef, useState } from 'react'
 import { useLenis } from '@/components/landing/LandingScrollProvider'
+import { clearLandingFocusOpen, setLandingFocusOpen } from '@/lib/landing-focus-dom-state'
 
 export type LandingStageFocusDevice = 'ipad' | 'iphone'
 
@@ -17,16 +18,19 @@ type Options = {
 	stageId: string
 	/** When true, device focus is disabled (e.g. stage tuner). */
 	disabled?: boolean
+	onBeforeClearFocus?: () => void
 }
 
-export function useLandingStageFocus({ stageId, disabled = false }: Options) {
+export function useLandingStageFocus({ stageId, disabled = false, onBeforeClearFocus }: Options) {
 	const [focusedDevice, setFocusedDevice] = useState<LandingStageFocusDevice | null>(null)
 	const lenis = useLenis()
 	const isFocused = focusedDevice != null && !disabled
+	const openTokenRef = useRef(Symbol(`landing-stage-open:${stageId}`))
 
 	const clearFocus = useCallback(() => {
+		onBeforeClearFocus?.()
 		setFocusedDevice(null)
-	}, [])
+	}, [onBeforeClearFocus])
 
 	const publishFocus = useCallback(
 		(device: LandingStageFocusDevice | null) => {
@@ -43,10 +47,13 @@ export function useLandingStageFocus({ stageId, disabled = false }: Options) {
 	const setFocus = useCallback(
 		(device: LandingStageFocusDevice | null) => {
 			if (disabled) return
+			if (device == null && focusedDevice != null) {
+				onBeforeClearFocus?.()
+			}
 			setFocusedDevice(device)
 			publishFocus(device)
 		},
-		[disabled, publishFocus]
+		[disabled, focusedDevice, onBeforeClearFocus, publishFocus]
 	)
 
 	const onDeviceClick = useCallback(
@@ -103,21 +110,20 @@ export function useLandingStageFocus({ stageId, disabled = false }: Options) {
 	}, [isFocused, setFocus])
 
 	useEffect(() => {
-		if (typeof document === 'undefined') return
-		const root = document.documentElement
-		document.body.classList.toggle('landing-stage-focus-open', isFocused)
-		root.classList.toggle('landing-stage-focus-open', isFocused)
-		if (isFocused) {
+		const anyOpen = setLandingFocusOpen(openTokenRef.current, isFocused)
+		if (anyOpen) {
 			lenis?.stop()
 		} else {
 			lenis?.start()
 		}
-		return () => {
-			document.body.classList.remove('landing-stage-focus-open')
-			root.classList.remove('landing-stage-focus-open')
-			lenis?.start()
-		}
 	}, [isFocused, lenis])
+
+	useEffect(() => {
+		return () => {
+			const anyOpen = clearLandingFocusOpen(openTokenRef.current)
+			if (!anyOpen) lenis?.start()
+		}
+	}, [lenis])
 
 	return {
 		focusedDevice: disabled ? null : focusedDevice,
