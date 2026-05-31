@@ -155,8 +155,6 @@
 	}
 
 	.landing-blog--teaser {
-		border-top-color: color-mix(in srgb, var(--accent-a5) 35%, var(--landing-border));
-
 		.landing-blog__teaser-item.landing-surface--metal:hover {
 			border-color: color-mix(in srgb, var(--accent-a7) 55%, var(--landing-metal-rim-light));
 		}
