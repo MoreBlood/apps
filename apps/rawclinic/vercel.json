@@ -1,5 +1,31 @@
 {
 	"framework": "nextjs",
 	"buildCommand": "cd ../.. && pnpm --filter rawclinic build",
-	"installCommand": "cd ../.. && pnpm install --frozen-lockfile"
+	"installCommand": "cd ../.. && pnpm install --frozen-lockfile",
+	"headers": [
+		{
+			"source": "/screenshots/:path*",
+			"headers": [{ "key": "Cache-Control", "value": "public, max-age=31536000, immutable" }]
+		},
+		{
+			"source": "/icons/:path*",
+			"headers": [{ "key": "Cache-Control", "value": "public, max-age=31536000, immutable" }]
+		},
+		{
+			"source": "/compare/:path*",
+			"headers": [{ "key": "Cache-Control", "value": "public, max-age=31536000, immutable" }]
+		},
+		{
+			"source": "/landing/:path*",
+			"headers": [{ "key": "Cache-Control", "value": "public, max-age=31536000, immutable" }]
+		},
+		{
+			"source": "/audio/:path*",
+			"headers": [{ "key": "Cache-Control", "value": "public, max-age=31536000, immutable" }]
+		},
+		{
+			"source": "/(favicon.ico|og-image.png|app-store.svg|clippy-clippit.gif|clippy-clippit-sprite.png)",
+			"headers": [{ "key": "Cache-Control", "value": "public, max-age=31536000, immutable" }]
+		}
+	]
 }
