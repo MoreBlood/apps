@@ -1,0 +1,32 @@
+/* Shared with lib/landing-performance/critical-css.ts — inlined on app landings for LCP/CLS. */
+.landing-hero__showcase {
+	display: grid;
+	width: 100%;
+	max-width: 40rem;
+	margin-inline: auto;
+	aspect-ratio: 1;
+	overflow: hidden;
+}
+
+.landing-hero__showcase > * {
+	grid-area: 1 / 1;
+	width: 100%;
+	height: 100%;
+	min-height: 0;
+	aspect-ratio: unset;
+	overflow: hidden;
+}
+
+.landing-hero__showcase .landing-stage {
+	min-height: 0;
+	aspect-ratio: unset;
+}
+
+.landing-stage__cluster {
+	visibility: hidden;
+	opacity: 0;
+}
+
+.landing-stage__glow {
+	opacity: 0;
+}

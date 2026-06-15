@@ -1,0 +1,20 @@
+/* Shared with lib/landing-performance/critical-css.ts — inlined before main CSS for CLS/LCP. */
+:root {
+	--app-nav-offset-top: max(1rem, env(safe-area-inset-top, 0px));
+	--app-nav-bar-height: 2.75rem;
+}
+
+@media (min-width: 1024px) {
+	:root {
+		--app-nav-bar-height: 3.25rem;
+	}
+}
+
+.app-nav-shell {
+	min-height: calc(var(--app-nav-offset-top) + var(--app-nav-bar-height));
+}
+
+.app-nav__bar {
+	min-height: var(--app-nav-bar-height);
+	box-sizing: border-box;
+}

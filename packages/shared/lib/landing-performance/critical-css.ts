@@ -1,22 +1,13 @@
 /**
- * Inline critical CSS for first paint. Keep small; full rules live in SCSS.
- * Add a named block here when a new above-the-fold element needs stable layout before app CSS.
+ * Inline critical CSS for first paint. Rules live in styles/critical/*.css
+ * and are also @imported from SCSS so nothing is duplicated by hand.
  */
+import heroShowcaseCss from '../../styles/critical/hero-showcase.css'
+import navShellCss from '../../styles/critical/nav-shell.css'
 
 export const LANDING_CRITICAL_CSS_BLOCKS = {
-	heroShowcase: [
-		'.landing-hero__showcase{display:grid;width:100%;max-width:40rem;margin-inline:auto;aspect-ratio:1;overflow:hidden}',
-		'.landing-hero__showcase>*{grid-area:1/1;width:100%;height:100%;min-height:0;aspect-ratio:unset;overflow:hidden}',
-		'.landing-hero__showcase .landing-stage{min-height:0;aspect-ratio:unset}',
-		'.landing-stage__cluster{visibility:hidden;opacity:0}',
-		'.landing-stage__glow{opacity:0}'
-	].join(''),
-	navShell: [
-		':root{--app-nav-offset-top:max(1rem,env(safe-area-inset-top,0px));--app-nav-bar-height:2.75rem}',
-		'@media(min-width:1024px){:root{--app-nav-bar-height:3.25rem}}',
-		'.app-nav-shell{min-height:calc(var(--app-nav-offset-top) + var(--app-nav-bar-height));margin-bottom:1.5rem;padding-bottom:0.75rem}',
-		'.app-nav__bar{min-height:var(--app-nav-bar-height);box-sizing:border-box}'
-	].join('')
+	heroShowcase: heroShowcaseCss,
+	navShell: navShellCss
 } as const
 
 export type LandingCriticalCssBlock = keyof typeof LANDING_CRITICAL_CSS_BLOCKS

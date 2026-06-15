@@ -9,5 +9,9 @@ export const sharedRoot = __dirname
 /** Webpack/Turbopack alias so `@/` resolves to packages/shared from app routes. */
 export function withSharedAlias(config) {
 	config.resolve.alias['@'] = sharedRoot
+	config.module.rules.push({
+		test: /styles\/critical\/.+\.css$/,
+		type: 'asset/source'
+	})
 	return config
 }

@@ -2,6 +2,7 @@
 @use 'mixins' as *;
 @use 'landing-title-gradient' as *;
 @use 'tokens' as *;
+@import 'critical/hero-showcase.css';
 
 .landing {
 	--landing-max: var(--rc-content-max-marketing);
@@ -97,7 +98,7 @@
 		margin-inline: calc(50% - 50dvw);
 	}
 	text-align: center;
-	padding-block: clamp(2rem, 6vw, 4rem) clamp(3rem, 8vw, 5rem);
+	padding-block: 0 clamp(3rem, 8vw, 5rem);
 	padding-inline: max(var(--space-4), env(safe-area-inset-left, 0px))
 		max(var(--space-4), env(safe-area-inset-right, 0px));
 	overflow: visible;
@@ -124,22 +125,10 @@
 	}
 
 	&__showcase {
-		// Fixed frame: size from width only; mockups clip inside, never resize this box
-		display: grid;
-		width: 100%;
+		// Layout frame: display/aspect-ratio in styles/critical/hero-showcase.css
 		max-width: var(--rc-content-max-reading);
 		margin: 0 auto clamp(1.25rem, 4vw, 2rem);
-		aspect-ratio: 1;
-		overflow: hidden;
 		isolation: isolate;
-
-		> * {
-			grid-area: 1 / 1;
-			width: 100%;
-			height: 100%;
-			min-height: 0;
-			overflow: hidden;
-		}
 	}
 
 	&__eyebrow {
@@ -263,8 +252,6 @@
 .landing-hero__showcase .landing-stage {
 	width: 100%;
 	height: 100%;
-	min-height: 0;
-	aspect-ratio: unset;
 	overflow: hidden;
 
 	.landing-stage__glow {
@@ -293,7 +280,6 @@ $mockup-iphone-h: 1603px;
 		inset: 15% 10% 5%;
 		background: radial-gradient(ellipse at center, var(--accent-a5), transparent 70%);
 		filter: blur(40px);
-		opacity: 0;
 	}
 
 	&__cluster {
@@ -303,8 +289,6 @@ $mockup-iphone-h: 1603px;
 		width: var(--composition-w);
 		height: var(--composition-h);
 		pointer-events: none;
-		visibility: hidden;
-		opacity: 0;
 		transform: translate(-50%, -50%) scale(var(--cluster-scale, 0.28));
 		transform-origin: center center;
 	}
@@ -2016,7 +2000,7 @@ html.lenis body {
 	}
 
 	.landing-hero {
-		padding-block: clamp(1.5rem, 5vw, 3rem) clamp(2rem, 6vw, 4rem);
+		padding-block: 0 clamp(2rem, 6vw, 4rem);
 	}
 
 	.landing__features {

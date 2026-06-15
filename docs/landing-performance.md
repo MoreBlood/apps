@@ -29,7 +29,7 @@ Policies live in `lib/landing-performance/tiers.ts`.
 />
 ```
 
-4. **Above-the-fold layout** — if the block affects CLS/LCP, add a small rule to `lib/landing-performance/critical-css.ts` and include it via `LandingCriticalStyles`.
+4. **Above-the-fold layout** — add rules to `styles/critical/*.css` (imported from SCSS and inlined via `critical-css.ts` / `LandingCriticalStyles`).
 5. **LCP images** — use `OptimizedImage` with `priority` or add paths to `getLandingLcpPreloads()` in `preloads.ts`.
 6. **Animations** — below-fold only; never on hero LCP text (`LandingHeroReveal` is for home only).
 
@@ -37,6 +37,7 @@ Policies live in `lib/landing-performance/tiers.ts`.
 
 | Concern | Location |
 |---------|----------|
+| Critical CSS (source files) | `styles/critical/*.css` |
 | Critical CSS registry | `lib/landing-performance/critical-css.ts` |
 | `<style>` injector | `components/landing/LandingCriticalStyles.tsx` |
 | Lazy section wrapper | `components/landing/LandingLazySection.tsx` |
@@ -54,7 +55,7 @@ RSC page.tsx
 └── AppLandingPage (client, lazy viewport sections)
 ```
 
-Do **not** duplicate inline `<style>` strings in components — extend `critical-css.ts` instead.
+Do **not** duplicate layout rules in SCSS — extend `styles/critical/*.css` instead.
 
 ## What we avoid
 
