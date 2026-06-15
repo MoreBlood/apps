@@ -1,6 +1,7 @@
 import type { Metadata, Viewport } from 'next'
 import { getAppBySlug, siteName } from '@/config'
 import { getSingleAppSlug, isSingleAppSite } from '@/config/site-mode'
+import { getAppleItunesAppMeta } from '@/lib/app-store'
 import { assetPath } from '@/lib/basePath'
 import { getBaseUrl, getMetadataBase } from '@/lib/siteUrl'
 
@@ -20,6 +21,8 @@ export function buildRootMetadata(): Metadata {
 		const app = getAppBySlug(getSingleAppSlug())
 		const title = app?.appName ?? 'RAW Clinic'
 		const description = app?.description
+		const pageUrl = `${canonicalBase}/`
+		const appleItunesApp = getAppleItunesAppMeta(app?.storeLink, pageUrl)
 		return {
 			metadataBase: getMetadataBase(),
 			icons: {
@@ -29,17 +32,21 @@ export function buildRootMetadata(): Metadata {
 			verification: { google: googleVerification },
 			title,
 			description,
+			...(appleItunesApp ? { other: { 'apple-itunes-app': appleItunesApp } } : {}),
 			openGraph: {
 				title,
 				description,
 				type: 'website',
 				locale: 'en',
-				url: `${canonicalBase}/`
+				url: pageUrl
 			},
 			twitter: {
 				card: 'summary',
 				title,
 				description
+			},
+			alternates: {
+				canonical: pageUrl
 			}
 		}
 	}
