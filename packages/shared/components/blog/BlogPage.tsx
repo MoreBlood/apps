@@ -5,21 +5,28 @@ import { Container, Link, Text } from '@radix-ui/themes'
 import NextLink from 'next/link'
 import { LandingRevealItem, LandingRevealStagger } from '@/components/landing/LandingReveal'
 import SitePageHero from '@/components/shared/SitePageHero'
-import { siteName } from '@/config'
-import { getAllBlogPosts } from '@/config/blog-content'
+import { getAppBySlug, siteName } from '@/config'
+import { getPublishedBlogPosts } from '@/config/blog-content'
+import { getSingleAppSlug, isSingleAppSite } from '@/config/site-mode'
+
+function relatedAppHref(relatedAppSlug: string): string {
+	if (isSingleAppSite() && relatedAppSlug === getSingleAppSlug()) {
+		return '/'
+	}
+	return `/${relatedAppSlug}/`
+}
 
 export default function BlogPage() {
-	const posts = getAllBlogPosts()
+	const posts = getPublishedBlogPosts()
+	const singleApp = isSingleAppSite() ? getAppBySlug(getSingleAppSlug()) : null
+	const eyebrow = singleApp?.appName ?? siteName
+	const lead = singleApp
+		? 'Notes on ProRAW workflows, on-device editing, and building RAW Clinic.'
+		: 'Notes on building native iOS apps — product decisions, photography workflows, and what we learn along the way.'
 
 	return (
 		<Container size="2" className="landing blog-page">
-			<SitePageHero
-				className="site-page-hero--section"
-				eyebrow={siteName}
-				title="Blog"
-				lead="Notes on building native iOS apps — product decisions, photography workflows, and what we learn along the way."
-				animate
-			/>
+			<SitePageHero className="site-page-hero--section" eyebrow={eyebrow} title="Blog" lead={lead} animate />
 
 			<LandingRevealStagger as="ul" className="landing-blog__list blog-page__list" stagger={0.08}>
 				{posts.map((post) => (
@@ -39,7 +46,7 @@ export default function BlogPage() {
 							{post.relatedAppSlug && (
 								<div className="blog-page__card-actions">
 									<Link asChild size="2" color="gray" className="blog-page__related-link">
-										<NextLink href={`/${post.relatedAppSlug}/`}>
+										<NextLink href={relatedAppHref(post.relatedAppSlug)}>
 											{post.relatedAppSlug === 'rawclinic' ? 'RAW Clinic' : post.relatedAppSlug}
 										</NextLink>
 									</Link>

@@ -43,3 +43,11 @@
 		color: var(--accent-11);
 	}
 }
+
+.not-found-page {
+	padding-bottom: clamp(3rem, 8vw, 5rem);
+
+	&__actions {
+		margin-top: var(--space-5);
+	}
+}

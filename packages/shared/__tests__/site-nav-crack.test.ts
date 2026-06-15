@@ -54,6 +54,7 @@ describe('getCrackNavMenuGroups', () => {
 			})
 
 			expect(groups.map((g) => g.label)).toEqual(['Site', 'RAW Clinic'])
+			expect(itemLabels(groups[0]?.entries ?? [])).toEqual(['Home', 'Blog'])
 		} finally {
 			if (prev === undefined) delete process.env.NEXT_PUBLIC_SITE_MODE
 			else process.env.NEXT_PUBLIC_SITE_MODE = prev

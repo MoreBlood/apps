@@ -34,3 +34,12 @@ export function getBlogPostsBySlugs(slugs: string[]): BlogPost[] {
 	const bySlug = new Map(blogPosts.map((post) => [post.slug, post]))
 	return slugs.map((slug) => bySlug.get(slug)).filter((post): post is BlogPost => post != null)
 }
+
+/** Hub shows all posts; single-app sites only show posts for that app (or unscoped). */
+export function getPublishedBlogPosts(): BlogPost[] {
+	if (typeof process !== 'undefined' && process.env.NEXT_PUBLIC_SITE_MODE === 'single-app') {
+		const appSlug = process.env.NEXT_PUBLIC_SINGLE_APP_SLUG?.trim() || 'rawclinic'
+		return blogPosts.filter((post) => !post.relatedAppSlug || post.relatedAppSlug === appSlug)
+	}
+	return blogPosts
+}

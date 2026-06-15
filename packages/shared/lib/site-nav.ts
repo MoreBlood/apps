@@ -18,6 +18,7 @@ const PRIMARY_NAV_HREFS = new Set(['/', '/blog'])
 function singleAppNavItems(): SiteNavItem[] {
 	return [
 		{ href: '/', label: 'Home' },
+		{ href: '/blog', label: 'Blog' },
 		{ href: '/roadmap', label: 'Roadmap' },
 		{ href: '/faq', label: 'FAQ' },
 		{ href: '/privacy', label: 'Privacy' },

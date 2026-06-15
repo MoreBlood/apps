@@ -9,6 +9,7 @@ function singleAppSitemap(base: string): MetadataRoute.Sitemap {
 	const lastModified = new Date()
 	return [
 		{ url: `${base}/`, lastModified, changeFrequency: 'monthly', priority: 1 },
+		{ url: `${base}/blog/`, lastModified, changeFrequency: 'monthly', priority: 0.7 },
 		...APP_SUB_ROUTES.map((segment) => ({
 			url: `${base}/${segment}/`,
 			lastModified,
