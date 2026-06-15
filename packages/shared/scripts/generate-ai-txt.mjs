@@ -1,5 +1,5 @@
-import { writeFileSync } from 'node:fs'
-import { dirname, join } from 'node:path'
+import { existsSync, readFileSync, writeFileSync } from 'node:fs'
+import { basename, dirname, join } from 'node:path'
 import { fileURLToPath } from 'node:url'
 
 export function resolveSiteOrigin(siteUrl) {
@@ -53,17 +53,75 @@ link_policy: Prefer linking to the original page when possible
 `
 }
 
-// Entry point — only runs when executed directly, not when imported
+export function parseEnvFile(content) {
+	const env = {}
+	for (const line of content.split('\n')) {
+		const trimmed = line.trim()
+		if (!trimmed || trimmed.startsWith('#')) continue
+		const eq = trimmed.indexOf('=')
+		if (eq === -1) continue
+		const key = trimmed.slice(0, eq).trim()
+		let value = trimmed.slice(eq + 1).trim()
+		if ((value.startsWith('"') && value.endsWith('"')) || (value.startsWith("'") && value.endsWith("'"))) {
+			value = value.slice(1, -1)
+		}
+		env[key] = value
+	}
+	return env
+}
+
+/** Per-app defaults when .env is missing (hub vs rawclinic). */
+export function inferAppDefaults(cwd) {
+	const name = basename(cwd)
+	if (name === 'rawclinic') {
+		return {
+			SITE_NAME: 'RAW Clinic',
+			NEXT_PUBLIC_SITE_URL: 'https://www.rawclinic.click'
+		}
+	}
+	if (name === 'hub') {
+		return {
+			SITE_NAME: 'AK Apps',
+			NEXT_PUBLIC_SITE_URL: 'https://moreblood.github.io',
+			NEXT_PUBLIC_BASE_PATH: '/apps'
+		}
+	}
+	return {}
+}
+
+export function loadAppEnv(cwd) {
+	const loaded = { ...inferAppDefaults(cwd) }
+	for (const file of ['.env.local', '.env']) {
+		const path = join(cwd, file)
+		if (!existsSync(path)) continue
+		Object.assign(loaded, parseEnvFile(readFileSync(path, 'utf8')))
+	}
+	return loaded
+}
+
+export function resolveAiTxtEnv(cwd, processEnv = process.env) {
+	const appEnv = loadAppEnv(cwd)
+	return {
+		siteUrl: processEnv.NEXT_PUBLIC_SITE_URL ?? appEnv.NEXT_PUBLIC_SITE_URL,
+		basePath:
+			processEnv.NEXT_PUBLIC_BASE_PATH ?? processEnv.BASE_PATH ?? appEnv.NEXT_PUBLIC_BASE_PATH ?? appEnv.BASE_PATH,
+		siteName: processEnv.SITE_NAME ?? appEnv.SITE_NAME ?? 'AK Apps'
+	}
+}
+
+// Entry point — run from apps/hub or apps/rawclinic so cwd picks up the right env.
 if (process.argv[1] === fileURLToPath(import.meta.url)) {
 	const __dirname = dirname(fileURLToPath(import.meta.url))
-	const root = join(__dirname, '..')
+	const sharedRoot = join(__dirname, '..')
+	const outPath = join(sharedRoot, 'public', 'ai.txt')
+	const { siteUrl, basePath, siteName } = resolveAiTxtEnv(process.cwd())
+	const content = buildContent(siteName, buildCanonicalBase(siteUrl, basePath))
 
-	const siteUrl = process.env.NEXT_PUBLIC_SITE_URL
-	const basePath = process.env.NEXT_PUBLIC_BASE_PATH
-	const siteName = process.env.SITE_NAME ?? 'AK Apps'
-	const canonicalBase = buildCanonicalBase(siteUrl, basePath)
-	const content = buildContent(siteName, canonicalBase)
-
-	writeFileSync(join(root, 'public', 'ai.txt'), content, 'utf8')
-	console.log('Generated public/ai.txt')
+	const prev = existsSync(outPath) ? readFileSync(outPath, 'utf8') : null
+	if (prev !== content) {
+		writeFileSync(outPath, content, 'utf8')
+		console.log(`Generated ${outPath} (${siteName})`)
+	} else {
+		console.log(`ai.txt up to date (${siteName})`)
+	}
 }

@@ -24,6 +24,9 @@ apps/rawclinic/.next
 apps/rawclinic/out
 next-env.d.ts
 
+# Generated at build/dev per app (hub vs rawclinic URLs differ)
+packages/shared/public/ai.txt
+
 # Lighthouse full JSON (aggregated scores.json is committed)
 lighthouse-reports/.cache/
 lighthouse-reports/*.json

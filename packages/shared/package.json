@@ -4,7 +4,8 @@
 	"private": true,
 	"type": "module",
 	"scripts": {
-		"generate:assets": "node scripts/generate-ai-txt.mjs && node scripts/generate-image-assets.mjs",
+		"generate:assets": "node scripts/generate-image-assets.mjs",
+		"generate:ai-txt": "node scripts/generate-ai-txt.mjs",
 		"generate:images": "node scripts/generate-image-assets.mjs",
 		"typecheck": "tsc --noEmit"
 	},

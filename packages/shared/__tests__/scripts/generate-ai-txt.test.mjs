@@ -1,5 +1,11 @@
 import { describe, expect, it } from 'vitest'
-import { buildCanonicalBase, buildContent } from '../../scripts/generate-ai-txt.mjs'
+import {
+	buildCanonicalBase,
+	buildContent,
+	inferAppDefaults,
+	parseEnvFile,
+	resolveAiTxtEnv
+} from '../../scripts/generate-ai-txt.mjs'
 
 describe('buildCanonicalBase', () => {
 	it('returns siteUrl as-is when no basePath', () => {
@@ -62,5 +68,61 @@ describe('buildContent', () => {
 		const content = buildContent(siteName, base)
 		expect(content).toContain(`# ai.txt for ${siteName}`)
 		expect(content).toContain(`# ${base}/ai.txt`)
+	})
+})
+
+describe('parseEnvFile', () => {
+	it('parses KEY=value lines and skips comments', () => {
+		expect(
+			parseEnvFile(`
+# comment
+SITE_NAME=RAW Clinic
+NEXT_PUBLIC_SITE_URL="https://rawclinic.click"
+`)
+		).toEqual({
+			SITE_NAME: 'RAW Clinic',
+			NEXT_PUBLIC_SITE_URL: 'https://rawclinic.click'
+		})
+	})
+})
+
+describe('inferAppDefaults', () => {
+	it('returns rawclinic defaults', () => {
+		expect(inferAppDefaults('/repo/apps/rawclinic')).toMatchObject({
+			SITE_NAME: 'RAW Clinic',
+			NEXT_PUBLIC_SITE_URL: 'https://www.rawclinic.click'
+		})
+	})
+
+	it('returns hub defaults with base path', () => {
+		expect(inferAppDefaults('/repo/apps/hub')).toMatchObject({
+			SITE_NAME: 'AK Apps',
+			NEXT_PUBLIC_BASE_PATH: '/apps'
+		})
+	})
+})
+
+describe('resolveAiTxtEnv', () => {
+	it('prefers process env over app defaults', () => {
+		expect(
+			resolveAiTxtEnv('/repo/apps/rawclinic', {
+				SITE_NAME: 'Override',
+				NEXT_PUBLIC_SITE_URL: 'https://example.com'
+			})
+		).toEqual({
+			siteName: 'Override',
+			siteUrl: 'https://example.com',
+			basePath: undefined
+		})
+	})
+
+	it('falls back to BASE_PATH when NEXT_PUBLIC_BASE_PATH is unset', () => {
+		expect(
+			resolveAiTxtEnv('/repo/apps/hub', {
+				BASE_PATH: '/apps'
+			})
+		).toMatchObject({
+			basePath: '/apps'
+		})
 	})
 })
