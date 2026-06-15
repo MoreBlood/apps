@@ -1,0 +1,15 @@
+{
+	"name": "hub",
+	"version": "1.0.0",
+	"private": true,
+	"type": "module",
+	"scripts": {
+		"dev": "next dev",
+		"build": "pnpm --filter @ak-apps/shared generate:assets && next build",
+		"start": "next start",
+		"typecheck": "tsc --noEmit"
+	},
+	"dependencies": {
+		"@ak-apps/shared": "workspace:*"
+	}
+}

@@ -1,4 +1,12 @@
-# Agent guide — Raw Clinic Web
+# Agent guide — AK Apps Web (monorepo)
+
+## Layout
+
+| Path | Deploy | Purpose |
+|------|--------|---------|
+| `apps/hub` | GitHub Pages (`/apps`) | AK Apps hub — all apps |
+| `apps/rawclinic` | Vercel (`rawclinic.click`) | RAW Clinic only + API routes |
+| `packages/shared` | — | Shared components, config, lib, styles, `public/` |
 
 Cursor rules in **`.cursor/rules/`** are the style guide. Read them before UI or SCSS work.
 

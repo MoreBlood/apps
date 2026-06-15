@@ -1,0 +1,327 @@
+// Classic Mac OS 7–9 desktop icons (periwinkle folders, dog-eared documents, 1px shadow)
+.landing-crack--mac .landing-crack-desktop {
+	--mac-icon-outline: #101010;
+	--mac-folder-face: #9696c8;
+	--mac-folder-hi: #b8b8e0;
+	--mac-folder-lo: #6e6e9c;
+	--mac-folder-tab: #c8c8e8;
+	--mac-doc-paper: #ffffff;
+	--mac-doc-fold: #b0b0b0;
+	--mac-floppy: #b8b8b8;
+	--mac-floppy-slot: #404040;
+
+	&__icon--square {
+		width: 4.85rem;
+		gap: 0.2rem;
+		padding: 0.1rem;
+		border-radius: 0;
+
+		&:hover {
+			background: transparent;
+		}
+
+		&--selected {
+			background: transparent;
+			border: none;
+			backdrop-filter: none;
+			box-shadow: none;
+
+			.landing-crack-desktop__tile {
+				outline: 1px dotted #ffffff;
+				outline-offset: 3px;
+			}
+		}
+
+		&:focus-visible {
+			outline: 1px dotted #ffffff;
+			outline-offset: 2px;
+		}
+	}
+
+	&__tile {
+		display: flex;
+		align-items: flex-end;
+		justify-content: center;
+		width: 100%;
+		min-height: 48px;
+		aspect-ratio: auto;
+		padding-bottom: 1px;
+		background: transparent;
+		border-radius: 0;
+		box-shadow: none;
+	}
+
+	&__glyph {
+		position: relative;
+		width: 48px;
+		height: 48px;
+		flex-shrink: 0;
+		border: none;
+		background: transparent;
+		filter: drop-shadow(1px 1px 0 rgb(0 0 0 / 48%));
+		image-rendering: pixelated;
+		image-rendering: crisp-edges;
+
+		&--raster {
+			display: flex;
+			align-items: center;
+			justify-content: center;
+
+			&::before,
+			&::after {
+				display: none;
+				content: none;
+			}
+
+			.mac-classic-9-icon {
+				display: block;
+				width: 48px;
+				height: 48px;
+				object-fit: contain;
+				image-rendering: pixelated;
+				image-rendering: crisp-edges;
+			}
+		}
+
+		&--app {
+			filter: drop-shadow(1px 1px 0 rgb(0 0 0 / 48%));
+
+			.app-icon {
+				width: 48px;
+				height: 48px;
+				border: 1px solid var(--mac-icon-outline);
+				border-radius: 2px;
+				box-shadow: inset 0 1px 0 rgb(255 255 255 / 35%);
+				image-rendering: pixelated;
+				image-rendering: crisp-edges;
+			}
+		}
+
+		// Dog-eared document (shared geometry)
+		&--exe,
+		&--lnk,
+		&--bat,
+		&--txt,
+		&--cfg,
+		&--dll {
+			&::before {
+				content: '';
+				position: absolute;
+				left: 50%;
+				top: 7px;
+				width: 32px;
+				height: 40px;
+				transform: translateX(-50%);
+				background-color: var(--mac-doc-paper);
+				border: 1px solid var(--mac-icon-outline);
+				box-shadow: 1px 1px 0 rgb(0 0 0 / 35%);
+			}
+
+			&::after {
+				content: '';
+				position: absolute;
+				top: 8px;
+				left: calc(50% + 9px);
+				width: 11px;
+				height: 11px;
+				background: linear-gradient(135deg, var(--mac-doc-fold) 0%, var(--mac-doc-fold) 50%, var(--mac-doc-paper) 50%);
+				border-top: 1px solid var(--mac-icon-outline);
+				border-right: 1px solid var(--mac-icon-outline);
+			}
+		}
+
+		&--exe::before {
+			background:
+				linear-gradient(180deg, #000080 0%, #000080 10px, var(--mac-doc-paper) 10px),
+				var(--mac-doc-paper);
+			background-size: 100% 100%;
+		}
+
+		&--lnk::after {
+			width: 0;
+			height: 0;
+			top: auto;
+			left: calc(50% - 10px);
+			bottom: 9px;
+			background: transparent;
+			border: none;
+			border-right: 10px solid var(--mac-icon-outline);
+			border-top: 8px solid transparent;
+			transform: skewX(-12deg);
+			filter: none;
+		}
+
+		&--bat::before {
+			background:
+				linear-gradient(var(--mac-doc-paper), var(--mac-doc-paper)),
+				linear-gradient(var(--mac-icon-outline), var(--mac-icon-outline));
+			background-size:
+				18px 2px,
+				14px 2px;
+			background-position:
+				7px 18px,
+				7px 24px;
+			background-repeat: no-repeat;
+			background-color: var(--mac-doc-paper);
+		}
+
+		&--txt::before {
+			background:
+				repeating-linear-gradient(
+					180deg,
+					var(--mac-icon-outline) 0,
+					var(--mac-icon-outline) 1px,
+					transparent 1px,
+					transparent 5px
+				),
+				var(--mac-doc-paper);
+			background-size:
+				20px 18px,
+				100% 100%;
+			background-position:
+				6px 12px,
+				0 0;
+			background-repeat: no-repeat;
+		}
+
+		&--cfg::before {
+			background:
+				linear-gradient(var(--mac-doc-paper), var(--mac-doc-paper)),
+				var(--mac-doc-paper);
+			background-size: 100% 100%;
+		}
+
+		&--cfg::after {
+			content: 'INI';
+			display: flex;
+			align-items: center;
+			justify-content: center;
+			top: 18px;
+			left: 50%;
+			width: 22px;
+			height: 10px;
+			transform: translateX(-50%);
+			font-family: Geneva, Chicago, 'MS Sans Serif', sans-serif;
+			font-size: 7px;
+			font-weight: 700;
+			line-height: 1;
+			color: var(--mac-icon-outline);
+			background: transparent;
+			border: none;
+		}
+
+		&--dll::before {
+			background:
+				radial-gradient(circle at 50% 55%, #606060 0, #606060 5px, transparent 5px),
+				var(--mac-doc-paper);
+			background-repeat: no-repeat;
+		}
+
+		&--folder {
+			&::before {
+				content: '';
+				position: absolute;
+				left: 50%;
+				top: 16px;
+				width: 40px;
+				height: 26px;
+				transform: translateX(-50%);
+				background: linear-gradient(180deg, var(--mac-folder-hi) 0%, var(--mac-folder-face) 38%, var(--mac-folder-lo) 100%);
+				border: 1px solid var(--mac-icon-outline);
+				border-radius: 0 2px 3px 3px;
+				box-shadow: 1px 1px 0 rgb(0 0 0 / 35%);
+			}
+
+			&::after {
+				content: '';
+				position: absolute;
+				top: 9px;
+				left: calc(50% - 19px);
+				width: 20px;
+				height: 9px;
+				background: linear-gradient(180deg, var(--mac-folder-tab) 0%, var(--mac-folder-face) 100%);
+				border: 1px solid var(--mac-icon-outline);
+				border-bottom: none;
+				border-radius: 2px 3px 0 0;
+				box-shadow: inset 0 1px 0 rgb(255 255 255 / 35%);
+			}
+		}
+
+		&--sys {
+			&::before {
+				content: '';
+				position: absolute;
+				left: 50%;
+				top: 10px;
+				width: 34px;
+				height: 36px;
+				transform: translateX(-50%);
+				background: linear-gradient(180deg, #d0d0d0 0%, var(--mac-floppy) 45%, #909090 100%);
+				border: 1px solid var(--mac-icon-outline);
+				border-radius: 2px;
+				box-shadow: 1px 1px 0 rgb(0 0 0 / 35%);
+			}
+
+			&::after {
+				content: '';
+				position: absolute;
+				top: 14px;
+				left: 50%;
+				width: 24px;
+				height: 3px;
+				transform: translateX(-50%);
+				background: var(--mac-floppy-slot);
+				border: 1px solid #202020;
+				box-shadow: inset 0 1px 0 rgb(255 255 255 / 15%);
+			}
+		}
+
+		&--url {
+			&::before {
+				content: '';
+				position: absolute;
+				left: 50%;
+				top: 8px;
+				width: 36px;
+				height: 36px;
+				transform: translateX(-50%);
+				border: 1px solid var(--mac-icon-outline);
+				border-radius: 50%;
+				background:
+					linear-gradient(var(--mac-icon-outline), var(--mac-icon-outline)),
+					linear-gradient(var(--mac-icon-outline), var(--mac-icon-outline)),
+					linear-gradient(90deg, transparent 48%, var(--mac-icon-outline) 48%, var(--mac-icon-outline) 52%, transparent 52%),
+					radial-gradient(circle at 50% 38%, #80c0ff 0%, #3060c0 55%, #2040a0 100%);
+				background-size:
+					28px 1px,
+					1px 24px,
+					100% 100%,
+					100% 100%;
+				background-position:
+					center 10px,
+					center center,
+					center center,
+					center center;
+				background-repeat: no-repeat;
+				box-shadow: 1px 1px 0 rgb(0 0 0 / 35%);
+			}
+		}
+	}
+
+	&__label {
+		font-family: Geneva, Chicago, 'Helvetica Neue', Helvetica, sans-serif;
+		font-size: 12px;
+		font-weight: 400;
+		line-height: 1.15;
+		color: #ffffff;
+		text-shadow: 1px 1px 0 #000000;
+		padding: 0.05rem 0.25rem;
+		border-radius: 0;
+	}
+
+	&__icon--selected .landing-crack-desktop__label {
+		background: #000000;
+		color: #ffffff;
+		text-shadow: none;
+	}
+}

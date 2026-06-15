@@ -3,9 +3,11 @@ description: Raw Clinic web — architecture, apps, shared UI entry points
 alwaysApply: true
 ---
 
-# Raw Clinic Web
+# Raw Clinic Web (monorepo)
 
-Next.js marketing + utility site for **Raw Clinic** (`rawclinic`, red accent) and **AQI Sense** (`aqi-sense`, green accent). Hub routes (`/`, `/blog`, `/faq`, legal, feedback) use **gray** accent via `resolveThemeAccent` in `config/app-theme.ts` — do not hardcode hub accent in components.
+Next.js monorepo: **hub** (`apps/hub`, GitHub Pages) + **rawclinic** (`apps/rawclinic`, Vercel) share **`packages/shared`**.
+
+Hub routes (`/`, `/blog`, legal, feedback) use **gray** accent via `resolveThemeAccent` in `packages/shared/config/app-theme.ts` — do not hardcode hub accent in components.
 
 ## Two UI layers
 
@@ -27,8 +29,9 @@ Prefer **extending existing shared pieces** over new one-off layouts.
 
 ## Imports & paths
 
-- Use `@/` alias (`@/components/...`, `@/lib/...`, `@/config/...`)
-- Config/content: `config/`, `config/home-content.ts`, `config/landing-content.ts`
+- Use `@/` alias in **packages/shared** (`@/components/...`, `@/lib/...`, `@/config/...`)
+- App routes in `apps/hub` or `apps/rawclinic` import shared code via the same `@/` path (tsconfig maps to `packages/shared`)
+- Config/content: `packages/shared/config/`, `packages/shared/config/home-content.ts`, etc.
 - Do not reintroduce removed modules: `LandingHero`, `DescriptionText`, `RoadmapOverviewCard`
 
 ## Scope

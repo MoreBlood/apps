@@ -1,0 +1,33 @@
+import { Container } from '@radix-ui/themes'
+import type { Metadata } from 'next'
+import { notFound } from 'next/navigation'
+import AppContactCta from '@/components/AppContactCta'
+import { DefaultPrivacyContent } from '@/components/legal'
+import { getAppBySlug } from '@/config'
+import type { AppRouteProps } from '@/routes/bind-shortcut-route'
+
+export async function generateMetadata({ params }: AppRouteProps): Promise<Metadata> {
+	const { appSlug } = await params
+	const app = getAppBySlug(appSlug)
+	if (!app) return { title: 'App not found' }
+	return {
+		title: `Privacy Policy - ${app.appName}`,
+		description: `Privacy policy for ${app.appName}. ${app.tagline}.`
+	}
+}
+
+export default async function AppPrivacyRoute({ params }: AppRouteProps) {
+	const { appSlug } = await params
+	const app = getAppBySlug(appSlug)
+	if (!app) notFound()
+
+	const Content = app.PrivacyContent ?? DefaultPrivacyContent
+	return (
+		<>
+			<Content app={app} />
+			<Container size="2">
+				<AppContactCta appSlug={appSlug} contactEmail={app.contactEmail} />
+			</Container>
+		</>
+	)
+}

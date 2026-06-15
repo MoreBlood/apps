@@ -1,1 +1,1 @@
-node scripts/pre-commit.mjs
+node packages/shared/scripts/pre-commit.mjs

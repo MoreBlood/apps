@@ -1,0 +1,14 @@
+{
+	"name": "@ak-apps/shared",
+	"version": "0.0.0",
+	"private": true,
+	"type": "module",
+	"scripts": {
+		"generate:assets": "node scripts/generate-ai-txt.mjs && node scripts/generate-image-assets.mjs",
+		"generate:images": "node scripts/generate-image-assets.mjs",
+		"typecheck": "tsc --noEmit"
+	},
+	"exports": {
+		"./*": "./*"
+	}
+}

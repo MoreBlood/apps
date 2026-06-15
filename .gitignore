@@ -18,6 +18,10 @@ dist-ssr
 # Next.js
 .next
 out
+apps/hub/.next
+apps/hub/out
+apps/rawclinic/.next
+apps/rawclinic/out
 next-env.d.ts
 
 # Lighthouse full JSON (aggregated scores.json is committed)
