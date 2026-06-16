@@ -18,6 +18,15 @@ const nextConfig = {
 	images: {
 		formats: ['image/webp']
 	},
+	async headers() {
+		return [
+			{
+				// AASA: служим без расширения как application/json для Universal Links.
+				source: '/.well-known/apple-app-site-association',
+				headers: [{ key: 'Content-Type', value: 'application/json' }]
+			}
+		]
+	},
 	turbopack: {
 		resolveAlias: {
 			'@': path.join(path.dirname(fileURLToPath(import.meta.url)), '../../packages/shared')

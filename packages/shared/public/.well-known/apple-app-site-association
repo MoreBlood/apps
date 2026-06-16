@@ -1,0 +1,15 @@
+{
+  "applinks": {
+    "details": [
+      {
+        "appIDs": ["Y4R79DH8AJ.moreblood.rawclinic"],
+        "components": [
+          {
+            "/": "/l/*",
+            "comment": "RAW Clinic shared-look import links"
+          }
+        ]
+      }
+    ]
+  }
+}

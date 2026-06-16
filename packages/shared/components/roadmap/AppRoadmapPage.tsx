@@ -154,7 +154,7 @@ export default function AppRoadmapPage({ app }: Props) {
 					/>
 					{app.storeLink && (
 						<Text as="p" size="2" mt="4">
-							<Link asChild href={app.storeLink} target="_blank" rel="noopener noreferrer">
+							<Link href={app.storeLink} target="_blank" rel="noopener noreferrer">
 								Download on the App Store
 							</Link>
 						</Text>
