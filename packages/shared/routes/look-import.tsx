@@ -1,7 +1,6 @@
 import { Container, Flex, Heading, Section, Text } from '@radix-ui/themes'
 import type { Metadata } from 'next'
 import LandingStoreButton from '@/components/landing/LandingStoreButton'
-import LookCard from '@/components/looks/LookCard'
 import { getAppBySlug, toLandingAppInfo } from '@/config'
 import { getSharedLook } from '@/lib/looks/db'
 import { decodeSelfContainedLook } from '@/lib/looks/decode'
@@ -61,9 +60,6 @@ export default async function LookImportRoute({ params }: Props) {
 							<Text size="2" color="gray" style={{ letterSpacing: '0.08em', textTransform: 'uppercase' }}>
 								RAW Clinic look
 							</Text>
-							<div style={{ width: '100%', maxWidth: 440 }}>
-								<LookCard palette={look.card.p} accent={look.card.a} chips={look.card.c} title={look.title} />
-							</div>
 							<Heading size="6">{look.title}</Heading>
 							{look.card.c.length > 0 && (
 								<Text size="3" weight="medium">
