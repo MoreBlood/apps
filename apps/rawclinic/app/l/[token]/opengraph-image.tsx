@@ -1,5 +1,6 @@
 import { ImageResponse } from 'next/og'
 import { getSharedLook } from '@/lib/looks/db'
+import { decodeSelfContainedLook } from '@/lib/looks/decode'
 
 export const runtime = 'nodejs'
 export const alt = 'RAW Clinic look'
@@ -13,17 +14,16 @@ export default async function Image({ params }: { params: Promise<{ token: strin
 	let title = 'RAW Clinic look'
 	let palette = ['#2a2a30', '#6a6a72']
 	let chips: string[] = []
-	try {
-		const row = await getSharedLook(token)
-		const card = row?.payload?.c
-		if (card) {
-			palette = card.p.length >= 2 ? card.p : [card.a, card.a]
-			chips = card.c ?? []
-			const t = row?.payload?.t
-			if (typeof t === 'string' && t.trim()) title = t
-		}
-	} catch {
-		// Нет БД/записи — рендерим дефолтную карточку.
+	// Короткий код → из БД; иначе декодим самодостаточный токен. Дефолт — общая карточка.
+	let payload = await getSharedLook(token)
+		.then((row) => row?.payload)
+		.catch(() => undefined)
+	if (!payload) payload = decodeSelfContainedLook(token) ?? undefined
+	const card = payload?.c
+	if (card) {
+		palette = card.p.length >= 2 ? card.p : [card.a, card.a]
+		chips = card.c ?? []
+		if (typeof payload?.t === 'string' && payload.t.trim()) title = payload.t
 	}
 
 	const gradient = `linear-gradient(135deg, ${palette.join(', ')})`

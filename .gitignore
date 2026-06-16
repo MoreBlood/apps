@@ -44,3 +44,5 @@ lighthouse-reports/*.json
 *.sln
 *.sw?
 
+.vercel
+.env*
